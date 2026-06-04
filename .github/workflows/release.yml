@@ -1,0 +1,75 @@
+name: Release
+
+# Dispara em tags do padrão `<package>@v<version>`:
+#   core@v0.1.1
+#   dnd5e-2014@v0.2.0
+#   lancer@v0.1.5
+#   gumshoe@v0.1.0
+#
+# Cada tag publica apenas o pacote alvo. Pré-requisitos no repo:
+#   - Secret NPM_TOKEN (token de automação com permissão de publish no
+#     escopo @gmcr no npm.org)
+#   - O scope @gmcr precisa existir no npm e o token precisa ter acesso
+
+on:
+  push:
+    tags:
+      - '*@v*'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Parse tag
+        id: parse
+        shell: bash
+        run: |
+          tag="${GITHUB_REF#refs/tags/}"
+          pkg="${tag%@v*}"
+          version="${tag##*@v}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "pkg=$pkg" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Tag $tag -> package=$pkg, version=$version"
+
+      - name: Verify package exists and version matches
+        shell: bash
+        run: |
+          pkgDir="packages/${{ steps.parse.outputs.pkg }}"
+          test -d "$pkgDir" || { echo "::error::Package directory '$pkgDir' not found for tag ${{ steps.parse.outputs.tag }}"; exit 1; }
+          declared=$(node -p "require('./$pkgDir/package.json').version")
+          expected="${{ steps.parse.outputs.version }}"
+          if [ "$declared" != "$expected" ]; then
+            echo "::error::Tag version ($expected) does not match package.json version ($declared) for $pkgDir"
+            exit 1
+          fi
+
+      - name: Install
+        run: npm ci
+
+      # Builds core first so downstream packages can resolve its types.
+      - name: Build core (typegen for downstream)
+        run: npm run build -w packages/core
+
+      - name: Build target package
+        run: npm run build -w packages/${{ steps.parse.outputs.pkg }}
+
+      - name: Run target package tests
+        run: npm test -w packages/${{ steps.parse.outputs.pkg }}
+
+      - name: Publish to npm
+        run: npm publish -w packages/${{ steps.parse.outputs.pkg }} --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

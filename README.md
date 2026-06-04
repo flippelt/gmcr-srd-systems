@@ -50,7 +50,42 @@ npm run dev -w packages/core
 
 ## Releases independentes
 
-Cada pacote tem seu próprio `version` em `packages/*/package.json`. Tags seguem o padrão `core@v0.1.0` ou `dnd5e-2014@v0.1.0`. Publish é manual por enquanto (`npm publish -w packages/core`); workflow tag-trigger pode automatizar no futuro.
+Cada pacote tem seu próprio `version` em `packages/*/package.json`. Releases são acionados por **tags** no formato `<pacote>@v<versão>`:
+
+```
+core@v0.1.1
+dnd5e-2014@v0.2.0
+lancer@v0.1.5
+gumshoe@v0.1.0
+```
+
+Quando uma tag desse formato é pushada para `main`, o workflow [`.github/workflows/release.yml`](.github/workflows/release.yml) faz checkout, build, test do pacote alvo e roda `npm publish` (com `--provenance`).
+
+### Setup inicial (uma vez)
+
+1. **Criar o scope `@gmcr` no npm** (caso ainda não exista):
+   ```bash
+   npm login
+   npm org create gmcr
+   ```
+2. **Gerar token de automação** em [npmjs.com/settings/{user}/tokens](https://www.npmjs.com/settings/) (tipo "Automation").
+3. **Adicionar como secret** do repo:
+   `gh secret set NPM_TOKEN --repo flippelt/gmcr-srd-systems`
+
+### Para publicar uma versão
+
+```bash
+# 1. bump no package.json correspondente
+cd packages/dnd5e-2014
+npm version patch    # ou minor/major
+
+# 2. commit + push (via PR como sempre)
+# 3. tag + push da tag
+git tag dnd5e-2014@v0.1.1
+git push origin dnd5e-2014@v0.1.1
+```
+
+O workflow valida que a versão da tag bate com a do `package.json` antes de publicar.
 
 ## Autores de novos sistemas
 
