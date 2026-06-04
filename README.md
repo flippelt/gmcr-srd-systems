@@ -10,8 +10,9 @@ Cada sistema é um pacote publicável independente — você instala só os que 
 | ----------------------------------------------------------------- | ------ | ----------------------------- | ------------------- |
 | [`@gmcr/srd-core`](packages/core)                                 | 0.1.0  | Contrato + registry           | MIT                 |
 | [`@gmcr/srd-dnd5e-2014`](packages/dnd5e-2014)                     | 0.1.0  | D&D 5e (2014) — SRD 5.1       | CC-BY 4.0 (WotC)    |
+| [`@gmcr/srd-lancer`](packages/lancer)                             | 0.1.0  | Lancer (Massif Press)         | Lancer 3PP License  |
 
-Sistemas planejados (`lancer`, `gumshoe-trail`, `vampire-v5`, `blade-runner`, `fallout-2d20`, `wng`, `imperium-maledictum`, `cyberpunk-red`) virão como novos pacotes em `packages/`. Os com conteúdo proprietário podem ficar num monorepo privado separado.
+Sistemas planejados (`gumshoe-trail`, `vampire-v5`, `blade-runner`, `fallout-2d20`, `wng`, `imperium-maledictum`, `cyberpunk-red`) virão como novos pacotes em `packages/`. Os com conteúdo proprietário podem ficar num monorepo privado separado.
 
 ## Instalação (consumidor)
 
