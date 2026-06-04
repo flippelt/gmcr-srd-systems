@@ -14,6 +14,7 @@ Cada sistema é um pacote publicável independente — você instala só os que 
 | [`@lippelt/srd-lancer`](packages/lancer)                             | 0.1.0  | Lancer (Massif Press)         | Lancer 3PP License  |
 | [`@lippelt/srd-gumshoe`](packages/gumshoe)                           | 0.1.0  | GUMSHOE (Pelgrane Press)      | CC-BY 3.0           |
 | [`@lippelt/srd-daggerheart`](packages/daggerheart)                   | 0.1.0  | Daggerheart (Darrington Press) | DPCGL              |
+| [`@lippelt/srd-candela-obscura`](packages/candela-obscura)           | 0.1.0  | Candela Obscura (Darrington)  | DPCGL               |
 
 **Próximos sistemas para este monorepo público** (têm SRD/licença aberta):
 
@@ -22,7 +23,6 @@ Cada sistema é um pacote publicável independente — você instala só os que 
 - `pathfinder-2e` — Pathfinder 2ª Edição (Paizo, [ORC License](https://paizo.com/orclicense))
 - `starfinder-1e` — Starfinder 1ª Edição (Paizo, OGL 1.0a)
 - `starfinder-2e` — Starfinder 2ª Edição (Paizo, ORC License)
-- `candela-obscura` — Candela Obscura (Darrington Press, DPCGL)
 
 **Em monorepo privado separado** (`vampire-v5`, `blade-runner`, `fallout-2d20`, `wng`, `imperium-maledictum`, `cyberpunk-red`, `ordem-paranormal`) — conteúdo proprietário do dono do livro. Ordem Paranormal pode migrar pra cá quando a Jambô oficializar a licença aberta que está estudando.
 
