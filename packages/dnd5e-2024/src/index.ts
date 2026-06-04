@@ -1,13 +1,19 @@
 /**
- * Dungeons & Dragons 5th Edition (2014).
+ * Dungeons & Dragons 5th Edition (2024 / "One D&D").
  *
- * Conteúdo de regras (condições, ability scores, escala de DC) deriva do
- * System Reference Document 5.1, publicado pela Wizards of the Coast LLC
- * sob a Creative Commons Attribution 4.0 International License:
+ * Conteúdo de regras deriva do System Reference Document 5.2, publicado
+ * pela Wizards of the Coast LLC sob a Creative Commons Attribution 4.0
+ * International License:
  *   https://creativecommons.org/licenses/by/4.0/legalcode
  *
- * Esta implementação é original (não copia código de implementações
- * existentes). Referência conceitual: foundryvtt/dnd5e (MIT).
+ * Mantém compatibilidade mecânica com a edição 2014 — o que mudou:
+ *  - Exhaustion: agora uma escala 1..10 com −2 cumulativo em d20 tests
+ *    (era 6 níveis discretos)
+ *  - Algumas condições com wording refinado
+ *  - Math de combate (advantage, attack vs AC, saves, crítico) é igual
+ *
+ * Esta implementação é original (referência conceitual: foundryvtt/dnd5e,
+ * MIT). Para spells e features de classe, use o SRD 5.2 oficial.
  */
 
 import type {
@@ -20,20 +26,17 @@ import type {
 } from '@flippelt/srd-core'
 
 // ============================================================================
-// Random helper — extraído pra que os testes possam injetar uma fonte
-// determinística via `setRoller`.
+// Random helper — injetável pra testes determinísticos.
 // ============================================================================
 
 type Roller = (sides: number) => number
 
 let roller: Roller = (sides: number) => Math.floor(Math.random() * sides) + 1
 
-/** Substitui o gerador de dados (use em testes). Restaurar com `resetRoller`. */
 export function setRoller(fn: Roller): void {
   roller = fn
 }
 
-/** Restaura o gerador padrão (Math.random). */
 export function resetRoller(): void {
   roller = (sides: number) => Math.floor(Math.random() * sides) + 1
 }
@@ -45,7 +48,7 @@ function roll(sides: number, count = 1): number[] {
 }
 
 // ============================================================================
-// Presets de dados — botões rápidos da UI
+// Presets de dados (idênticos aos 2014)
 // ============================================================================
 
 const DICE_PRESETS: DicePreset[] = [
@@ -61,34 +64,32 @@ const DICE_PRESETS: DicePreset[] = [
 ]
 
 // ============================================================================
-// Condições — SRD 5.1 (CC-BY 4.0)
+// Condições — SRD 5.2 (CC-BY 4.0)
+//
+// Mudança principal vs 5.1: Exhaustion é uma escala única 1..10, cada nível
+// dá −2 acumulativo em d20 tests; nível 10 = morte.
 // ============================================================================
 
 const CONDITIONS: ConditionDef[] = [
   { id: 'blinded', label: 'Blinded', summary: 'Cego: falha em testes que exigem visão; atacantes têm vantagem; o cego tem desvantagem.' },
   { id: 'charmed', label: 'Charmed', summary: 'Enfeitiçado: não pode atacar o encantador nem usar habilidades nocivas contra ele.' },
   { id: 'deafened', label: 'Deafened', summary: 'Surdo: falha em testes que dependem de audição.' },
-  { id: 'exhaustion-1', label: 'Exhaustion 1', summary: 'Exaustão 1: desvantagem em testes de habilidade.' },
-  { id: 'exhaustion-2', label: 'Exhaustion 2', summary: 'Exaustão 2: velocidade reduzida pela metade.' },
-  { id: 'exhaustion-3', label: 'Exhaustion 3', summary: 'Exaustão 3: desvantagem em ataques e jogadas de resistência.' },
-  { id: 'exhaustion-4', label: 'Exhaustion 4', summary: 'Exaustão 4: máximo de HP reduzido pela metade.' },
-  { id: 'exhaustion-5', label: 'Exhaustion 5', summary: 'Exaustão 5: velocidade reduzida a 0.' },
-  { id: 'exhaustion-6', label: 'Exhaustion 6', summary: 'Exaustão 6: morte.' },
+  { id: 'exhaustion', label: 'Exhaustion (level)', summary: 'Exaustão (1..10): −2 acumulativo em todos os testes de d20 por nível; nível 10 = morte.' },
   { id: 'frightened', label: 'Frightened', summary: 'Amedrontado: desvantagem se a fonte do medo estiver à vista; não pode se mover para perto dela.' },
-  { id: 'grappled', label: 'Grappled', summary: 'Agarrado: velocidade 0; termina se o agarrador ficar incapacitado.' },
-  { id: 'incapacitated', label: 'Incapacitated', summary: 'Incapacitado: não pode tomar ações nem reações.' },
+  { id: 'grappled', label: 'Grappled', summary: 'Agarrado: velocidade 0; termina se o agarrador ficar incapacitado ou afastado.' },
+  { id: 'incapacitated', label: 'Incapacitated', summary: 'Incapacitado: não pode tomar ações, reações nem mover-se.' },
   { id: 'invisible', label: 'Invisible', summary: 'Invisível: vantagem em ataques; atacantes têm desvantagem.' },
-  { id: 'paralyzed', label: 'Paralyzed', summary: 'Paralisado: incapacitado, não pode se mover/falar; ataques a até 1,5m são automáticos críticos.' },
-  { id: 'petrified', label: 'Petrified', summary: 'Petrificado: transformado em substância sólida; resistência a todo dano; imune a venenos e doenças.' },
+  { id: 'paralyzed', label: 'Paralyzed', summary: 'Paralisado: incapacitado, não pode mover/falar; ataques a até 1,5m crítico automático.' },
+  { id: 'petrified', label: 'Petrified', summary: 'Petrificado: incapacitado, transformado em pedra; resistência a todo dano; imune a venenos e doenças.' },
   { id: 'poisoned', label: 'Poisoned', summary: 'Envenenado: desvantagem em ataques e testes de habilidade.' },
-  { id: 'prone', label: 'Prone', summary: 'Caído: desvantagem em ataques; ataques corpo-a-corpo contra o alvo têm vantagem; à distância têm desvantagem.' },
-  { id: 'restrained', label: 'Restrained', summary: 'Contido: velocidade 0; desvantagem em ataques e Dex saves; atacantes têm vantagem.' },
-  { id: 'stunned', label: 'Stunned', summary: 'Atordoado: incapacitado; falha automaticamente em Str/Dex saves; atacantes têm vantagem.' },
-  { id: 'unconscious', label: 'Unconscious', summary: 'Inconsciente: incapacitado, caído; ataques a até 1,5m são críticos automáticos.' },
+  { id: 'prone', label: 'Prone', summary: 'Caído: desvantagem em ataques; corpo-a-corpo contra o alvo têm vantagem; à distância têm desvantagem.' },
+  { id: 'restrained', label: 'Restrained', summary: 'Contido: velocidade 0; desvantagem em ataques e em Dex saves; atacantes têm vantagem.' },
+  { id: 'stunned', label: 'Stunned', summary: 'Atordoado: incapacitado; falha em Str/Dex saves; atacantes têm vantagem.' },
+  { id: 'unconscious', label: 'Unconscious', summary: 'Inconsciente: incapacitado, caído; ataques a até 1,5m crítico automático.' },
 ]
 
 // ============================================================================
-// Tracker fields — AC e death saves além de initiative/hp genéricos
+// Tracker fields — mesmas do 2014 (AC, death saves)
 // ============================================================================
 
 const TRACKER_FIELDS: TrackerField[] = [
@@ -100,6 +101,15 @@ const TRACKER_FIELDS: TrackerField[] = [
     max: 30,
     default: 10,
     description: 'Classe de Armadura — DC para ser atingido por ataques.',
+  },
+  {
+    key: 'exhaustion',
+    label: 'Exh',
+    kind: 'integer',
+    min: 0,
+    max: 10,
+    default: 0,
+    description: 'Nível de Exhaustion (0..10). Cada ponto dá −2 cumulativo em d20 tests; 10 = morte.',
   },
   {
     key: 'deathSuccesses',
@@ -125,46 +135,58 @@ const TRACKER_FIELDS: TrackerField[] = [
 // Regras automatizadas
 // ============================================================================
 
-/** Modificador derivado da ability score: floor((score - 10) / 2). */
 export function abilityMod(score: number): number {
   return Math.floor((score - 10) / 2)
 }
 
-/** DC de feitiço: 8 + proficiency + ability modifier. */
 export function spellSaveDC(proficiency: number, casterMod: number): number {
   return 8 + proficiency + casterMod
 }
 
-/** Bônus de ataque por feitiço: proficiency + ability modifier. */
 export function spellAttackBonus(proficiency: number, casterMod: number): number {
   return proficiency + casterMod
+}
+
+/** Modificador de exaustão por nível (2024): −2 por nível. */
+export function exhaustionPenalty(level: number): number {
+  const clamped = Math.max(0, Math.min(10, Math.trunc(level)))
+  return clamped === 0 ? 0 : -2 * clamped
 }
 
 interface D20Params {
   modifier?: number
   advantage?: boolean
   disadvantage?: boolean
+  /** Nível de exaustão (0..10). Aplica −2 por nível em todos os testes. */
+  exhaustion?: number
 }
 
-/** Rola um d20 com possível advantage/disadvantage e modificador. */
-function rollD20({ modifier = 0, advantage = false, disadvantage = false }: D20Params): RollResult {
-  // Vantagem e desvantagem se cancelam mutuamente (SRD 5.1).
+function rollD20({
+  modifier = 0,
+  advantage = false,
+  disadvantage = false,
+  exhaustion = 0,
+}: D20Params): RollResult {
   const cancelled = advantage && disadvantage
   const useAdv = advantage && !cancelled
   const useDis = disadvantage && !cancelled
   const count = useAdv || useDis ? 2 : 1
   const dice = roll(20, count)
   const picked = useAdv ? Math.max(...dice) : useDis ? Math.min(...dice) : dice[0]!
-  const total = picked + modifier
+  const exhPenalty = exhaustionPenalty(exhaustion)
+  const effectiveMod = modifier + exhPenalty
+  const total = picked + effectiveMod
   const notes: string[] = []
   if (cancelled) notes.push('vantagem/desvantagem se cancelaram')
   else if (useAdv) notes.push('vantagem')
   else if (useDis) notes.push('desvantagem')
+  if (exhPenalty !== 0) notes.push(`exaustão ${exhaustion} (${exhPenalty})`)
   if (picked === 20) notes.push('crítico natural')
   if (picked === 1) notes.push('falha crítica')
-  const modStr = modifier === 0 ? '' : modifier > 0 ? `+${modifier}` : `${modifier}`
+  const modStr =
+    effectiveMod === 0 ? '' : effectiveMod > 0 ? `+${effectiveMod}` : `${effectiveMod}`
   const dStr = count === 2 ? `2d20${useAdv ? 'kh1' : 'kl1'}` : '1d20'
-  return { rolls: dice, modifier, total, notation: `${dStr}${modStr}`, notes }
+  return { rolls: dice, modifier: effectiveMod, total, notation: `${dStr}${modStr}`, notes }
 }
 
 interface AttackParams {
@@ -172,23 +194,36 @@ interface AttackParams {
   targetAC?: number
   advantage?: boolean
   disadvantage?: boolean
+  exhaustion?: number
 }
 
-/**
- * Rolagem de ataque contra AC. Se `targetAC` for fornecido, anota se acertou.
- * Crítico natural 20 sempre acerta; 1 sempre erra (SRD 5.1).
- */
 function rollAttack(params: AttackParams): RollResult {
   const result = rollD20(params)
-  const d20 = result.rolls[result.rolls.length === 2
-    ? (params.advantage && !params.disadvantage ? (result.rolls[0]! >= result.rolls[1]! ? 0 : 1) : (result.rolls[0]! <= result.rolls[1]! ? 0 : 1))
-    : 0]!
+  const adv = params.advantage && !params.disadvantage
+  const d20 =
+    result.rolls.length === 2
+      ? adv
+        ? result.rolls[0]! >= result.rolls[1]!
+          ? result.rolls[0]!
+          : result.rolls[1]!
+        : result.rolls[0]! <= result.rolls[1]!
+          ? result.rolls[0]!
+          : result.rolls[1]!
+      : result.rolls[0]!
   const notes = [...(result.notes ?? [])]
   if (params.targetAC !== undefined) {
     const natural20 = d20 === 20
     const natural1 = d20 === 1
     const hit = natural20 || (!natural1 && result.total >= params.targetAC)
-    notes.push(hit ? (natural20 ? 'acerto crítico' : 'acertou') : (natural1 ? 'erro crítico' : 'errou'))
+    notes.push(
+      hit
+        ? natural20
+          ? 'acerto crítico'
+          : 'acertou'
+        : natural1
+          ? 'erro crítico'
+          : 'errou',
+    )
   }
   return { ...result, notes }
 }
@@ -198,9 +233,9 @@ interface SaveParams {
   dc: number
   advantage?: boolean
   disadvantage?: boolean
+  exhaustion?: number
 }
 
-/** Saving throw vs DC. Anota success/failure. */
 function rollSave(params: SaveParams): RollResult {
   const result = rollD20(params)
   const notes = [...(result.notes ?? [])]
@@ -215,10 +250,6 @@ interface DamageParams {
   critical?: boolean
 }
 
-/**
- * Rolagem de dano: NdM+K, com opção de crítico (rola o dobro dos dados,
- * mantém o modificador uma única vez — SRD 5.1).
- */
 function rollDamage({ count, sides, modifier = 0, critical = false }: DamageParams): RollResult {
   const totalDice = critical ? count * 2 : count
   const dice = roll(sides, totalDice)
@@ -245,15 +276,10 @@ interface ApplyDamageInput {
   target?: DamageTarget
 }
 
-/**
- * Reduz dano pelas propriedades do alvo. Ordem (SRD 5.1):
- * 1. Imunidade zera o dano.
- * 2. Resistência metade (arredondar pra baixo).
- * 3. Vulnerabilidade dobra.
- * Se uma criatura tem múltiplas categorias para o mesmo tipo, apenas uma se aplica
- * (mas combinadas com outras categorias podem coexistir — aqui assumimos exclusividade).
- */
-function applyDndDamage(incoming: number, ctx: ApplyDamageInput): { final: number; notes: string[] } {
+function applyDndDamage(
+  incoming: number,
+  ctx: ApplyDamageInput,
+): { final: number; notes: string[] } {
   const t = ctx.target
   const type = ctx.type
   if (!type || !t) return { final: Math.max(0, incoming), notes: [] }
@@ -268,7 +294,7 @@ function applyDndDamage(incoming: number, ctx: ApplyDamageInput): { final: numbe
 }
 
 // ============================================================================
-// Bundle do sistema
+// Bundle
 // ============================================================================
 
 const RULES: SystemRules = {
@@ -293,12 +319,12 @@ const RULES: SystemRules = {
   },
 }
 
-export const dnd5e2014: System = {
-  id: 'dnd5e-2014',
-  name: 'Dungeons & Dragons 5e (2014)',
-  ruleVersion: 'SRD 5.1',
+export const dnd5e2024: System = {
+  id: 'dnd5e-2024',
+  name: 'Dungeons & Dragons 5e (2024)',
+  ruleVersion: 'SRD 5.2',
   attribution:
-    'Contains material from the System Reference Document 5.1 by Wizards of the Coast LLC, licensed under CC-BY 4.0.',
+    'Contains material from the System Reference Document 5.2 by Wizards of the Coast LLC, licensed under CC-BY 4.0.',
   dicePresets: DICE_PRESETS,
   conditions: CONDITIONS,
   trackerFields: TRACKER_FIELDS,

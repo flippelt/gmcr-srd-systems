@@ -17,7 +17,7 @@ import type {
   System,
   SystemRules,
   TrackerField,
-} from '@gmcr/srd-core'
+} from '@flippelt/srd-core'
 
 // ============================================================================
 // Random helper

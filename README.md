@@ -8,22 +8,23 @@ Cada sistema é um pacote publicável independente — você instala só os que 
 
 | Pacote                                                            | Versão | Sistema                       | Licença do conteúdo |
 | ----------------------------------------------------------------- | ------ | ----------------------------- | ------------------- |
-| [`@gmcr/srd-core`](packages/core)                                 | 0.1.0  | Contrato + registry           | MIT                 |
-| [`@gmcr/srd-dnd5e-2014`](packages/dnd5e-2014)                     | 0.1.0  | D&D 5e (2014) — SRD 5.1       | CC-BY 4.0 (WotC)    |
-| [`@gmcr/srd-lancer`](packages/lancer)                             | 0.1.0  | Lancer (Massif Press)         | Lancer 3PP License  |
-| [`@gmcr/srd-gumshoe`](packages/gumshoe)                           | 0.1.0  | GUMSHOE (Pelgrane Press)      | CC-BY 3.0           |
+| [`@flippelt/srd-core`](packages/core)                                 | 0.1.0  | Contrato + registry           | MIT                 |
+| [`@flippelt/srd-dnd5e-2014`](packages/dnd5e-2014)                     | 0.1.0  | D&D 5e (2014) — SRD 5.1       | CC-BY 4.0 (WotC)    |
+| [`@flippelt/srd-dnd5e-2024`](packages/dnd5e-2024)                     | 0.1.0  | D&D 5e (2024) — SRD 5.2       | CC-BY 4.0 (WotC)    |
+| [`@flippelt/srd-lancer`](packages/lancer)                             | 0.1.0  | Lancer (Massif Press)         | Lancer 3PP License  |
+| [`@flippelt/srd-gumshoe`](packages/gumshoe)                           | 0.1.0  | GUMSHOE (Pelgrane Press)      | CC-BY 3.0           |
 
-Sistemas planejados (`vampire-v5`, `blade-runner`, `fallout-2d20`, `wng`, `imperium-maledictum`, `cyberpunk-red`) virão como novos pacotes em `packages/`. Os com conteúdo proprietário podem ficar num monorepo privado separado.
+Sistemas planejados em monorepo privado separado (`vampire-v5`, `blade-runner`, `fallout-2d20`, `wng`, `imperium-maledictum`, `cyberpunk-red`) — conteúdo proprietário do dono do livro.
 
 ## Instalação (consumidor)
 
 ```bash
-npm install @gmcr/srd-core @gmcr/srd-dnd5e-2014
+npm install @flippelt/srd-core @flippelt/srd-dnd5e-2014
 ```
 
 ```ts
-import { register, getSystem } from '@gmcr/srd-core'
-import { dnd5e2014 } from '@gmcr/srd-dnd5e-2014'
+import { register, getSystem } from '@flippelt/srd-core'
+import { dnd5e2014 } from '@flippelt/srd-dnd5e-2014'
 
 register(dnd5e2014)
 
@@ -89,7 +90,7 @@ O workflow valida que a versão da tag bate com a do `package.json` antes de pub
 
 ## Autores de novos sistemas
 
-Crie `packages/<nome>/` implementando o contrato `System` de `@gmcr/srd-core`. Veja `packages/dnd5e-2014/` como referência.
+Crie `packages/<nome>/` implementando o contrato `System` de `@flippelt/srd-core`. Veja `packages/dnd5e-2014/` como referência.
 
 ## Licença
 

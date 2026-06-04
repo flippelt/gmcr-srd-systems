@@ -1,7 +1,7 @@
 {
-  "name": "@gmcr/srd-lancer",
+  "name": "@flippelt/srd-lancer",
   "version": "0.1.0",
-  "description": "Lancer system module for @gmcr/srd-core — third party work under the Lancer Third Party License",
+  "description": "Lancer system module for @flippelt/srd-core — third party work under the Lancer Third Party License",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -36,9 +36,9 @@
     "directory": "packages/lancer"
   },
   "peerDependencies": {
-    "@gmcr/srd-core": "^0.1.0"
+    "@flippelt/srd-core": "^0.1.0"
   },
   "devDependencies": {
-    "@gmcr/srd-core": "*"
+    "@flippelt/srd-core": "*"
   }
 }

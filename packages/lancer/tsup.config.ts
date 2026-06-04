@@ -7,5 +7,5 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   target: 'es2022',
-  external: ['@gmcr/srd-core'],
+  external: ['@flippelt/srd-core'],
 })
