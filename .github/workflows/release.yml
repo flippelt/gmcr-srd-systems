@@ -18,6 +18,9 @@ on:
 
 permissions:
   contents: read
+  # id-token: write é necessário pra `npm publish --provenance` (assina
+  # publicações com OIDC do GitHub).
+  id-token: write
 
 jobs:
   publish:
