@@ -1,0 +1,49 @@
+{
+  "name": "@gmcr/srd-systems",
+  "version": "0.1.0",
+  "description": "SRD-compliant rules and defaults for tabletop RPG systems (consumed by GM Control Room)",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./dnd5e-2014": {
+      "types": "./dist/systems/dnd5e-2014.d.ts",
+      "import": "./dist/systems/dnd5e-2014.js",
+      "require": "./dist/systems/dnd5e-2014.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepare": "tsup"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flippelt/gmcr-srd-systems.git"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@types/node": "^22.10.5",
+    "eslint": "^9.18.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0",
+    "vitest": "^4.1.8"
+  }
+}

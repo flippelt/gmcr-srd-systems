@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Smoke — assert key files generated
+        run: |
+          test -f dist/index.js || (echo "missing dist/index.js"; exit 1)
+          test -f dist/index.d.ts || (echo "missing dist/index.d.ts"; exit 1)
+          test -f dist/systems/dnd5e-2014.js || (echo "missing dnd5e-2014.js"; exit 1)
+
+      - name: Audit (high/critical only)
+        run: npm audit --audit-level=high
