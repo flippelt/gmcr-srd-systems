@@ -41,11 +41,13 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Smoke — assert key files generated
+      - name: Smoke — assert each package generated dist
         run: |
-          test -f dist/index.js || (echo "missing dist/index.js"; exit 1)
-          test -f dist/index.cjs || (echo "missing dist/index.cjs"; exit 1)
-          test -f dist/index.d.ts || (echo "missing dist/index.d.ts"; exit 1)
+          for pkg in packages/*/; do
+            test -f "${pkg}dist/index.js"  || (echo "missing ${pkg}dist/index.js"; exit 1)
+            test -f "${pkg}dist/index.cjs" || (echo "missing ${pkg}dist/index.cjs"; exit 1)
+            test -f "${pkg}dist/index.d.ts" || (echo "missing ${pkg}dist/index.d.ts"; exit 1)
+          done
 
       - name: Audit (high/critical only)
         run: npm audit --audit-level=high
