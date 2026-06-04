@@ -34,7 +34,7 @@ describe('duality dice', () => {
     setRoller(fixedRoller(7, 7))
     const r = rollDuality({ difficulty: 30 }) // dificuldade absurda
     expect(r.breakdown.outcome).toBe('critical')
-    expect(r.notes.some((n) => n.includes('crítico'))).toBe(true)
+    expect(r.notes!.some((n) => n.includes('crítico'))).toBe(true)
     // Crítico passa mesmo se total < dificuldade
     expect(r.notes).toContain('sucesso')
   })
@@ -49,14 +49,14 @@ describe('duality dice', () => {
     setRoller(fixedRoller(5, 4, 5)) // Hope=5, Fear=4, adv d6=5
     const r = rollDuality({ advantage: true })
     expect(r.total).toBe(5 + 4 + 5)
-    expect(r.notes.some((n) => n.startsWith('vantagem'))).toBe(true)
+    expect(r.notes!.some((n) => n.startsWith('vantagem'))).toBe(true)
   })
 
   it('aplica desvantagem subtraindo d6', () => {
     setRoller(fixedRoller(8, 6, 3)) // Hope=8, Fear=6, dis d6=3
     const r = rollDuality({ disadvantage: true })
     expect(r.total).toBe(8 + 6 - 3)
-    expect(r.notes.some((n) => n.startsWith('desvantagem'))).toBe(true)
+    expect(r.notes!.some((n) => n.startsWith('desvantagem'))).toBe(true)
   })
 
   it('vantagem e desvantagem se cancelam (não rola d6)', () => {
@@ -104,7 +104,7 @@ describe('applyDamage (thresholds)', () => {
   it('armorMark reduz severidade em 1 banda', () => {
     const r = apply(15, { major: 6, severe: 12, armorMark: true })
     expect(r.final).toBe(2) // severe → major
-    expect(r.notes.some((n) => n.includes('armor reduziu'))).toBe(true)
+    expect(r.notes!.some((n) => n.includes('armor reduziu'))).toBe(true)
   })
 
   it('armorMark em minor zera dano', () => {
