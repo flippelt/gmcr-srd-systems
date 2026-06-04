@@ -1,29 +1,21 @@
 /**
- * Contrato comum para todos os sistemas RPG suportados.
+ * Contrato comum para sistemas RPG plugáveis.
  *
- * Princípios:
- *  - Tudo aqui é DEFAULTS e LÓGICA — sem estado, sem efeitos colaterais.
- *  - A UI (gm-control-room) consome via `Campaign.system` → `getSystem(id)`.
- *  - Os módulos por sistema são pequenos e auto-contidos; conteúdo
- *    proprietário fica em pacotes privados separados.
+ * Cada implementação (pacote separado) exporta um `System` e o consumidor
+ * registra com `register()` deste pacote. O consumidor escolhe quais
+ * sistemas instalar — `@gmcr/srd-core` por si só não traz nenhum.
  */
 
 // ============================================================================
 // Identidade
 // ============================================================================
 
-/** Identificadores estáveis de sistemas. Adicionar novos aqui. */
-export type SystemId =
-  | 'dnd5e-2014'
-  | 'dnd5e-2024'
-  | 'lancer'
-  | 'gumshoe-trail'
-  | 'vampire-v5'
-  | 'blade-runner'
-  | 'fallout-2d20'
-  | 'wng'
-  | 'imperium-maledictum'
-  | 'cyberpunk-red'
+/**
+ * ID estável de um sistema. Convenção: `<sistema>-<edição>` em kebab-case
+ * (ex: `dnd5e-2014`, `lancer`, `vampire-v5`). Cada implementação define
+ * o seu; conflitos entre pacotes registrados são erro.
+ */
+export type SystemId = string
 
 // ============================================================================
 // Notação de dados
@@ -31,7 +23,7 @@ export type SystemId =
 
 /**
  * Preset de rolagem rápida — botões que aparecem no painel de dados,
- * adaptados ao sistema (ex: D&D mostra d20+mod; V5 mostra pool de d10).
+ * adaptados ao sistema.
  */
 export interface DicePreset {
   /** Identificador único dentro do sistema. */
@@ -50,10 +42,6 @@ export interface DicePreset {
 // Condições / status
 // ============================================================================
 
-/**
- * Condição/status disponível no sistema. O nome é o que aparece no
- * tracker; a descrição pode aparecer em tooltip.
- */
 export interface ConditionDef {
   /** ID estável (snake-case, ex: 'frightened'). */
   id: string
@@ -70,19 +58,13 @@ export interface ConditionDef {
 /**
  * Definição de um campo numérico extra no tracker do sistema
  * (além dos genéricos initiative/hp).
- *
- * Exemplos:
- *  - D&D: AC (armor class, 1–30)
- *  - Lancer: Structure (1–4), Stress (1–4)
- *  - V5: Hunger (0–5)
- *  - W&G: Wounds (current/max)
  */
 export interface TrackerField {
   /** Chave estável usada na ficha (ex: 'ac', 'hunger'). */
   key: string
   /** Rótulo curto (4–8 chars) — vai num pill compacto no tracker. */
   label: string
-  /** Tipo do valor — define UI (stepper, slider, pair max/current). */
+  /** Tipo do valor — define UI (stepper, pair max/current, toggle). */
   kind: 'integer' | 'maxCurrent' | 'boolean'
   /** Faixa válida (inclusiva). */
   min?: number
@@ -97,10 +79,6 @@ export interface TrackerField {
 // Regras automatizadas (hooks puros)
 // ============================================================================
 
-/**
- * Resultado de uma rolagem com modificações de sistema aplicadas
- * (ex: advantage no D&D pega o maior de 2d20).
- */
 export interface RollResult {
   /** Rolagens individuais (todos os dados antes de filtragem). */
   rolls: number[]
@@ -114,15 +92,11 @@ export interface RollResult {
   notes?: string[]
 }
 
-/**
- * Hooks que um sistema PODE implementar. Todos opcionais —
- * sistemas simples só precisam de presets/conditions/tracker.
- */
 export interface SystemRules {
   /**
-   * Rola uma checagem do sistema com mecânica própria.
-   * O `kind` é definido por cada sistema (ex: 'attack', 'save', 'check', 'damage').
-   * Retorna null se o sistema não tem essa mecânica.
+   * Rola uma checagem do sistema. `kind` é definido por cada sistema
+   * (ex: 'attack', 'save', 'check', 'damage'). Retorna null se a mecânica
+   * não existe no sistema.
    */
   roll?: (kind: string, params: Record<string, unknown>) => RollResult | null
 
@@ -130,19 +104,16 @@ export interface SystemRules {
    * Reduz dano conforme regras do sistema (resistência, vulnerabilidade,
    * imunidade, armadura, etc).
    */
-  applyDamage?: (incoming: number, target: Record<string, unknown>) => {
-    final: number
-    notes?: string[]
-  }
+  applyDamage?: (
+    incoming: number,
+    target: Record<string, unknown>,
+  ) => { final: number; notes?: string[] }
 }
 
 // ============================================================================
 // Sistema completo
 // ============================================================================
 
-/**
- * O bundle completo de um sistema RPG. Forma estável que a UI consome.
- */
 export interface System {
   id: SystemId
   /** Nome humano (ex: "Dungeons & Dragons 5e (2014)"). */
