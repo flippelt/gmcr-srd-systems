@@ -29,6 +29,11 @@ jobs:
       - name: Install
         run: npm ci
 
+      # Builds the core package first so downstream packages can resolve
+      # `@gmcr/srd-core` types/exports during typecheck and tests.
+      - name: Build core (typegen for downstream packages)
+        run: npm run build -w packages/core
+
       - name: Lint
         run: npm run lint
 
@@ -38,7 +43,7 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: Build
+      - name: Build all
         run: npm run build
 
       - name: Smoke — assert each package generated dist
