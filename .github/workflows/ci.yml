@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       # Builds the core package first so downstream packages can resolve
-      # `@flippelt/srd-core` types/exports during typecheck and tests.
+      # `@lippelt/srd-core` types/exports during typecheck and tests.
       - name: Build core (typegen for downstream packages)
         run: npm run build -w packages/core
 

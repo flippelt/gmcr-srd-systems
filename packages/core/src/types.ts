@@ -3,7 +3,7 @@
  *
  * Cada implementação (pacote separado) exporta um `System` e o consumidor
  * registra com `register()` deste pacote. O consumidor escolhe quais
- * sistemas instalar — `@flippelt/srd-core` por si só não traz nenhum.
+ * sistemas instalar — `@lippelt/srd-core` por si só não traz nenhum.
  */
 
 // ============================================================================

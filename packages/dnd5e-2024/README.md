@@ -1,10 +1,10 @@
-# @flippelt/srd-dnd5e-2024
+# @lippelt/srd-dnd5e-2024
 
-Módulo D&D 5e (2024 / "One D&D") para [`@flippelt/srd-core`](../core).
+Módulo D&D 5e (2024 / "One D&D") para [`@lippelt/srd-core`](../core).
 
 Baseado no [System Reference Document 5.2](https://dnd.wizards.com/resources/systems-reference-document) da Wizards of the Coast, sob **Creative Commons Attribution 4.0 International**.
 
-## Diferenças vs `@flippelt/srd-dnd5e-2014`
+## Diferenças vs `@lippelt/srd-dnd5e-2014`
 
 - **Exhaustion**: agora uma escala única 1..10 com **−2 cumulativo** em d20 tests por nível; nível 10 = morte (vs 6 níveis discretos do 5.1).
   - O parâmetro `exhaustion` no `roll('d20')` / `roll('attack')` / `roll('save')` aplica o penalty automaticamente.
@@ -23,8 +23,8 @@ Baseado no [System Reference Document 5.2](https://dnd.wizards.com/resources/sys
 ## Uso
 
 ```ts
-import { register } from '@flippelt/srd-core'
-import { dnd5e2024 } from '@flippelt/srd-dnd5e-2024'
+import { register } from '@lippelt/srd-core'
+import { dnd5e2024 } from '@lippelt/srd-dnd5e-2024'
 
 register(dnd5e2024)
 ```
