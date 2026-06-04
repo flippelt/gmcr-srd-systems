@@ -1,6 +1,6 @@
-# @flippelt/srd-gumshoe
+# @lippelt/srd-gumshoe
 
-Módulo GUMSHOE (mecânica genérica) para [@flippelt/srd-core](../core).
+Módulo GUMSHOE (mecânica genérica) para [@lippelt/srd-core](../core).
 
 Baseado no [GUMSHOE SRD](https://site.pelgranepress.com/index.php/the-gumshoe-system-reference-document/) de Robin D. Laws / Pelgrane Press, sob a **Creative Commons Attribution 3.0 Unported**.
 
@@ -24,8 +24,8 @@ Settings específicos (Cthulhu Mythos, anomalies do Mutant City Blues, etc) são
 ## Uso
 
 ```ts
-import { register } from '@flippelt/srd-core'
-import { gumshoe } from '@flippelt/srd-gumshoe'
+import { register } from '@lippelt/srd-core'
+import { gumshoe } from '@lippelt/srd-gumshoe'
 
 register(gumshoe)
 ```

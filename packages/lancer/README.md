@@ -1,6 +1,6 @@
-# @flippelt/srd-lancer
+# @lippelt/srd-lancer
 
-Módulo Lancer para [@flippelt/srd-core](../core).
+Módulo Lancer para [@lippelt/srd-core](../core).
 
 > This work is not an official Lancer product; it is a third party work, and is not affiliated with Massif Press. Published via the [Lancer Third Party License](https://massifpress.com/legal).
 
@@ -23,8 +23,8 @@ Não redistribuímos texto ou arte oficial de Massif Press. As tabelas e descri�
 ## Uso
 
 ```ts
-import { register } from '@flippelt/srd-core'
-import { lancer } from '@flippelt/srd-lancer'
+import { register } from '@lippelt/srd-core'
+import { lancer } from '@lippelt/srd-lancer'
 
 register(lancer)
 ```
