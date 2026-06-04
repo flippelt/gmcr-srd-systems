@@ -1,7 +1,7 @@
 {
-  "name": "@flippelt/srd-core",
+  "name": "@flippelt/srd-dnd5e-2024",
   "version": "0.1.0",
-  "description": "Plugin core for tabletop RPG system modules (types + registry). Each system ships in its own package.",
+  "description": "D&D 5e (2024) system module for @flippelt/srd-core — SRD 5.2, CC-BY 4.0",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -33,6 +33,12 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/flippelt/gmcr-srd-systems.git",
-    "directory": "packages/core"
+    "directory": "packages/dnd5e-2024"
+  },
+  "peerDependencies": {
+    "@flippelt/srd-core": "^0.1.0"
+  },
+  "devDependencies": {
+    "@flippelt/srd-core": "*"
   }
 }

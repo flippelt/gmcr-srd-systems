@@ -1,10 +1,10 @@
 /**
- * @gmcr/srd-core — contrato + registry para sistemas RPG plugáveis.
+ * @flippelt/srd-core — contrato + registry para sistemas RPG plugáveis.
  *
  * Padrão de uso (lado do consumidor):
  *
- *   import { register, getSystem } from '@gmcr/srd-core'
- *   import { dnd5e2014 } from '@gmcr/srd-dnd5e-2014'
+ *   import { register, getSystem } from '@flippelt/srd-core'
+ *   import { dnd5e2014 } from '@flippelt/srd-dnd5e-2014'
  *
  *   register(dnd5e2014)
  *   const sys = getSystem('dnd5e-2014')  // System | null

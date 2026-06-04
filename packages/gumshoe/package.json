@@ -1,7 +1,7 @@
 {
-  "name": "@gmcr/srd-gumshoe",
+  "name": "@flippelt/srd-gumshoe",
   "version": "0.1.0",
-  "description": "GUMSHOE system module for @gmcr/srd-core — investigative & general ability mechanics, CC-BY 3.0",
+  "description": "GUMSHOE system module for @flippelt/srd-core — investigative & general ability mechanics, CC-BY 3.0",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -36,9 +36,9 @@
     "directory": "packages/gumshoe"
   },
   "peerDependencies": {
-    "@gmcr/srd-core": "^0.1.0"
+    "@flippelt/srd-core": "^0.1.0"
   },
   "devDependencies": {
-    "@gmcr/srd-core": "*"
+    "@flippelt/srd-core": "*"
   }
 }
