@@ -1,6 +1,13 @@
 /**
- * Entrypoint principal — exporta o contrato e um registry de sistemas
- * conhecidos (carregados sob demanda).
+ * @gmcr/srd-core — contrato + registry para sistemas RPG plugáveis.
+ *
+ * Padrão de uso (lado do consumidor):
+ *
+ *   import { register, getSystem } from '@gmcr/srd-core'
+ *   import { dnd5e2014 } from '@gmcr/srd-dnd5e-2014'
+ *
+ *   register(dnd5e2014)
+ *   const sys = getSystem('dnd5e-2014')  // System | null
  */
 
 export type {
@@ -15,24 +22,34 @@ export type {
 
 import type { System, SystemId } from './types.js'
 
+const registry = new Map<SystemId, System>()
+
 /**
- * Resolve um sistema pelo id. Cada sistema é importado dinamicamente
- * pra que o consumidor só carregue o que usa (tree-shaking + lazy).
- *
- * Sistemas não suportados ainda retornam null.
+ * Registra um sistema. Idempotente: registrar o mesmo `system` (mesma
+ * referência) duas vezes é no-op. Registrar uma instância DIFERENTE com
+ * id já existente lança erro — proteção contra conflitos.
  */
-export async function getSystem(id: SystemId): Promise<System | null> {
-  switch (id) {
-    case 'dnd5e-2014': {
-      const mod = await import('./systems/dnd5e-2014.js')
-      return mod.dnd5e2014
-    }
-    default:
-      return null
+export function register(system: System): void {
+  const existing = registry.get(system.id)
+  if (existing && existing !== system) {
+    throw new Error(
+      `[gmcr-srd-core] sistema "${system.id}" já registrado por outra instância`,
+    )
   }
+  registry.set(system.id, system)
 }
 
-/** Lista os ids de sistemas com implementação disponível. */
-export function availableSystems(): SystemId[] {
-  return ['dnd5e-2014']
+/** Resolve um sistema pelo id, ou null se não registrado. */
+export function getSystem(id: SystemId): System | null {
+  return registry.get(id) ?? null
+}
+
+/** Lista os ids de sistemas atualmente registrados. */
+export function listRegisteredSystems(): SystemId[] {
+  return [...registry.keys()]
+}
+
+/** Remove todos os registros. Útil em testes; raro em produção. */
+export function clearRegistry(): void {
+  registry.clear()
 }

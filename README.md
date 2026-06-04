@@ -1,52 +1,66 @@
-# @gmcr/srd-systems
+# @gmcr/srd-core
 
-Bundles de regras, presets de dados e condições para sistemas de RPG de mesa, consumido pelo [GM Control Room](https://github.com/flippelt/gm-control-room).
+Contrato e registry para sistemas RPG plugáveis, consumido pelo [GM Control Room](https://github.com/flippelt/gm-control-room).
 
-## Sistemas suportados
+**Este pacote não inclui nenhum sistema.** Cada sistema vive em seu próprio repositório/pacote — você instala apenas os que sua mesa usa.
 
-| ID            | Nome                            | Fonte das regras  | Licença do conteúdo |
-| ------------- | ------------------------------- | ----------------- | ------------------- |
-| `dnd5e-2014`  | Dungeons & Dragons 5e (2014)    | SRD 5.1           | CC-BY 4.0 (WotC)    |
+## Pacotes de sistema disponíveis
 
-Sistemas adicionais com conteúdo proprietário (V5, Blade Runner, Fallout, W&G, Imperium Maledictum, Cyberpunk RED) vivem em um pacote privado separado.
+| Pacote                          | Sistema                       | Status |
+| ------------------------------- | ----------------------------- | ------ |
+| [`@gmcr/srd-dnd5e-2014`](https://github.com/flippelt/gmcr-srd-dnd5e-2014) | D&D 5e (SRD 5.1, CC-BY 4.0) | ativo |
+
+Sistemas adicionais (Lancer, GUMSHOE, Vampire V5, Blade Runner, Fallout, Wrath & Glory, Imperium Maledictum, Cyberpunk RED) ainda não publicados.
 
 ## Instalação
 
 ```bash
-npm install @gmcr/srd-systems
+npm install @gmcr/srd-core @gmcr/srd-dnd5e-2014
 ```
 
 ## Uso
 
 ```ts
-import { getSystem } from '@gmcr/srd-systems'
+import { register, getSystem } from '@gmcr/srd-core'
+import { dnd5e2014 } from '@gmcr/srd-dnd5e-2014'
 
-const dnd = await getSystem('dnd5e-2014')
-if (!dnd) throw new Error('sistema não disponível')
+// Uma vez, no bootstrap do app:
+register(dnd5e2014)
 
-// Presets de dados pra UI
-console.log(dnd.dicePresets)
+// Em qualquer ponto que precise das regras/presets:
+const sys = getSystem('dnd5e-2014')
+if (!sys) throw new Error('sistema não registrado')
 
-// Rolar um ataque
-const attack = dnd.rules!.roll!('attack', {
+const attack = sys.rules!.roll!('attack', {
   modifier: 5,
   targetAC: 18,
   advantage: true,
 })
-console.log(attack)
-// { rolls: [..], total: .., notes: ['vantagem', 'acertou'] }
 ```
 
-## Estrutura
+## Para autores de novos sistemas
 
-Cada sistema implementa o contrato `System` (em [src/types.ts](src/types.ts)):
+Implemente o contrato `System` de [`src/types.ts`](src/types.ts):
 
-- `dicePresets` — botões de rolagem rápida específicos do sistema
-- `conditions` — condições/status com descrição
-- `trackerFields` — campos numéricos extras no tracker (ex: AC no D&D, Hunger no V5)
-- `rules.roll(kind, params)` — rolagens automatizadas
-- `rules.applyDamage(amount, target)` — redução de dano (resistência, vulnerabilidade, imunidade)
+```ts
+import type { System } from '@gmcr/srd-core'
+
+export const meuSistema: System = {
+  id: 'meu-sistema',
+  name: 'Meu Sistema',
+  ruleVersion: '1.0',
+  dicePresets: [...],
+  conditions: [...],
+  trackerFields: [...],
+  rules: {
+    roll: (kind, params) => { /* ... */ },
+    applyDamage: (incoming, target) => { /* ... */ },
+  },
+}
+```
+
+Publique em um pacote separado (`@vendor/srd-meu-sistema`) e o consumidor faz `register(meuSistema)`.
 
 ## Licença
 
-MIT (código). Conteúdo derivado de SRDs mantém sua atribuição original — ver [LICENSE](LICENSE) e o cabeçalho de cada módulo de sistema.
+[MIT](LICENSE). Conteúdo derivado de SRDs em pacotes de sistema individuais mantém atribuição própria.
