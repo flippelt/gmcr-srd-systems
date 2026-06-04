@@ -116,7 +116,7 @@ function rollPool(params: PoolParams): RollResult & { breakdown: PoolBreakdown }
 
 function rollResistance(params: PoolParams): RollResult & { breakdown: PoolBreakdown } {
   const r = rollPool(params)
-  const notes: string[] = [...r.notes]
+  const notes: string[] = [...(r.notes ?? [])]
   // Substituir/anotar interpretação de resistance:
   notes.push(
     r.breakdown.outcome === 'clean'

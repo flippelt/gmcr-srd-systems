@@ -114,7 +114,7 @@ describe('system bundle', () => {
   it('roll("resistance") delega ao resistance', () => {
     setRoller(fixedRoller(4))
     const r = candelaObscura.rules!.roll!('resistance', { pool: 1 })!
-    expect(r.notes.some((n) => n.startsWith('resistance:'))).toBe(true)
+    expect(r.notes!.some((n) => n.startsWith('resistance:'))).toBe(true)
   })
 
   it('roll("desconhecido") retorna null', () => {
