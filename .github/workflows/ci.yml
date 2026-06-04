@@ -44,8 +44,8 @@ jobs:
       - name: Smoke — assert key files generated
         run: |
           test -f dist/index.js || (echo "missing dist/index.js"; exit 1)
+          test -f dist/index.cjs || (echo "missing dist/index.cjs"; exit 1)
           test -f dist/index.d.ts || (echo "missing dist/index.d.ts"; exit 1)
-          test -f dist/systems/dnd5e-2014.js || (echo "missing dnd5e-2014.js"; exit 1)
 
       - name: Audit (high/critical only)
         run: npm audit --audit-level=high
