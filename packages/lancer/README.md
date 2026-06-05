@@ -2,23 +2,23 @@
 
 Módulo Lancer para [@lippelt/srd-core](../core).
 
-> This work is not an official Lancer product; it is a third party work, and is not affiliated with Massif Press. Published via the [Lancer Third Party License](https://massifpress.com/legal).
+> Lancer™ é trademark da Massif Press. Este trabalho não é um produto oficial de Lancer; é um trabalho de terceiros, publicado sob a [Lancer Third Party License](https://massifpress.com/legal). Lancer não tem tradução oficial PT-BR — os rótulos das condições mantêm os nomes originais em inglês (Impaired, Slowed etc) com explicação em PT-BR no resumo.
 
 ## O que inclui
 
-- **Dice presets** — d20, d6/2d6/3d6/4d6, d3, "structure", "stress"
-- **12 status conditions** (Impaired, Slowed, Immobilized, Lock On, Engaged, Stunned, Prone, Invisible, Shutdown, Hidden, Danger Zone, Burn) — nomes oficiais, resumos próprios
-- **Tracker fields** — Structure (0-4), Stress (0-4), Heat, Armor (0-4), Evasion, E-Defense
-- **Rules automatizadas:**
-  - `roll('check' | 'skill', { modifier, accuracy?, difficulty? })` — d20 + acc/diff (cancelam 1-1; rola pelo líquido, pega maior pra acc / menor pra diff)
-  - `roll('attack', { modifier, targetDefense?, accuracy?, difficulty? })` — d20 vs Evasion/E-Defense; crit em 20 natural
-  - `roll('damage', { count, sides, modifier, type?, armor? })` — armor reduz kinetic/energy/explosive, ignora burn/heat
-  - `roll('structure', {})` / `roll('stress', {})` — d6 nas tabelas de dano estrutural / de reator
-  - `applyDamage(amount, { type, armor })` — mesma redução do damage roll
+- **Presets de dados** — d20, d6/2d6/3d6/4d6, d3, "structure" (estrutura), "stress" (estresse)
+- **12 condições de status** (Impaired, Slowed, Immobilized, Lock On, Engaged, Stunned, Prone, Invisible, Shutdown, Hidden, Danger Zone, Burn) — nomes oficiais, resumos próprios em PT-BR.
+- **Campos de status** — Structure (0–4), Stress (0–4), Heat, Armor (0–4), Evasion, E-Defense
+- **Regras automatizadas:**
+  - `roll('check' | 'skill', { modifier, accuracy?, difficulty? })` — d20 + Accuracy/Difficulty (cancelam 1-1; rola o líquido, pega o maior pra accuracy / o menor pra difficulty).
+  - `roll('attack', { modifier, targetDefense?, accuracy?, difficulty? })` — d20 vs Evasion/E-Defense; crítico em 20 natural.
+  - `roll('damage', { count, sides, modifier, type?, armor? })` — Armor reduz dano cinético/energético/explosivo; ignora burn/heat.
+  - `roll('structure', {})` / `roll('stress', {})` — d6 nas tabelas de dano estrutural / de reator.
+  - `applyDamage(amount, { type, armor })` — mesma redução da rolagem de dano.
 
 ## Não inclui (3PP License)
 
-Não redistribuímos texto ou arte oficial de Massif Press. As tabelas e descrições de condições são paráfrases mecânicas escritas do zero. Para regras detalhadas use o Lancer Core Book.
+Não redistribuímos texto ou arte oficial da Massif Press. As tabelas e descrições de condições são paráfrases mecânicas escritas do zero. Para regras detalhadas use o Lancer Core Book.
 
 ## Uso
 

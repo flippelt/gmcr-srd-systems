@@ -1,6 +1,6 @@
 {
   "name": "@lippelt/srd-dnd5e-2014",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "D&D 5e (2014) system module for @lippelt/srd-core — SRD 5.1, CC-BY 4.0",
   "type": "module",
   "main": "./dist/index.cjs",

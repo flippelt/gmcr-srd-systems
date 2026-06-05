@@ -1,8 +1,8 @@
 # @lippelt/srd-core
 
-Contrato + registry para sistemas de RPG plugáveis. Cada sistema (D&D 5e, Pathfinder, Lancer, etc) ships como seu próprio pacote (`@lippelt/srd-*`), implementando o contrato `System` definido aqui.
+Contrato + registro para sistemas de RPG plugáveis. Cada sistema (D&D 5e, Pathfinder, Lancer etc) é distribuído como seu próprio pacote (`@lippelt/srd-*`), implementando o contrato `System` definido aqui.
 
-Pensado pra ser consumido por painéis de mesa, ferramentas de jogo e VTTs leves — agnóstico de UI.
+Pensado para ser consumido por painéis de mesa, ferramentas de jogo e VTTs leves — **agnóstico de UI**.
 
 ## Instalação
 
@@ -26,9 +26,9 @@ const result = sys?.rules?.roll?.('attack', { modifier: 5, targetAC: 18, advanta
 ## API
 
 - `register(system: System): void` — registra um sistema. Idempotente (mesma referência); colisão de id com instância diferente lança erro.
-- `getSystem(id: SystemId): System | null` — resolve sync; retorna `null` se não registrado.
+- `getSystem(id: SystemId): System | null` — resolve síncrono; retorna `null` se não registrado.
 - `listRegisteredSystems(): SystemId[]` — todos os ids atualmente registrados.
-- `clearRegistry(): void` — limpa o registry (útil em testes).
+- `clearRegistry(): void` — limpa o registro (útil em testes).
 
 ## Contrato `System`
 
@@ -41,13 +41,15 @@ interface System {
   dicePresets: DicePreset[]
   conditions: ConditionDef[]
   trackerFields: TrackerField[]
-  rules?: SystemRules    // opcional — rolls customizados (advantage, crit, damage)
+  rules?: SystemRules    // opcional — rolagens customizadas (vantagem, crítico, dano)
 }
 ```
 
+> Os nomes dos campos no contrato permanecem em inglês por serem identificadores de código (consumidos por TypeScript em qualquer idioma de projeto).
+
 ### `DicePreset`
 
-Botões rápidos de rolagem por categoria (`check`, `attack`, `damage`, `save`, `special`):
+Botões de rolagem rápida por categoria (`check`, `attack`, `damage`, `save`, `special`):
 
 ```ts
 { id: 'd20-adv', label: 'd20 com vantagem', notation: '2d20kh1', category: 'check' }
@@ -55,10 +57,10 @@ Botões rápidos de rolagem por categoria (`check`, `attack`, `damage`, `save`, 
 
 ### `ConditionDef`
 
-Status/condições do sistema:
+Condições/estados do sistema:
 
 ```ts
-{ id: 'poisoned', label: 'Envenenado', summary: 'Desvantagem em ataques e testes de atributo.' }
+{ id: 'poisoned', label: 'Envenenado', summary: 'Desvantagem em ataques e testes de habilidade.' }
 ```
 
 ### `TrackerField`
@@ -72,7 +74,7 @@ Campos numéricos/booleanos extras por combatente:
 
 ### `SystemRules` (opcional)
 
-Funções puras de roll/dano que vão além da notação `NdM±K`:
+Funções puras de rolagem/dano que vão além da notação `NdM±K`:
 
 ```ts
 rules?: {

@@ -10,20 +10,22 @@ Cada sistema é um pacote npm publicado independentemente — você instala só 
 
 | Pacote | Versão | Sistema | Licença do conteúdo |
 | --- | --- | --- | --- |
-| [`@lippelt/srd-core`](packages/core) | [`0.1.1`](https://www.npmjs.com/package/@lippelt/srd-core) | Contrato + registry | MIT |
-| [`@lippelt/srd-dnd-3.5`](packages/dnd-3.5) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-dnd-3.5) | D&D 3.5 — SRD 3.5 | OGL 1.0a (WotC) |
-| [`@lippelt/srd-dnd5e-2014`](packages/dnd5e-2014) | [`0.1.1`](https://www.npmjs.com/package/@lippelt/srd-dnd5e-2014) | D&D 5e (2014) — SRD 5.1 | CC-BY 4.0 (WotC) |
-| [`@lippelt/srd-dnd5e-2024`](packages/dnd5e-2024) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-dnd5e-2024) | D&D 5e (2024) — SRD 5.2 | CC-BY 4.0 (WotC) |
-| [`@lippelt/srd-pathfinder-1e`](packages/pathfinder-1e) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-pathfinder-1e) | Pathfinder 1e — PRD | OGL 1.0a (Paizo) |
-| [`@lippelt/srd-pathfinder-2e`](packages/pathfinder-2e) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-pathfinder-2e) | Pathfinder 2e — PRD | ORC License (Paizo) |
-| [`@lippelt/srd-starfinder-1e`](packages/starfinder-1e) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-starfinder-1e) | Starfinder 1e — SRD | OGL 1.0a (Paizo) |
-| [`@lippelt/srd-starfinder-2e`](packages/starfinder-2e) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-starfinder-2e) | Starfinder 2e — SRD | ORC License (Paizo) |
-| [`@lippelt/srd-lancer`](packages/lancer) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-lancer) | Lancer (Massif Press) | Lancer 3PP License |
-| [`@lippelt/srd-gumshoe`](packages/gumshoe) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-gumshoe) | GUMSHOE (Pelgrane Press) | CC-BY 3.0 |
-| [`@lippelt/srd-daggerheart`](packages/daggerheart) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-daggerheart) | Daggerheart (Darrington Press) | DPCGL |
-| [`@lippelt/srd-candela-obscura`](packages/candela-obscura) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-candela-obscura) | Candela Obscura (Darrington Press) | DPCGL |
+| [`@lippelt/srd-core`](packages/core) | [`0.1.2`](https://www.npmjs.com/package/@lippelt/srd-core) | Contrato + registro | MIT |
+| [`@lippelt/srd-dnd-3.5`](packages/dnd-3.5) | [`0.1.1`](https://www.npmjs.com/package/@lippelt/srd-dnd-3.5) | D&D 3.5 — SRD 3.5 | OGL 1.0a (WotC) |
+| [`@lippelt/srd-dnd5e-2014`](packages/dnd5e-2014) | [`0.1.2`](https://www.npmjs.com/package/@lippelt/srd-dnd5e-2014) | D&D 5e (2014) — SRD 5.1 | CC-BY 4.0 (WotC) |
+| [`@lippelt/srd-dnd5e-2024`](packages/dnd5e-2024) | [`0.1.1`](https://www.npmjs.com/package/@lippelt/srd-dnd5e-2024) | D&D 5e (2024) — SRD 5.2 | CC-BY 4.0 (WotC) |
+| [`@lippelt/srd-pathfinder-1e`](packages/pathfinder-1e) | [`0.1.1`](https://www.npmjs.com/package/@lippelt/srd-pathfinder-1e) | Pathfinder 1e — PRD | OGL 1.0a (Paizo) |
+| [`@lippelt/srd-pathfinder-2e`](packages/pathfinder-2e) | [`0.1.1`](https://www.npmjs.com/package/@lippelt/srd-pathfinder-2e) | Pathfinder 2e — PRD | ORC License (Paizo) |
+| [`@lippelt/srd-starfinder-1e`](packages/starfinder-1e) | [`0.1.1`](https://www.npmjs.com/package/@lippelt/srd-starfinder-1e) | Starfinder 1e — SRD | OGL 1.0a (Paizo) |
+| [`@lippelt/srd-starfinder-2e`](packages/starfinder-2e) | [`0.1.1`](https://www.npmjs.com/package/@lippelt/srd-starfinder-2e) | Starfinder 2e — SRD | ORC License (Paizo) |
+| [`@lippelt/srd-lancer`](packages/lancer) | [`0.1.1`](https://www.npmjs.com/package/@lippelt/srd-lancer) | Lancer (Massif Press) | Lancer 3PP License |
+| [`@lippelt/srd-gumshoe`](packages/gumshoe) | [`0.1.1`](https://www.npmjs.com/package/@lippelt/srd-gumshoe) | GUMSHOE (Pelgrane Press) | CC-BY 3.0 |
+| [`@lippelt/srd-daggerheart`](packages/daggerheart) | [`0.1.1`](https://www.npmjs.com/package/@lippelt/srd-daggerheart) | Daggerheart (Darrington Press) | DPCGL |
+| [`@lippelt/srd-candela-obscura`](packages/candela-obscura) | [`0.1.1`](https://www.npmjs.com/package/@lippelt/srd-candela-obscura) | Candela Obscura (Darrington Press) | DPCGL |
 
-**11 sistemas implementados** + core. Cada um modela só mecânicas (dice, condições, modificadores derivados, tracker fields) — **sem spells/classes/monstros/items específicos**, que devem vir do livro ou de uma camada superior.
+**11 sistemas implementados** + core. Cada um modela só mecânicas (dados, condições, modificadores derivados, campos de status) — **sem magias, classes, monstros ou itens específicos**, que devem vir do livro ou de uma camada superior.
+
+Termos em PT-BR seguem traduções oficiais quando existem (Galápagos pra D&D 5e, Devir pra D&D 3.5 e Pathfinder/Starfinder); sistemas sem tradução oficial PT-BR (Lancer, GUMSHOE, Daggerheart, Candela Obscura) usam termos próprios — ver README de cada pacote.
 
 ## Instalação (consumidor)
 
@@ -55,7 +57,7 @@ interface System {
   dicePresets: DicePreset[]
   conditions: ConditionDef[]
   trackerFields: TrackerField[]
-  rules?: SystemRules    // opcional — rolls customizados (advantage, crit, etc)
+  rules?: SystemRules    // opcional — rolagens customizadas (vantagem, crítico etc)
 }
 ```
 
@@ -85,8 +87,8 @@ Stack: TypeScript 5.7, tsup (ESM + CJS + .d.ts), vitest, npm workspaces.
 Cada pacote tem seu próprio `version` em `packages/*/package.json`. Releases são acionados por **tags** no formato `<pacote>@v<versão>`:
 
 ```
-core@v0.1.1
-dnd5e-2014@v0.1.1
+core@v0.1.2
+dnd5e-2014@v0.1.2
 lancer@v0.1.5
 ```
 

@@ -1,6 +1,6 @@
 {
   "name": "@lippelt/srd-dnd-3.5",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "D&D 3.5 system module for @lippelt/srd-core — SRD 3.5, OGL 1.0a",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -13,8 +13,14 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist", "README.md", "LICENSE"],
-  "publishConfig": { "access": "public" },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -29,6 +35,10 @@
     "url": "git+https://github.com/flippelt/gmcr-srd-systems.git",
     "directory": "packages/dnd-3.5"
   },
-  "peerDependencies": { "@lippelt/srd-core": "^0.1.0" },
-  "devDependencies": { "@lippelt/srd-core": "*" }
+  "peerDependencies": {
+    "@lippelt/srd-core": "^0.1.0"
+  },
+  "devDependencies": {
+    "@lippelt/srd-core": "*"
+  }
 }

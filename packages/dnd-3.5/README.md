@@ -2,19 +2,19 @@
 
 Módulo D&D 3.5 para [`@lippelt/srd-core`](../core).
 
-Baseado no [System Reference Document 3.5](https://www.opengamingfoundation.org/) sob a **Open Game License v1.0a**.
+> Dungeons & Dragons® é trademark da Wizards of the Coast LLC. Mecânica derivada do [System Reference Document 3.5](https://www.opengamingfoundation.org/) sob a **Open Game License v1.0a**.
 
-## Bundle
+## O que inclui
 
-- **7 dice presets** — d20, d4–d12, d100
-- **24 conditions** SRD 3.5 (Blinded, Cowering, Dazed, Dying, Frightened, Grappled, Helpless, Panicked, Paralyzed, Petrified, Pinned, Prone, Shaken, Sickened, Stunned, etc)
-- **5 tracker fields** — CA, Fort, Ref, Will, BAB
-- **Rules:**
-  - `roll('d20'/'check'/'ability'/'skill', { modifier })` — d20 + mod, anota 20/1 natural
-  - `roll('attack', { modifier, targetAC, critRange? })` — vs AC, marca crit (20 nat auto + threat range)
-  - `roll('save', { modifier, dc })` — 20 nat auto-passa, 1 nat auto-falha
-  - `roll('damage', { count, sides, modifier, critMultiplier? })` — multiplica dados em crit (×2/×3/×4)
-- **Helpers:** `abilityMod`, `spellSaveDC`
+- **7 presets de dados** — d20, d4–d12, d100
+- **24 condições** do SRD 3.5 (Cego, Encolhido, Pasmo, Morrendo, Amedrontado, Agarrado, Indefeso, Em Pânico, Paralisado, Petrificado, Imobilizado, Caído, Abalado, Enojado, Aturdido etc — nomes em inglês no `id`, rótulos em PT-BR seguindo a tradução Devir).
+- **5 campos de status** — CA, Fort, Ref, Vontade, BBA
+- **Regras automatizadas:**
+  - `roll('d20'/'check'/'ability'/'skill', { modifier })` — d20 + modificador, anota 20/1 natural.
+  - `roll('attack', { modifier, targetAC, critRange? })` — ataque vs CA, marca crítico (20 natural sempre ameaça + faixa de ameaça).
+  - `roll('save', { modifier, dc })` — teste de resistência; 20 natural passa, 1 natural falha automaticamente.
+  - `roll('damage', { count, sides, modifier, critMultiplier? })` — multiplica os dados em crítico (×2/×3/×4).
+- **Utilitários:** `abilityMod`, `spellSaveDC`
 
 ## Uso
 
@@ -27,4 +27,4 @@ register(dnd35)
 
 ## Licença
 
-[MIT](LICENSE). Conteúdo do SRD 3.5 sob OGL 1.0a.
+[MIT](LICENSE) (código). Conteúdo do SRD 3.5 sob OGL 1.0a.

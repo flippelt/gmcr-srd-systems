@@ -1,6 +1,6 @@
 {
   "name": "@lippelt/srd-candela-obscura",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Candela Obscura / Illuminated Worlds system module for @lippelt/srd-core — DPCGL, Darrington Press",
   "type": "module",
   "main": "./dist/index.cjs",
