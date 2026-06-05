@@ -2,23 +2,23 @@
 
 Módulo Candela Obscura / Illuminated Worlds para [`@lippelt/srd-core`](../core).
 
-> Candela Obscura™ é trademark da [Darrington Press LLC](https://darringtonpress.com/). Mecânica derivada do sistema Illuminated Worlds sob a [Darrington Press Community Gaming License (DPCGL)](https://darringtonpress.com/license/).
+> Candela Obscura™ é trademark da [Darrington Press LLC](https://darringtonpress.com/). Mecânica derivada do sistema Illuminated Worlds sob a [Darrington Press Community Gaming License (DPCGL)](https://darringtonpress.com/license/). Candela Obscura não tem tradução oficial PT-BR; usamos termos próprios.
 
 ## O que inclui
 
-- **Dice pool d6 (take highest)** — `roll('check' | 'action' | 'pool', { pool, gilded? })`
+- **Reserva de dados d6 (take highest)** — `roll('check' | 'action' | 'pool', { pool, gilded? })`
   - `6` → `clean` (sucesso pleno)
   - `4-5` → `partial` (sucesso com custo)
-  - `1-3` → `failure`
-  - `gilded: true` anota recuperação de 1 Drive
-- **Resistance roll** — `roll('resistance', { pool })` interpreta o outcome em termos de redução de consequência (-0/-1/-2 Drive)
-- **6 conditions** — Bleeding, Shaken, Hunted, Illuminated, Compromised, Exhausted
-- **7 tracker fields:** bodyMarks/brainMarks/bleedMarks (0..3 cada), scars (0..9), drive em 3 grupos (Nerve, Cunning, Intuition)
-- **Dice presets:** pool 1..6 + resistance
+  - `1-3` → `failure` (falha)
+  - `gilded: true` anota a recuperação de 1 Impulso (Drive).
+- **Rolagem de resistência** — `roll('resistance', { pool })` interpreta o resultado em termos de redução de consequência (−0/−1/−2 Impulso).
+- **6 condições** — Sangrando, Abalado, Caçado, Iluminado, Comprometido, Exausto (Bleeding, Shaken, Hunted, Illuminated, Compromised, Exhausted).
+- **7 campos de status** — bodyMarks/brainMarks/bleedMarks (marcas no corpo / mentais / de sangramento, 0..3 cada), cicatrizes (0..9), Impulso em 3 grupos (Coragem, Astúcia, Intuição).
+- **Presets de dados** — reserva 1..6 + resistência.
 
 ## Não inclui
 
-Setting (Newfaire, Capítulos da Candela, lore), nomes de NPCs, conteúdo de campaign. Use o livro/SRD oficial pra esse material.
+Setting (Newfaire, capítulos da Candela, lore), nomes de NPCs, conteúdo de campanha. Use o livro/SRD oficial pra esse material.
 
 ## Uso
 

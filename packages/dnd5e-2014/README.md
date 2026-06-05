@@ -2,25 +2,21 @@
 
 Módulo Dungeons & Dragons 5ª Edição (2014) para [`@lippelt/srd-core`](../core).
 
-> D&D® é trademark da Wizards of the Coast LLC. Este pacote usa mecânicas do [System Reference Document 5.1](https://dnd.wizards.com/resources/systems-reference-document) sob a [Creative Commons Attribution 4.0 International License (CC-BY 4.0)](https://creativecommons.org/licenses/by/4.0/legalcode).
+> D&D® é trademark da Wizards of the Coast LLC. Este pacote usa mecânicas do [System Reference Document 5.1](https://dnd.wizards.com/resources/systems-reference-document) sob a [Creative Commons Attribution 4.0 International License (CC-BY 4.0)](https://creativecommons.org/licenses/by/4.0/legalcode). Termos em PT-BR seguem a tradução oficial Galápagos Jogos.
 
 ## O que inclui
 
-- **d20 com vantagem/desvantagem** — `roll('check' | 'd20', { modifier, advantage?, disadvantage? })`. Vantagem e desvantagem se cancelam (regra SRD).
-- **Attack roll vs AC** — `roll('attack', { modifier, targetAC?, advantage?, disadvantage? })`. Crítico natural 20 sempre acerta; 1 sempre erra.
-- **Saving throw** — `roll('save', { modifier, dc?, advantage?, disadvantage? })`.
-- **Damage roll** — `roll('damage', { count, sides, modifier, critical? })`. `critical: true` dobra os dados.
-- **Helpers exportados**:
+- **d20 com vantagem/desvantagem** — `roll('check' | 'd20', { modifier, advantage?, disadvantage? })`. Vantagem e desvantagem se cancelam (regra do SRD).
+- **Rolagem de ataque vs CA** — `roll('attack', { modifier, targetAC?, advantage?, disadvantage? })`. 20 natural sempre acerta; 1 natural sempre erra.
+- **Teste de resistência** — `roll('save', { modifier, dc?, advantage?, disadvantage? })`.
+- **Rolagem de dano** — `roll('damage', { count, sides, modifier, critical? })`. `critical: true` dobra os dados.
+- **Utilitários exportados:**
   - `abilityMod(score)` — `floor((score - 10) / 2)`
   - `spellSaveDC(proficiency, casterMod)` — `8 + prof + mod`
   - `spellAttackBonus(proficiency, casterMod)` — `prof + mod`
-- **20 conditions** — Blinded, Charmed, Deafened, Exhaustion (níveis 1–6), Frightened, Grappled, Incapacitated, Invisible, Paralyzed, Petrified, Poisoned, Prone, Restrained, Stunned, Unconscious.
-- **3 tracker fields** — AC (Classe de Armadura), Death Successes ✓, Death Failures ✗.
-- **9 dice presets** — d20, d20 advantage/disadvantage, d4/d6/d8/d10/d12 (damage), d100.
-
-## Não inclui
-
-Spells, classes, races, monstros, items específicos — esse conteúdo deve vir do livro/SRD oficial ou de uma camada acima (compendium do consumidor). Este pacote modela só **mecânicas** (dice, condições, modificadores derivados).
+- **20 condições** — Cego, Enfeitiçado, Surdo, Exaustão (níveis 1–6), Amedrontado, Agarrado, Incapacitado, Invisível, Paralisado, Petrificado, Envenenado, Caído, Contido, Atordoado, Inconsciente.
+- **3 campos de status** — CA (Classe de Armadura), Mortes ✓, Mortes ✗.
+- **9 presets de dados** — d20, d20 com vantagem/desvantagem, d4/d6/d8/d10/d12 (dano), d100.
 
 ## Uso
 
@@ -32,12 +28,12 @@ register(dnd5e2014)
 
 const sys = getSystem('dnd5e-2014')!
 
-// Attack roll com vantagem contra CA 16
+// Ataque com vantagem contra CA 16
 const atk = sys.rules!.roll!('attack', { modifier: 6, targetAC: 16, advantage: true })
 // → { total: 24, notes: ['vantagem', 'acertou (CA 16)'], ... }
 
-// DC de feitiço pra um warlock CHA 18 com proficiência +3
-const dc = spellSaveDC(3, abilityMod(18))   // 14
+// CD de magia pra um warlock CAR 18 com proficiência +3
+const cd = spellSaveDC(3, abilityMod(18))   // 14
 ```
 
 ## Testes determinísticos

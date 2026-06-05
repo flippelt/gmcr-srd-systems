@@ -2,26 +2,26 @@
 
 Módulo Starfinder 2ª Edição para [`@lippelt/srd-core`](../core).
 
-Baseado no [Starfinder Second Edition Reference Document](https://paizo.com/community/communityuse) sob a [ORC License](https://paizo.com/orclicense).
+> Starfinder® é trademark da Paizo Inc. Mecânica derivada do [Starfinder Second Edition Reference Document](https://paizo.com/community/communityuse) sob a [ORC License](https://paizo.com/orclicense).
 
 ## O que combina
 
 SF2e une dois universos mecânicos:
 
-- **De PF2e:** degrees of success ±10 (critical success/success/failure/critical failure), proficiency ranks, 3-action economy (Quickened/Slowed valoradas), Multiple Attack Penalty (MAP).
-- **De SF1e:** EAC/KAC separadas pelo tipo do dano, Stamina Points + HP (drena SP primeiro), Resolve Points como recurso narrativo.
+- **De PF2e:** graus de sucesso ±10 (Sucesso Crítico / Sucesso / Falha / Falha Crítica), patentes de proficiência, economia de 3 ações (Acelerado/Lento valoradas), Penalidade de Múltiplos Ataques (PMA).
+- **De SF1e:** CAE/CAC separadas pelo tipo do dano, Pontos de Vigor + PV (drena Vigor primeiro), Pontos de Determinação como recurso narrativo.
 
-## Bundle
+## O que inclui
 
-- **7 dice presets** — d20, d4–d12, d100
-- **31 conditions** (Clumsy N, Frightened N, Quickened, Slowed N, Wounded N + Off-Guard e Overheated específicos do SF2)
-- **10 tracker fields** — EAC, KAC, Fort, Ref, Will, Perception, Speed, SP, RP, Hero Points
-- **Rules:**
+- **7 presets de dados** — d20, d4–d12, d100
+- **31 condições** (Desajeitado N, Amedrontado N, Acelerado, Lento N, Ferido N + Off-Guard e Superaquecido específicos do SF2).
+- **10 campos de status** — CAE, CAC, Fort, Ref, Vontade, Percepção, Velocidade, SP (Vigor), RP (Determinação), Pontos de Herói.
+- **Regras:**
   - `roll('check'/'skill'/'perception', { modifier, dc? })`
   - `roll('attack', { modifier, damageType: 'kinetic'|'energy', targetEAC?, targetKAC?, map? })`
   - `roll('save', { modifier, dc })`
-  - `roll('damage', { count, sides, modifier, damageType?, critical? })` — crit ×2
-- **Helpers:** `abilityMod`, `proficiencyBonus(rank)`, `degreeOfSuccess(total, dc, natural)`, **`applyToStaminaThenHp`**
+  - `roll('damage', { count, sides, modifier, damageType?, critical? })` — crítico ×2.
+- **Utilitários:** `abilityMod`, `proficiencyBonus(rank)`, `degreeOfSuccess(total, dc, natural)`, **`applyToStaminaThenHp`**.
 
 ## Uso
 
@@ -34,4 +34,4 @@ register(starfinder2e)
 
 ## Licença
 
-[MIT](LICENSE). Conteúdo do SF2 SRD sob ORC License.
+[MIT](LICENSE) (código). Conteúdo do SF2 SRD sob ORC License.

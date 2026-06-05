@@ -2,19 +2,19 @@
 
 Módulo Starfinder 1ª Edição para [`@lippelt/srd-core`](../core).
 
-Baseado no [Starfinder SRD](https://www.aonsrd.com/) da Paizo sob **Open Game License v1.0a**.
+> Starfinder® é trademark da Paizo Inc. Mecânica derivada do [Starfinder SRD](https://www.aonsrd.com/) sob **Open Game License v1.0a**.
 
-## Bundle
+## O que inclui
 
-- **7 dice presets** — d20, d4–d12, d100
-- **30 conditions** SRD (Asleep, Bleeding, Burning, Dazed, Dying, Encumbered, Entangled, Exhausted, Fascinated, Fatigued, Flat-Footed, Frightened, Grappled, Off-target, Paralyzed, Pinned, Sickened, Staggered, Stunned, etc)
-- **8 tracker fields** — **EAC** + **KAC** (separadas, energia vs cinético), Fort, Ref, Will, BAB, **Stamina Points**, **Resolve Points**
-- **Rules:**
+- **7 presets de dados** — d20, d4–d12, d100
+- **30 condições** do SRD (Dormindo, Sangrando, Queimando, Pasmo, Morrendo, Sobrecarregado, Enredado, Exausto, Fascinado, Fatigado, Desprevenido, Amedrontado, Agarrado, Desfocado, Paralisado, Imobilizado, Enojado, Cambaleante, Atordoado etc).
+- **8 campos de status** — **CAE** (Energia) + **CAC** (Cinética) separadas, Fort, Ref, Vontade, BBA, **Pontos de Vigor (SP)**, **Pontos de Determinação (RP)**.
+- **Regras:**
   - `roll('d20'/'check'/'ability'/'skill', { modifier })`
-  - `roll('attack', { modifier, damageType: 'kinetic'|'energy', targetEAC?, targetKAC? })` — escolhe a AC certa
+  - `roll('attack', { modifier, damageType: 'kinetic'|'energy', targetEAC?, targetKAC? })` — escolhe a CA correta conforme o tipo de dano.
   - `roll('save', { modifier, dc })`
   - `roll('damage', { count, sides, modifier, damageType? })`
-- **Helpers:** `abilityMod`, `spellSaveDC`, **`applyToStaminaThenHp`** (drena SP primeiro, sobra vai pra HP)
+- **Utilitários:** `abilityMod`, `spellSaveDC`, **`applyToStaminaThenHp`** (drena Vigor primeiro; sobra vai pra PV).
 
 ## Uso
 
@@ -27,4 +27,4 @@ register(starfinder1e)
 
 ## Licença
 
-[MIT](LICENSE). Conteúdo do Starfinder SRD sob OGL 1.0a.
+[MIT](LICENSE) (código). Conteúdo do Starfinder SRD sob OGL 1.0a.
