@@ -1,0 +1,34 @@
+{
+  "name": "@lippelt/srd-pathfinder-1e",
+  "version": "0.1.0",
+  "description": "Pathfinder 1e system module for @lippelt/srd-core — PRD, OGL 1.0a (Paizo)",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "publishConfig": { "access": "public" },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flippelt/gmcr-srd-systems.git",
+    "directory": "packages/pathfinder-1e"
+  },
+  "peerDependencies": { "@lippelt/srd-core": "^0.1.0" },
+  "devDependencies": { "@lippelt/srd-core": "*" }
+}
