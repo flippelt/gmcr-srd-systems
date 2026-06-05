@@ -1,27 +1,29 @@
 # gmcr-srd-systems
 
-Monorepo de regras, presets e condições para sistemas de RPG de mesa, consumido pelo [GM Control Room](https://github.com/flippelt/gm-control-room).
+Monorepo de regras, presets e condições para sistemas de RPG de mesa. Pensado pra ser consumido por painéis de mesa e VTTs leves — **agnóstico de UI**. Usado em produção pelo [GM Control Room](https://github.com/flippelt/gm-control-room).
 
-Cada sistema é um pacote publicável independente — você instala só os que sua mesa usa.
+Cada sistema é um pacote npm publicado independentemente — você instala só os que sua mesa usa.
 
-## Pacotes
+[![CI](https://github.com/flippelt/gmcr-srd-systems/actions/workflows/ci.yml/badge.svg)](https://github.com/flippelt/gmcr-srd-systems/actions/workflows/ci.yml)
 
-| Pacote                                                            | Versão | Sistema                       | Licença do conteúdo |
-| ----------------------------------------------------------------- | ------ | ----------------------------- | ------------------- |
-| [`@lippelt/srd-core`](packages/core)                                 | 0.1.0  | Contrato + registry           | MIT                 |
-| [`@lippelt/srd-dnd-3.5`](packages/dnd-3.5)                           | 0.1.0  | D&D 3.5 — SRD 3.5              | OGL 1.0a (WotC)     |
-| [`@lippelt/srd-dnd5e-2014`](packages/dnd5e-2014)                     | 0.1.0  | D&D 5e (2014) — SRD 5.1       | CC-BY 4.0 (WotC)    |
-| [`@lippelt/srd-dnd5e-2024`](packages/dnd5e-2024)                     | 0.1.0  | D&D 5e (2024) — SRD 5.2       | CC-BY 4.0 (WotC)    |
-| [`@lippelt/srd-pathfinder-1e`](packages/pathfinder-1e)               | 0.1.0  | Pathfinder 1e — PRD            | OGL 1.0a (Paizo)    |
-| [`@lippelt/srd-pathfinder-2e`](packages/pathfinder-2e)               | 0.1.0  | Pathfinder 2e — PRD            | ORC License (Paizo) |
-| [`@lippelt/srd-starfinder-1e`](packages/starfinder-1e)               | 0.1.0  | Starfinder 1e — SRD            | OGL 1.0a (Paizo)    |
-| [`@lippelt/srd-starfinder-2e`](packages/starfinder-2e)               | 0.1.0  | Starfinder 2e — SRD            | ORC License (Paizo) |
-| [`@lippelt/srd-lancer`](packages/lancer)                             | 0.1.0  | Lancer (Massif Press)         | Lancer 3PP License  |
-| [`@lippelt/srd-gumshoe`](packages/gumshoe)                           | 0.1.0  | GUMSHOE (Pelgrane Press)      | CC-BY 3.0           |
-| [`@lippelt/srd-daggerheart`](packages/daggerheart)                   | 0.1.0  | Daggerheart (Darrington Press) | DPCGL              |
-| [`@lippelt/srd-candela-obscura`](packages/candela-obscura)           | 0.1.0  | Candela Obscura (Darrington)  | DPCGL               |
+## Pacotes públicos
 
-**Em monorepo privado separado** (`vampire-v5`, `blade-runner`, `fallout-2d20`, `wng`, `imperium-maledictum`, `cyberpunk-red`, `ordem-paranormal`) — conteúdo proprietário do dono do livro. Ordem Paranormal pode migrar pra cá quando a Jambô oficializar a licença aberta que está estudando.
+| Pacote | Versão | Sistema | Licença do conteúdo |
+| --- | --- | --- | --- |
+| [`@lippelt/srd-core`](packages/core) | [`0.1.1`](https://www.npmjs.com/package/@lippelt/srd-core) | Contrato + registry | MIT |
+| [`@lippelt/srd-dnd-3.5`](packages/dnd-3.5) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-dnd-3.5) | D&D 3.5 — SRD 3.5 | OGL 1.0a (WotC) |
+| [`@lippelt/srd-dnd5e-2014`](packages/dnd5e-2014) | [`0.1.1`](https://www.npmjs.com/package/@lippelt/srd-dnd5e-2014) | D&D 5e (2014) — SRD 5.1 | CC-BY 4.0 (WotC) |
+| [`@lippelt/srd-dnd5e-2024`](packages/dnd5e-2024) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-dnd5e-2024) | D&D 5e (2024) — SRD 5.2 | CC-BY 4.0 (WotC) |
+| [`@lippelt/srd-pathfinder-1e`](packages/pathfinder-1e) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-pathfinder-1e) | Pathfinder 1e — PRD | OGL 1.0a (Paizo) |
+| [`@lippelt/srd-pathfinder-2e`](packages/pathfinder-2e) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-pathfinder-2e) | Pathfinder 2e — PRD | ORC License (Paizo) |
+| [`@lippelt/srd-starfinder-1e`](packages/starfinder-1e) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-starfinder-1e) | Starfinder 1e — SRD | OGL 1.0a (Paizo) |
+| [`@lippelt/srd-starfinder-2e`](packages/starfinder-2e) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-starfinder-2e) | Starfinder 2e — SRD | ORC License (Paizo) |
+| [`@lippelt/srd-lancer`](packages/lancer) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-lancer) | Lancer (Massif Press) | Lancer 3PP License |
+| [`@lippelt/srd-gumshoe`](packages/gumshoe) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-gumshoe) | GUMSHOE (Pelgrane Press) | CC-BY 3.0 |
+| [`@lippelt/srd-daggerheart`](packages/daggerheart) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-daggerheart) | Daggerheart (Darrington Press) | DPCGL |
+| [`@lippelt/srd-candela-obscura`](packages/candela-obscura) | [`0.1.0`](https://www.npmjs.com/package/@lippelt/srd-candela-obscura) | Candela Obscura (Darrington Press) | DPCGL |
+
+**11 sistemas implementados** + core. Cada um modela só mecânicas (dice, condições, modificadores derivados, tracker fields) — **sem spells/classes/monstros/items específicos**, que devem vir do livro ou de uma camada superior.
 
 ## Instalação (consumidor)
 
@@ -37,24 +39,46 @@ register(dnd5e2014)
 
 const sys = getSystem('dnd5e-2014')!
 const result = sys.rules!.roll!('attack', { modifier: 5, targetAC: 18, advantage: true })
+// → { rolls: [18, 4], modifier: 5, total: 23, notation: '2d20kh1+5', notes: ['vantagem', 'acertou (CA 18)'] }
 ```
+
+Cada pacote tem seu próprio README com a API completa — abra na npmjs.com pelo link da tabela acima.
+
+## Contrato `System`
+
+```ts
+interface System {
+  id: string
+  name: string
+  ruleVersion: string
+  attribution: string
+  dicePresets: DicePreset[]
+  conditions: ConditionDef[]
+  trackerFields: TrackerField[]
+  rules?: SystemRules    // opcional — rolls customizados (advantage, crit, etc)
+}
+```
+
+Tudo em `@lippelt/srd-core`. Veja o [README do core](packages/core/README.md) pra detalhes.
 
 ## Desenvolvimento
 
 ```bash
 npm install           # instala todos os workspaces
-npm test              # roda tests de todos os pacotes
+npm test              # vitest em todos os pacotes
 npm run typecheck     # tsc em todos
 npm run lint          # eslint root + packages
 npm run build         # tsup em todos
 ```
 
-Para trabalhar em um pacote específico:
+Pra trabalhar em um pacote específico:
 
 ```bash
 npm test  -w packages/dnd5e-2014
 npm run dev -w packages/core
 ```
+
+Stack: TypeScript 5.7, tsup (ESM + CJS + .d.ts), vitest, npm workspaces.
 
 ## Releases independentes
 
@@ -62,43 +86,50 @@ Cada pacote tem seu próprio `version` em `packages/*/package.json`. Releases s�
 
 ```
 core@v0.1.1
-dnd5e-2014@v0.2.0
+dnd5e-2014@v0.1.1
 lancer@v0.1.5
-gumshoe@v0.1.0
 ```
 
-Quando uma tag desse formato é pushada para `main`, o workflow [`.github/workflows/release.yml`](.github/workflows/release.yml) faz checkout, build, test do pacote alvo e roda `npm publish` (com `--provenance`).
-
-### Setup inicial (uma vez)
-
-1. **Criar o scope `@gmcr` no npm** (caso ainda não exista):
-   ```bash
-   npm login
-   npm org create gmcr
-   ```
-2. **Gerar token de automação** em [npmjs.com/settings/{user}/tokens](https://www.npmjs.com/settings/) (tipo "Automation").
-3. **Adicionar como secret** do repo:
-   `gh secret set NPM_TOKEN --repo flippelt/gmcr-srd-systems`
+Quando uma tag desse formato é pushada para `main`, o workflow [`release.yml`](.github/workflows/release.yml) faz checkout, build, test do pacote alvo e roda `npm publish` com `--provenance` + `--access public`.
 
 ### Para publicar uma versão
 
 ```bash
-# 1. bump no package.json correspondente
-cd packages/dnd5e-2014
-npm version patch    # ou minor/major
+# 1. bump no package.json correspondente (via npm version)
+npm version patch -w packages/dnd5e-2014 --no-git-tag-version
 
 # 2. commit + push (via PR como sempre)
-# 3. tag + push da tag
-git tag dnd5e-2014@v0.1.1
-git push origin dnd5e-2014@v0.1.1
+git add packages/dnd5e-2014/package.json package-lock.json
+git commit -m "chore(dnd5e-2014): bump 0.1.1 → 0.1.2"
+git push origin <branch>
+# (abre PR, merge no main)
+
+# 3. tag + push da tag (do main, após merge)
+git checkout main && git pull
+git tag dnd5e-2014@v0.1.2
+git push origin dnd5e-2014@v0.1.2
 ```
 
 O workflow valida que a versão da tag bate com a do `package.json` antes de publicar.
 
-## Autores de novos sistemas
+### Setup inicial (uma vez — já feito)
 
-Crie `packages/<nome>/` implementando o contrato `System` de `@lippelt/srd-core`. Veja `packages/dnd5e-2014/` como referência.
+1. **Scope `@lippelt` no npm** — usa a conta `lippelt`. Não precisa criar org pra scopes de usuário.
+2. **Token de automação** em [npmjs.com/settings/lippelt/tokens](https://www.npmjs.com/settings/lippelt/tokens) (tipo "Automation").
+3. **Adicionar como secret do repo**:
+   ```bash
+   gh secret set NPM_TOKEN --repo flippelt/gmcr-srd-systems
+   ```
+4. **Permissão `id-token: write`** já está no `release.yml` pra suportar `--provenance`.
+
+## Adicionar um sistema novo
+
+1. Crie `packages/<nome>/` baseado em [`packages/dnd5e-2014/`](packages/dnd5e-2014) (estrutura: `package.json`, `tsconfig.json`, `tsup.config.ts`, `src/index.ts`, `src/index.test.ts`, `README.md`).
+2. Implemente o contrato `System` — exporte como named export (ex.: `export const meuSistema: System = { ... }`).
+3. Testes determinísticos: exporte `setRoller(fn)` e `resetRoller()` pra permitir injeção de dados controlados.
+4. README seguindo o padrão dos outros (o que inclui, o que NÃO inclui, exemplo de uso, licença).
+5. PR. Após merge, tag `<nome>@v0.1.0` dispara a publicação automática.
 
 ## Licença
 
-[MIT](LICENSE). Conteúdo derivado de SRDs em cada pacote mantém atribuição própria.
+Código sob [MIT](LICENSE). Conteúdo derivado de SRDs em cada pacote mantém atribuição própria (vide README + `attribution` do `System`).
