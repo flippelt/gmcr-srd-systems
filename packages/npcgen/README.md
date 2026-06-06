@@ -67,6 +67,40 @@ Cada NPC gerado tem `attacks: NpcAttack[]` (lista) além do `attack` (alias do p
 
 `getBenchmark(level)` retorna HP/CA/ataque/CD/dano-por-round esperados pelo estilo 5e DMG. Cada NPC gerado já vem com `npc.benchmark` pra você comparar a saída com o alvo do CR.
 
+## Criatura, armas e resistências (v0.1.3)
+
+Todo NPC vem com:
+
+- **`npc.creature`** — `type` (humanoid/beast/undead/fiend/celestial/fey/dragon/aberration/construct/elemental/giant/monstrosity/ooze/plant), `size` (tiny..gargantuan), `senses` (darkvision-60/120, blindsight, low-light, tremorsense, truesight), `movements` (walk/fly/swim/climb/burrow em pés), `languages`.
+- **`npc.resistances`** — `damageResistances`/`damageImmunities`/`damageVulnerabilities`/`conditionImmunities`, derivadas do tipo (undead imune a poison, fiend resiste a cold/fire/lightning vulnerável a radiant, construct imune a várias condições, etc).
+- **`npc.weapon`** — arma assinatura completa (`name`, `category`, `damageDie`, `damageType`, `range`/`reach`, `properties`). Mapeada do `role` (brute → machado grande, archer → arco longo, caster → dardo arcano, etc).
+
+### Opções novas
+
+| Opção | Default | Conteúdo |
+|---|---|---|
+| `creatureType` | `'humanoid'` | Um dos tipos acima. Afeta sentidos/movimentos/idiomas/resistências. |
+| `creatureSize` | `'medium'` | tiny/small/medium/large/huge/gargantuan. Afeta walking. |
+| `nameStyle` | `'fantasy'` | `fantasy` / `sci-fi` / `lovecraftian` / `cyberpunk` / `plain`. |
+| `withEpithet` | `false` | Anexa título/epíteto ("Korak o Astuto", "V1per netrunner"). |
+
+### Exemplos
+
+```ts
+// Dragão jovem azul, large, com voo e darkvision
+generateNpc({ systemId: 'dnd5e-2024', level: 10, role: 'brute',
+              creatureType: 'dragon', creatureSize: 'large' })
+
+// Replicante operativo no Starfinder, com epíteto sci-fi
+generateNpc({ systemId: 'starfinder-2e', level: 5, role: 'archer',
+              nameStyle: 'sci-fi', withEpithet: true })
+
+// Avatar do Yog-Sothoth com nome lovecraftiano
+generateNpc({ systemId: 'dnd5e-2024', level: 15, role: 'caster',
+              creatureType: 'aberration', nameStyle: 'lovecraftian',
+              withEpithet: true })
+```
+
 ## Tuning específico por papel/sistema (v0.1.2)
 
 Quando aplicável, o NPC ganha campos extras:

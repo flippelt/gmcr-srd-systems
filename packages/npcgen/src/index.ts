@@ -31,6 +31,9 @@ export {
   STARFINDER_SYSTEMS,
   PROFICIENCY_RANK_SYSTEMS,
 } from './tuning'
+export { buildCreature } from './creature'
+export { getResistancesForType } from './resistances'
+export { WEAPONS, ROLE_WEAPON, getRoleWeapon, type WeaponId } from './weapons'
 export { generateNpc, isD20System } from './generate'
 export { toTrackerCombatant, toCodexMarkdown } from './adapters'
-export { generateName } from './names'
+export { generateName, type NameOptions } from './names'

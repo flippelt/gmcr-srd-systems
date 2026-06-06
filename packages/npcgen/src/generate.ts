@@ -16,6 +16,9 @@ import {
   getProficiencyRank,
   getStarfinderTuning,
 } from './tuning'
+import { buildCreature } from './creature'
+import { getResistancesForType } from './resistances'
+import { getRoleWeapon } from './weapons'
 import { d, seededRoller, setRng } from './rng'
 import { generateName } from './names'
 
@@ -64,9 +67,22 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
     ? getProficiencyRank(level)
     : undefined
 
+  // Criatura: tipo/tamanho/sentidos/idiomas; resistências derivam do tipo.
+  const creatureType = opts.creatureType ?? 'humanoid'
+  const creatureSize = opts.creatureSize ?? 'medium'
+  const creature = buildCreature(creatureType, creatureSize)
+  const resistances = getResistancesForType(creatureType)
+  const weapon = getRoleWeapon(role)
+  const speed = creature.movements.walk
+
+  // Nome com estilo opcional.
+  const name =
+    opts.name ??
+    generateName({ style: opts.nameStyle, withEpithet: opts.withEpithet })
+
   return {
     systemId: opts.systemId,
-    name: opts.name ?? generateName(),
+    name,
     role,
     level,
     abilities,
@@ -74,7 +90,7 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
     attackProgression: prog,
     hp: deriveHp(def, level, abilities.con.mod),
     ac,
-    speed: 30,
+    speed,
     saves,
     // Atalhos de Fort/Ref/Will (classics 3.5/PF1, válidos em 5e também).
     fortSave: saves.con,
@@ -86,6 +102,9 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
     ...(magic ? { magic } : {}),
     ...(starfinder ? { starfinder } : {}),
     ...(proficiencyRank ? { proficiencyRank } : {}),
+    creature,
+    resistances,
+    weapon,
     benchmark: getBenchmark(level),
   }
 }

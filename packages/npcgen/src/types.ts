@@ -48,7 +48,17 @@ export interface NpcOptions {
   name?: string
   /** Seed para geração reproduzível (define o RNG internamente). */
   seed?: number
+  /** Tipo de criatura. Padrão: 'humanoid'. */
+  creatureType?: CreatureType
+  /** Tamanho. Padrão: 'medium'. */
+  creatureSize?: CreatureSize
+  /** Estilo do nome gerado. Padrão: 'fantasy'. */
+  nameStyle?: NameStyle
+  /** Quando `true`, anexa um epíteto/título ao nome (ex.: "Korak o Astuto"). */
+  withEpithet?: boolean
 }
+
+export type NameStyle = 'fantasy' | 'sci-fi' | 'lovecraftian' | 'cyberpunk' | 'plain'
 
 export interface NpcAttack {
   name: string
@@ -96,6 +106,121 @@ export interface NpcStarfinderTuning {
  * que difere do 5e — o `attackProgression` atual ainda usa o modelo 5e).
  */
 export type ProficiencyRank = 'trained' | 'expert' | 'master' | 'legendary'
+
+// ============================================================================
+// Criatura: tipo, tamanho, sentidos, deslocamento, idiomas
+// ============================================================================
+
+export type CreatureType =
+  | 'humanoid'
+  | 'beast'
+  | 'undead'
+  | 'fiend'
+  | 'celestial'
+  | 'fey'
+  | 'dragon'
+  | 'aberration'
+  | 'construct'
+  | 'elemental'
+  | 'giant'
+  | 'monstrosity'
+  | 'ooze'
+  | 'plant'
+
+export type CreatureSize = 'tiny' | 'small' | 'medium' | 'large' | 'huge' | 'gargantuan'
+
+/**
+ * Sentidos comuns. Formato `<sentido>-<alcance em pés>` pra facilitar parse
+ * (ex.: `darkvision-60`, `tremorsense-30`).
+ */
+export type Sense =
+  | 'darkvision-60'
+  | 'darkvision-120'
+  | 'blindsight-30'
+  | 'blindsight-60'
+  | 'tremorsense-30'
+  | 'tremorsense-60'
+  | 'truesight-60'
+  | 'low-light-vision'
+
+/** Tipos de dano comuns no d20. */
+export type DamageType =
+  | 'acid'
+  | 'cold'
+  | 'fire'
+  | 'force'
+  | 'lightning'
+  | 'necrotic'
+  | 'poison'
+  | 'psychic'
+  | 'radiant'
+  | 'thunder'
+  | 'bludgeoning'
+  | 'piercing'
+  | 'slashing'
+
+/** Deslocamentos em pés (5e/PF). `walk` é sempre o padrão. */
+export interface Movements {
+  walk: number
+  fly?: number
+  swim?: number
+  climb?: number
+  burrow?: number
+}
+
+export interface NpcCreature {
+  type: CreatureType
+  size: CreatureSize
+  senses: Sense[]
+  movements: Movements
+  languages: string[]
+}
+
+export interface NpcResistances {
+  damageResistances: DamageType[]
+  damageImmunities: DamageType[]
+  damageVulnerabilities: DamageType[]
+  /** Condições às quais é imune (formato livre — depende do sistema). */
+  conditionImmunities: string[]
+}
+
+// ============================================================================
+// Armas
+// ============================================================================
+
+export type WeaponCategory =
+  | 'simple-melee'
+  | 'martial-melee'
+  | 'simple-ranged'
+  | 'martial-ranged'
+  | 'natural'
+
+export type WeaponProperty =
+  | 'finesse'
+  | 'versatile'
+  | 'two-handed'
+  | 'heavy'
+  | 'light'
+  | 'thrown'
+  | 'ammunition'
+  | 'reach'
+
+export interface NpcWeapon {
+  name: string
+  category: WeaponCategory
+  damageDie: 4 | 6 | 8 | 10 | 12
+  /**
+   * Tipo de dano. Geralmente físico (bludgeoning/piercing/slashing) pra armas
+   * comuns; armas naturais/mágicas (ex.: Dardo Arcano) podem ter qualquer
+   * `DamageType`.
+   */
+  damageType: DamageType
+  /** Para armas a distância: alcance normal e longo em pés. */
+  range?: { normal: number; long?: number }
+  /** Pra armas de corpo-a-corpo com alcance estendido (ex.: lança). */
+  reach?: number
+  properties: WeaponProperty[]
+}
 
 /** Faixa-alvo de stats por nível/CR. Usada pra calibrar/comparar a saída
  *  do gerador com expectativa de "encontro adequado" no estilo 5e DMG. */
@@ -159,6 +284,12 @@ export interface GeneratedNpc {
    * ROADMAP Bloco A item 5).
    */
   proficiencyRank?: ProficiencyRank
+  /** Tipo/tamanho/sentidos/deslocamentos/idiomas (sempre presente). */
+  creature: NpcCreature
+  /** Resistências/imunidades/vulnerabilidades derivadas do tipo de criatura. */
+  resistances: NpcResistances
+  /** Arma assinatura (mesma do `attack[0]`, mas com mais metadata). */
+  weapon: NpcWeapon
   /** Benchmark esperado pra esse nível/CR (referência). */
   benchmark: CRBenchmark
 }
