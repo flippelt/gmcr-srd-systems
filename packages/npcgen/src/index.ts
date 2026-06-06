@@ -24,6 +24,13 @@ export {
   buildAttacks,
   getBenchmark,
 } from './combat'
+export {
+  getMagicStats,
+  getStarfinderTuning,
+  getProficiencyRank,
+  STARFINDER_SYSTEMS,
+  PROFICIENCY_RANK_SYSTEMS,
+} from './tuning'
 export { generateNpc, isD20System } from './generate'
 export { toTrackerCombatant, toCodexMarkdown } from './adapters'
 export { generateName } from './names'

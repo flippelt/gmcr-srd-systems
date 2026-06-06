@@ -41,15 +41,41 @@ export function toCodexMarkdown(npc: GeneratedNpc): string {
           ),
         ]
 
-  return [
+  // Header com proficiency rank se for PF2/SF2.
+  const subtitle =
+    `*${npc.role} • nível ${npc.level} • ${npc.systemId}` +
+    (npc.proficiencyRank ? ` • ${npc.proficiencyRank}` : '') +
+    `*`
+
+  // Linha de defesa: CA padrão; em Starfinder mostra KAC/EAC + Stamina/Resolve.
+  const defenseLine = npc.starfinder
+    ? `- **KAC** ${npc.starfinder.kac}  **EAC** ${npc.starfinder.eac}  ` +
+      `**PV** ${npc.hp}  **SP** ${npc.starfinder.stamina}  ` +
+      `**RP** ${npc.starfinder.resolve}  **Deslocamento** ${npc.speed} ft`
+    : `- **CA** ${npc.ac}  **PV** ${npc.hp}  **Deslocamento** ${npc.speed} ft`
+
+  const lines = [
     `### ${npc.name}`,
-    `*${npc.role} • nível ${npc.level} • ${npc.systemId}*`,
+    subtitle,
     '',
-    `- **CA** ${npc.ac}  **PV** ${npc.hp}  **Deslocamento** ${npc.speed} ft`,
+    defenseLine,
     `- **${progLabel}** ${sign(npc.attackProgression)}`,
+    `- **Fort** ${sign(npc.fortSave)}  **Ref** ${sign(npc.refSave)}  **Will** ${sign(npc.willSave)}`,
     `- **Atributos** ${abilities}`,
     `- **Resistências** ${saves}`,
     `- **Perícias** ${skills}`,
     ...attackLines,
-  ].join('\n')
+  ]
+
+  // Bloco de magia (se for caster).
+  if (npc.magic) {
+    lines.push(
+      `- **Magia** ${npc.magic.spellAbility.toUpperCase()}` +
+        ` · CD ${npc.magic.spellSaveDC}` +
+        ` · ataque ${sign(npc.magic.spellAttackBonus)}` +
+        ` · cantrip ${npc.magic.cantripDamage}`,
+    )
+  }
+
+  return lines.join('\n')
 }

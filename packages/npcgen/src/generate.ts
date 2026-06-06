@@ -9,6 +9,13 @@ import {
   generateAbilityScores,
 } from './d20'
 import { buildAttacks, getBenchmark } from './combat'
+import {
+  PROFICIENCY_RANK_SYSTEMS,
+  STARFINDER_SYSTEMS,
+  getMagicStats,
+  getProficiencyRank,
+  getStarfinderTuning,
+} from './tuning'
 import { d, seededRoller, setRng } from './rng'
 import { generateName } from './names'
 
@@ -42,6 +49,20 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
 
   const dmgMod = abilities[def.attackAbility].mod
   const attacks = buildAttacks(role, def, model, level, dmgMod, prog)
+  const saves = deriveSaves(abilities, def, model, level)
+  const ac = deriveAc(def, abilities.dex.mod)
+
+  // Tuning condicional por papel/sistema.
+  const magic =
+    role === 'caster'
+      ? getMagicStats(def.attackAbility, dmgMod, prog, model, level)
+      : undefined
+  const starfinder = STARFINDER_SYSTEMS.has(opts.systemId)
+    ? getStarfinderTuning(ac, abilities.con.mod, level, model)
+    : undefined
+  const proficiencyRank = PROFICIENCY_RANK_SYSTEMS.has(opts.systemId)
+    ? getProficiencyRank(level)
+    : undefined
 
   return {
     systemId: opts.systemId,
@@ -52,12 +73,19 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
     model,
     attackProgression: prog,
     hp: deriveHp(def, level, abilities.con.mod),
-    ac: deriveAc(def, abilities.dex.mod),
+    ac,
     speed: 30,
-    saves: deriveSaves(abilities, def, model, level),
+    saves,
+    // Atalhos de Fort/Ref/Will (classics 3.5/PF1, válidos em 5e também).
+    fortSave: saves.con,
+    refSave: saves.dex,
+    willSave: saves.wis,
     skills,
     attacks,
     attack: attacks[0]!,
+    ...(magic ? { magic } : {}),
+    ...(starfinder ? { starfinder } : {}),
+    ...(proficiencyRank ? { proficiencyRank } : {}),
     benchmark: getBenchmark(level),
   }
 }

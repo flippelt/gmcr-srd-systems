@@ -56,6 +56,47 @@ export interface NpcAttack {
   damage: string
 }
 
+/**
+ * Bloco de magia. Anexado a `GeneratedNpc.magic` quando o role é `caster`.
+ * Os valores derivam do atributo de conjuração do papel (`def.attackAbility`)
+ * + bônus de proficiência/BAB do modelo.
+ */
+export interface NpcMagic {
+  /** Atributo usado pra conjurar (geralmente CHA pro caster genérico). */
+  spellAbility: Ability
+  /** CD pra resistir a magias deste conjurador (8 + prof + mod no 5e). */
+  spellSaveDC: number
+  /** Bônus de ataque mágico (prof + mod no 5e). */
+  spellAttackBonus: number
+  /** Dano de cantrip/feitiço at-will (escala com nível como em PR 1). */
+  cantripDamage: string
+}
+
+/**
+ * Stats específicos de Starfinder (1e e 2e). Anexado quando o sistema é SF.
+ *
+ * - SF1: Stamina Points = level * 5 (com mod CON), Resolve = 1 + level/2,
+ *   KAC/EAC derivam da armadura (KAC ≈ AC, EAC ≈ AC − 1).
+ * - SF2: aproximadamente o mesmo, com tuning leve do PF2.
+ */
+export interface NpcStarfinderTuning {
+  /** Stamina Points (drenam antes do HP). */
+  stamina: number
+  /** Kinetic Armor Class (defesa contra ataques físicos). */
+  kac: number
+  /** Energy Armor Class (defesa contra ataques de energia). */
+  eac: number
+  /** Resolve Points (recurso narrativo). */
+  resolve: number
+}
+
+/**
+ * Patente de proficiência do PF2/SF2. Determinada pelo nível e usada como
+ * referência informativa (a matemática real do PF2 é `level + bônus de patente`,
+ * que difere do 5e — o `attackProgression` atual ainda usa o modelo 5e).
+ */
+export type ProficiencyRank = 'trained' | 'expert' | 'master' | 'legendary'
+
 /** Faixa-alvo de stats por nível/CR. Usada pra calibrar/comparar a saída
  *  do gerador com expectativa de "encontro adequado" no estilo 5e DMG. */
 export interface CRBenchmark {
@@ -86,6 +127,14 @@ export interface GeneratedNpc {
   ac: number
   speed: number
   saves: AbilityMap<number>
+  /**
+   * Atalhos pros saves comuns d20: Fortitude (CON), Reflex (DEX), Will (WIS).
+   * Mesma origem que `saves.con/dex/wis` mas expostos com os nomes clássicos
+   * usados em 3.5/PF1.
+   */
+  fortSave: number
+  refSave: number
+  willSave: number
   skills: Record<string, number>
   /**
    * Lista de ataques por turno.
@@ -100,6 +149,16 @@ export interface GeneratedNpc {
    * mostram só um ataque resumido.
    */
   attack: NpcAttack
+  /** Bloco de magia (só preenchido quando `role === 'caster'`). */
+  magic?: NpcMagic
+  /** Stats específicos de Starfinder (1e/2e) — só preenchido pra esses sistemas. */
+  starfinder?: NpcStarfinderTuning
+  /**
+   * Patente de proficiência (PF2/SF2). Informativa — a matemática do
+   * `attackProgression` ainda usa o modelo 5e (5e e PF2 diferem; ver
+   * ROADMAP Bloco A item 5).
+   */
+  proficiencyRank?: ProficiencyRank
   /** Benchmark esperado pra esse nível/CR (referência). */
   benchmark: CRBenchmark
 }

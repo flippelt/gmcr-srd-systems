@@ -67,6 +67,31 @@ Cada NPC gerado tem `attacks: NpcAttack[]` (lista) além do `attack` (alias do p
 
 `getBenchmark(level)` retorna HP/CA/ataque/CD/dano-por-round esperados pelo estilo 5e DMG. Cada NPC gerado já vem com `npc.benchmark` pra você comparar a saída com o alvo do CR.
 
+## Tuning específico por papel/sistema (v0.1.2)
+
+Quando aplicável, o NPC ganha campos extras:
+
+| Campo | Quando aparece | Conteúdo |
+|---|---|---|
+| `npc.magic` | `role === 'caster'` | `{ spellAbility, spellSaveDC, spellAttackBonus, cantripDamage }` |
+| `npc.starfinder` | `systemId` em SF1/SF2 | `{ stamina, kac, eac, resolve }` (drena SP antes do HP) |
+| `npc.proficiencyRank` | `systemId` em PF2/SF2 | `'trained' \| 'expert' \| 'master' \| 'legendary'` |
+| `npc.fortSave/refSave/willSave` | sempre | atalhos pros saves clássicos (CON/DEX/WIS) |
+
+> A matemática do PF2 (`level + bônus de rank`) difere do 5e. O `attackProgression` ainda usa o 5e — `proficiencyRank` é informativa. Tuning matemático fino do PF2 é planejado pro próximo PR (Bloco A item 11, hook `System.npc?`).
+
+### Exemplo
+
+```ts
+const mago = generateNpc({ systemId: 'dnd5e-2024', level: 9, role: 'caster' })
+mago.magic              // { spellAbility: 'cha', spellSaveDC: 14, spellAttackBonus: 6, cantripDamage: '2d8+2' }
+mago.fortSave           // atalho pra saves.con
+
+const operative = generateNpc({ systemId: 'starfinder-2e', level: 11, role: 'archer' })
+operative.starfinder    // { stamina: ..., kac: ..., eac: ..., resolve: ... }
+operative.proficiencyRank  // 'master'
+```
+
 ```ts
 const npc = generateNpc({ systemId: 'dnd5e-2024', level: 10, role: 'brute' })
 npc.attacks.length     // 2 (Extra Attack ativo)
