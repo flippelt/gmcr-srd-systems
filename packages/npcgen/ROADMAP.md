@@ -25,9 +25,9 @@ deve vir com teste determinístico (use `seed`/`setRng`). Manter `typecheck`,
 
 ## Bloco A — Aprofundar o d20
 
-- [ ] **Multiataque por nível**: papéis marciais ganham ataques extras (ex.: 5/11/20 no estilo 5e; iterativos no modelo BAB). Expor `attacks: NpcAttack[]`.
-- [ ] **Escala de dano**: número de dados/bônus do ataque cresce com nível/CR (hoje é sempre `1dX+mod`).
-- [ ] **Benchmarks por CR/nível**: tabela alvo de HP/CA/ataque/DC por CR para *calibrar* a saída (não só derivar dos atributos), evitando NPCs fracos/fortes demais.
+- [x] **Multiataque por nível**: papéis marciais ganham ataques extras (ex.: 5/11/20 no estilo 5e; iterativos no modelo BAB). Expor `attacks: NpcAttack[]`. *(v0.1.1)*
+- [x] **Escala de dano**: número de dados/bônus do ataque cresce com nível/CR (caster como cantrip 1/2/3/4; brute ganha dado extra no lvl 11). *(v0.1.1)*
+- [x] **Benchmarks por CR/nível**: tabela alvo de HP/CA/ataque/DC por CR para *calibrar* a saída (não só derivar dos atributos), evitando NPCs fracos/fortes demais. *(v0.1.1 — função `getBenchmark`, anexado em `npc.benchmark`)*
 - [ ] **Bloco de magia para `caster`**: `spellSaveDC`/`spellAttackBonus` (usar os helpers do pacote de sistema quando existirem), cantrips/slots sugeridos.
 - [ ] **Tuning por sistema** (em vez de só os 2 modelos genéricos):
   - [ ] PF2e: proficiência = nível + bônus; graus de sucesso no ataque.

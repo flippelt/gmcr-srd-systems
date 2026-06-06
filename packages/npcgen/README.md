@@ -32,9 +32,9 @@ toCodexMarkdown(npc)    // stat block em Markdown
 Dois modelos cobrem a família d20:
 
 - **`proficiency`** (5e 2024/2014, Pathfinder 2e, Starfinder 2e): bônus de
-  proficiência `2 + ⌊(nível−1)/4⌋`.
+  proficiência `2 + ⌊(nível−1)/4⌋`. Multiataque adiciona ataques com mesmo bônus.
 - **`bab`** (D&D 3.5, Pathfinder 1e, Starfinder 1e): BAB cheio aproximado
-  (= nível) e saves bom/fraco.
+  (= nível) e saves bom/fraco. Ataques iterativos com bônus decrescente (−5).
 
 Sistemas baseados em pool (Daggerheart, Candela Obscura, GUMSHOE) ficam para
 uma versão futura — o gerador lança erro para ids fora da família d20.
@@ -42,3 +42,34 @@ uma versão futura — o gerador lança erro para ids fora da família d20.
 > As fórmulas são aproximações ao estilo "NPC de mesa" (não builds completos de
 > PC): atributos por arquétipo, HP por dado de vida + CON, CA por armadura +
 > Dex limitada, e ataque/perícias com a progressão do modelo.
+
+## Multiataque, escala de dano e benchmarks (v0.1.1)
+
+Cada NPC gerado tem `attacks: NpcAttack[]` (lista) além do `attack` (alias do primeiro).
+
+### Multiataque por papel + modelo + nível
+
+| Papel | proficiency | bab |
+|---|---|---|
+| Marciais (brute, soldier, skirmisher, archer, lurker) | 1 → 2 (lvl 5) → 3 (lvl 11) → 4 (lvl 20) | 1 → 2 (BAB 6) → 3 (BAB 11) → 4 (BAB 16) |
+| Leader | 1 → 2 (lvl 5) | 1 → 2 (lvl 5) |
+| Caster, Minion | 1 (sempre) | 1 (sempre) |
+
+### Escala de dado de dano
+
+| Papel | Quantidade de dados |
+|---|---|
+| Caster | 1 (lvl 1–4) → 2 (5–10) → 3 (11–16) → 4 (17+) — estilo cantrip 5e |
+| Brute | 1 (1–10) → 2 (11+) |
+| Demais marciais / leader / minion | 1 (sempre — a arma "escala" via multiataque) |
+
+### Benchmarks de CR
+
+`getBenchmark(level)` retorna HP/CA/ataque/CD/dano-por-round esperados pelo estilo 5e DMG. Cada NPC gerado já vem com `npc.benchmark` pra você comparar a saída com o alvo do CR.
+
+```ts
+const npc = generateNpc({ systemId: 'dnd5e-2024', level: 10, role: 'brute' })
+npc.attacks.length     // 2 (Extra Attack ativo)
+npc.attacks[0].damage  // '1d10+4' (brute lvl 10, ainda 1 dado)
+npc.benchmark          // { level: 10, hp: 250, ac: 17, attackBonus: 7, ... }
+```

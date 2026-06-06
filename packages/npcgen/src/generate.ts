@@ -8,6 +8,7 @@ import {
   deriveSaves,
   generateAbilityScores,
 } from './d20'
+import { buildAttacks, getBenchmark } from './combat'
 import { d, seededRoller, setRng } from './rng'
 import { generateName } from './names'
 
@@ -40,10 +41,7 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
   }
 
   const dmgMod = abilities[def.attackAbility].mod
-  const damage =
-    dmgMod === 0
-      ? `1d${def.damageDie}`
-      : `1d${def.damageDie}${dmgMod > 0 ? '+' : ''}${dmgMod}`
+  const attacks = buildAttacks(role, def, model, level, dmgMod, prog)
 
   return {
     systemId: opts.systemId,
@@ -58,6 +56,8 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
     speed: 30,
     saves: deriveSaves(abilities, def, model, level),
     skills,
-    attack: { name: def.attackName, bonus: dmgMod + prog, damage },
+    attacks,
+    attack: attacks[0]!,
+    benchmark: getBenchmark(level),
   }
 }

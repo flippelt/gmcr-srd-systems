@@ -29,6 +29,18 @@ export function toCodexMarkdown(npc: GeneratedNpc): string {
     .join(', ')
   const progLabel = npc.model === 'proficiency' ? 'Proficiência' : 'BAB'
 
+  // Multiataque: lista cada ataque numa linha quando > 1. Modelo bab tem
+  // bônus decrescente, então a forma "1d8+3 / 1d8−2 / 1d8−7" é informativa.
+  const attackLines =
+    npc.attacks.length === 1
+      ? [`- **Ataque** ${npc.attacks[0]!.name} ${sign(npc.attacks[0]!.bonus)}, dano ${npc.attacks[0]!.damage}`]
+      : [
+          `- **Ataques** (${npc.attacks.length} por turno):`,
+          ...npc.attacks.map(
+            (a, i) => `  ${i + 1}. ${a.name} ${sign(a.bonus)}, dano ${a.damage}`,
+          ),
+        ]
+
   return [
     `### ${npc.name}`,
     `*${npc.role} • nível ${npc.level} • ${npc.systemId}*`,
@@ -38,6 +50,6 @@ export function toCodexMarkdown(npc: GeneratedNpc): string {
     `- **Atributos** ${abilities}`,
     `- **Resistências** ${saves}`,
     `- **Perícias** ${skills}`,
-    `- **Ataque** ${npc.attack.name} ${sign(npc.attack.bonus)}, dano ${npc.attack.damage}`,
+    ...attackLines,
   ].join('\n')
 }

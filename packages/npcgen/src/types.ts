@@ -56,6 +56,23 @@ export interface NpcAttack {
   damage: string
 }
 
+/** Faixa-alvo de stats por nível/CR. Usada pra calibrar/comparar a saída
+ *  do gerador com expectativa de "encontro adequado" no estilo 5e DMG. */
+export interface CRBenchmark {
+  /** Nível/CR alvo (1..20). */
+  level: number
+  /** HP médio esperado pra um NPC desse nível. */
+  hp: number
+  /** CA típica pra esse nível. */
+  ac: number
+  /** Bônus de ataque típico (proficiency model). */
+  attackBonus: number
+  /** Dano por round esperado (todos os ataques somados). */
+  damagePerRound: number
+  /** CD de magia/efeito típica. */
+  saveDC: number
+}
+
 export interface GeneratedNpc {
   systemId: string
   name: string
@@ -70,7 +87,21 @@ export interface GeneratedNpc {
   speed: number
   saves: AbilityMap<number>
   skills: Record<string, number>
+  /**
+   * Lista de ataques por turno.
+   * - Modelo `proficiency` (5e/PF2/SF2): todos com mesmo bônus (multiattack).
+   * - Modelo `bab` (3.5/PF1/SF1): iterativos (BAB, BAB−5, BAB−10, BAB−15).
+   *
+   * Sempre tem ≥ 1 entrada; `attacks[0]` é o ataque assinatura.
+   */
+  attacks: NpcAttack[]
+  /**
+   * Atalho retro-compatível: igual a `attacks[0]`. Mantido pra UIs que
+   * mostram só um ataque resumido.
+   */
   attack: NpcAttack
+  /** Benchmark esperado pra esse nível/CR (referência). */
+  benchmark: CRBenchmark
 }
 
 /** Combatente no formato do tracker do GM Control Room. Desacoplado: espelha
