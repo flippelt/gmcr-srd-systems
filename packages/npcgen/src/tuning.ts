@@ -36,10 +36,13 @@ export function getMagicStats(
   attackProg: number,
   model: D20Model,
   level: number,
+  /** Hook opcional do sistema pra override do nº de dados de cantrip. */
+  cantripDamageDiceHook?: (level: number) => number,
 ): NpcMagic {
   // prof do 5e quando proficiency; senão BAB direto do PR 1 (já vem em prog).
   const prof = attackProg
-  const cantripDieCount = damageDiceCount('caster', level)
+  const cantripDieCount =
+    cantripDamageDiceHook?.(level) ?? damageDiceCount('caster', level)
   // d8 padrão como dado de cantrip (similar ao Fire Bolt do 5e).
   const cantripDamage = formatDamage(cantripDieCount, 8, abilityMod)
   return {

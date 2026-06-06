@@ -111,6 +111,53 @@ export interface SystemRules {
 }
 
 // ============================================================================
+// Hooks de geração de NPC (consumidos pelo @lippelt/srd-npcgen)
+// ============================================================================
+
+/**
+ * Hooks opcionais para refinar a geração de NPCs por sistema. Quando o
+ * `@lippelt/srd-npcgen` encontra um destes preenchidos em `System.npc`,
+ * usa em vez dos defaults genéricos da família d20.
+ *
+ * Cada hook é puro e independente — implemente só os que fizerem sentido
+ * pra mecânica do seu sistema.
+ */
+export interface SystemNpcHooks {
+  /**
+   * Override da progressão de ataque (default 5e: prof = 2 + ⌊(lvl−1)/4⌋).
+   *
+   * PF2e/SF2e devem retornar `level + bônus de patente` (rank bonus):
+   * trained +2, expert +4, master +6, legendary +8.
+   *
+   * `role` é o id do arquétipo (ex.: 'soldier', 'caster').
+   */
+  attackProgression?: (level: number, role: string) => number
+
+  /**
+   * Override da quantidade de dados de cantrip pra casters. Default 5e:
+   * 1 (lvl 1-4) → 2 (5-10) → 3 (11-16) → 4 (17+).
+   *
+   * PF2e segue padrão diferente (heightening de cantrips a cada 2 níveis).
+   */
+  cantripDamageDice?: (level: number) => number
+
+  /**
+   * Lista canônica de perícias do sistema (snake-case ou camelCase). O
+   * npcgen pode usar pra validar/expandir o set de perícias proficient
+   * por arquétipo.
+   */
+  skills?: readonly string[]
+
+  /**
+   * Idiomas default pra um tipo de criatura no setting do sistema. Quando
+   * preenchido, sobrescreve o default genérico do npcgen.
+   *
+   * Útil pra settings com idiomas exóticos (ex.: SF tem Vesk, Ysoki etc.).
+   */
+  defaultLanguages?: (creatureType: string) => string[]
+}
+
+// ============================================================================
 // Sistema completo
 // ============================================================================
 
@@ -130,4 +177,6 @@ export interface System {
   trackerFields: TrackerField[]
   /** Regras automatizáveis (opcionais). */
   rules?: SystemRules
+  /** Hooks pra refinar a geração de NPCs (consumidos pelo @lippelt/srd-npcgen). */
+  npc?: SystemNpcHooks
 }

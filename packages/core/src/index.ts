@@ -14,6 +14,7 @@ export type {
   System,
   SystemId,
   SystemRules,
+  SystemNpcHooks,
   DicePreset,
   ConditionDef,
   TrackerField,
