@@ -278,6 +278,40 @@ const RULES: SystemRules = {
   },
 }
 
+/**
+ * Hooks pra `@lippelt/srd-npcgen`: SF2 herda a matemática do PF2 (level +
+ * rank bonus). Skills com viés sci-fi (Computers, Piloting etc.) + idiomas
+ * default Galáctico/Vesk/Ysoki/Shirren pra humanoides.
+ */
+function profRankBonus(level: number): number {
+  if (level >= 17) return 8
+  if (level >= 11) return 6
+  if (level >= 5) return 4
+  return 2
+}
+
+const SF2_SKILLS = [
+  'acrobatics',
+  'arcana',
+  'athletics',
+  'computers',
+  'crafting',
+  'deception',
+  'diplomacy',
+  'engineering',
+  'intimidation',
+  'medicine',
+  'nature',
+  'occultism',
+  'performance',
+  'piloting',
+  'religion',
+  'society',
+  'stealth',
+  'survival',
+  'thievery',
+] as const
+
 export const starfinder2e: System = {
   id: 'starfinder-2e',
   name: 'Starfinder 2nd Edition',
@@ -288,4 +322,15 @@ export const starfinder2e: System = {
   conditions: CONDITIONS,
   trackerFields: TRACKER_FIELDS,
   rules: RULES,
+  npc: {
+    attackProgression: (level) => level + profRankBonus(level),
+    cantripDamageDice: (level) => Math.max(1, Math.ceil(level / 2)),
+    skills: SF2_SKILLS,
+    defaultLanguages: (type) => {
+      if (type === 'humanoid') return ['Comum Galáctico']
+      if (type === 'aberration') return ['Telepatia 60 ft']
+      if (type === 'construct') return ['Comum Galáctico (entende)']
+      return []
+    },
+  },
 }
