@@ -1,6 +1,6 @@
 {
   "name": "@lippelt/srd-starfinder-1e",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Starfinder 1e system module for @lippelt/srd-core — SRD, OGL 1.0a (Paizo)",
   "type": "module",
   "main": "./dist/index.cjs",

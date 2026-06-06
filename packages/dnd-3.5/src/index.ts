@@ -220,6 +220,54 @@ const RULES: SystemRules = {
 // Bundle
 // ============================================================================
 
+/**
+ * Hooks pra `@lippelt/srd-npcgen`. 3.5 usa BAB (default do npcgen já trata
+ * via D20_MODEL). Cantrips/0-level spells em 3.5 têm dano FIXO (não escalam
+ * por nível) — override pra retornar 1 dado sempre.
+ *
+ * Skill list é a do SRD 3.5; algumas skills (Knowledge, Profession, Craft,
+ * Perform) têm múltiplas instâncias na ficha real, mas aqui listamos só os
+ * IDs canônicos.
+ */
+const DND35_SKILLS = [
+  'appraise',
+  'balance',
+  'bluff',
+  'climb',
+  'concentration',
+  'craft',
+  'decipher-script',
+  'diplomacy',
+  'disable-device',
+  'disguise',
+  'escape-artist',
+  'forgery',
+  'gather-information',
+  'handle-animal',
+  'heal',
+  'hide',
+  'intimidate',
+  'jump',
+  'knowledge',
+  'listen',
+  'move-silently',
+  'open-lock',
+  'perform',
+  'profession',
+  'ride',
+  'search',
+  'sense-motive',
+  'sleight-of-hand',
+  'speak-language',
+  'spellcraft',
+  'spot',
+  'survival',
+  'swim',
+  'tumble',
+  'use-magic-device',
+  'use-rope',
+] as const
+
 export const dnd35: System = {
   id: 'dnd-3.5',
   name: 'Dungeons & Dragons 3.5',
@@ -230,4 +278,8 @@ export const dnd35: System = {
   conditions: CONDITIONS,
   trackerFields: TRACKER_FIELDS,
   rules: RULES,
+  npc: {
+    cantripDamageDice: () => 1,
+    skills: DND35_SKILLS,
+  },
 }

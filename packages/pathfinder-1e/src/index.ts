@@ -245,6 +245,44 @@ const RULES: SystemRules = {
   },
 }
 
+/**
+ * Hooks pra `@lippelt/srd-npcgen`. PF1 usa BAB (default do npcgen já trata
+ * via D20_MODEL). 0-level spells (cantrips/orisons) em PF1 têm dano FIXO —
+ * override pra retornar 1 dado.
+ *
+ * Skills consolidadas em PF1 (Move Silently/Hide → Stealth, Spot/Listen →
+ * Perception, etc). Knowledge/Craft/Perform/Profession são "famílias" com
+ * múltiplas instâncias; listamos só o ID canônico.
+ */
+const PF1_SKILLS = [
+  'acrobatics',
+  'appraise',
+  'bluff',
+  'climb',
+  'craft',
+  'diplomacy',
+  'disable-device',
+  'disguise',
+  'escape-artist',
+  'fly',
+  'handle-animal',
+  'heal',
+  'intimidate',
+  'knowledge',
+  'linguistics',
+  'perception',
+  'perform',
+  'profession',
+  'ride',
+  'sense-motive',
+  'sleight-of-hand',
+  'spellcraft',
+  'stealth',
+  'survival',
+  'swim',
+  'use-magic-device',
+] as const
+
 export const pathfinder1e: System = {
   id: 'pathfinder-1e',
   name: 'Pathfinder 1st Edition',
@@ -255,4 +293,8 @@ export const pathfinder1e: System = {
   conditions: CONDITIONS,
   trackerFields: TRACKER_FIELDS,
   rules: RULES,
+  npc: {
+    cantripDamageDice: () => 1,
+    skills: PF1_SKILLS,
+  },
 }

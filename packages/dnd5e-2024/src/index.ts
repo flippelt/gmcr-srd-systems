@@ -319,6 +319,32 @@ const RULES: SystemRules = {
   },
 }
 
+/**
+ * Hooks pra `@lippelt/srd-npcgen`. 5e 2024 mantém a mesma matemática
+ * (proficiency + ability mod, cantrip scaling 1/5/11/17). A lista de skills
+ * é idêntica à 2014 — o SRD 5.2 não acrescentou nem removeu skills.
+ */
+const DND5E_2024_SKILLS = [
+  'acrobatics',
+  'animal-handling',
+  'arcana',
+  'athletics',
+  'deception',
+  'history',
+  'insight',
+  'intimidation',
+  'investigation',
+  'medicine',
+  'nature',
+  'perception',
+  'performance',
+  'persuasion',
+  'religion',
+  'sleight-of-hand',
+  'stealth',
+  'survival',
+] as const
+
 export const dnd5e2024: System = {
   id: 'dnd5e-2024',
   name: 'Dungeons & Dragons 5e (2024)',
@@ -329,4 +355,7 @@ export const dnd5e2024: System = {
   conditions: CONDITIONS,
   trackerFields: TRACKER_FIELDS,
   rules: RULES,
+  npc: {
+    skills: DND5E_2024_SKILLS,
+  },
 }
