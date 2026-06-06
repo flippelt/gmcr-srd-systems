@@ -28,11 +28,11 @@ deve vir com teste determinístico (use `seed`/`setRng`). Manter `typecheck`,
 - [x] **Multiataque por nível**: papéis marciais ganham ataques extras (ex.: 5/11/20 no estilo 5e; iterativos no modelo BAB). Expor `attacks: NpcAttack[]`. *(v0.1.1)*
 - [x] **Escala de dano**: número de dados/bônus do ataque cresce com nível/CR (caster como cantrip 1/2/3/4; brute ganha dado extra no lvl 11). *(v0.1.1)*
 - [x] **Benchmarks por CR/nível**: tabela alvo de HP/CA/ataque/DC por CR para *calibrar* a saída (não só derivar dos atributos), evitando NPCs fracos/fortes demais. *(v0.1.1 — função `getBenchmark`, anexado em `npc.benchmark`)*
-- [ ] **Bloco de magia para `caster`**: `spellSaveDC`/`spellAttackBonus` (usar os helpers do pacote de sistema quando existirem), cantrips/slots sugeridos.
+- [x] **Bloco de magia para `caster`**: `spellSaveDC`/`spellAttackBonus`, cantrip que escala. *(v0.1.2 — `npc.magic`)*
 - [ ] **Tuning por sistema** (em vez de só os 2 modelos genéricos):
-  - [ ] PF2e: proficiência = nível + bônus; graus de sucesso no ataque.
-  - [ ] Starfinder: Stamina + HP, KAC/EAC no lugar de CA única.
-  - [ ] D&D 3.5/PF1: saves Fort/Ref/Will explícitos; iterativos de BAB.
+  - [ ] PF2e: proficiência = nível + bônus; graus de sucesso no ataque. *(parcial v0.1.2: `proficiencyRank` exposto; matemática real fica pra PR 4 com hook `System.npc?`)*
+  - [x] Starfinder: Stamina + HP, KAC/EAC no lugar de CA única. *(v0.1.2 — `npc.starfinder`)*
+  - [x] D&D 3.5/PF1: saves Fort/Ref/Will explícitos *(v0.1.2 — atalhos `fortSave/refSave/willSave`)*; iterativos de BAB *(v0.1.1)*.
 - [ ] **Tipo/tamanho de criatura**, sentidos (visão no escuro), deslocamentos (voo/natação), idiomas.
 - [ ] **Resistências/imunidades/imunidade a condições** por tipo/papel, ligadas ao `applyDamage` do sistema.
 - [ ] **Perícias completas** por sistema + seleção de proficiências por papel.

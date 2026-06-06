@@ -42,6 +42,18 @@ describe('generateNpc (opções fixas → determinístico)', () => {
     expect(npc.benchmark.attackBonus).toBe(6)
   })
 
+  it('atalhos fort/ref/will espelham saves CON/DEX/WIS', () => {
+    expect(npc.fortSave).toBe(npc.saves.con)
+    expect(npc.refSave).toBe(npc.saves.dex)
+    expect(npc.willSave).toBe(npc.saves.wis)
+  })
+
+  it('soldier não tem bloco de magia, starfinder nem proficiencyRank', () => {
+    expect(npc.magic).toBeUndefined()
+    expect(npc.starfinder).toBeUndefined()
+    expect(npc.proficiencyRank).toBeUndefined()
+  })
+
   it('todos os mods conferem com os scores', () => {
     for (const ab of ['str', 'dex', 'con', 'int', 'wis', 'cha'] as const) {
       expect(npc.abilities[ab].mod).toBe(Math.floor((npc.abilities[ab].score - 10) / 2))
@@ -70,6 +82,70 @@ describe('generateNpc (seed reproduzível)', () => {
     const b = generateNpc({ systemId: 'pathfinder-2e', seed: 42 })
     expect(a).toEqual(b)
     expect(a.name.length).toBeGreaterThan(0)
+  })
+})
+
+describe('generateNpc (caster)', () => {
+  const npc = generateNpc({
+    systemId: 'dnd5e-2024',
+    level: 9,
+    role: 'caster',
+    abilityMethod: 'standard',
+    name: 'Mago',
+  })
+
+  it('preenche magic com CD e ataque mágico', () => {
+    expect(npc.magic).toBeDefined()
+    expect(npc.magic!.spellAbility).toBe('cha') // priority do role caster
+    // CHA score 15 → mod +2; prof lvl 9 = +4 → DC 14, atk +6
+    expect(npc.magic!.spellSaveDC).toBe(14)
+    expect(npc.magic!.spellAttackBonus).toBe(6)
+    // cantrip lvl 9: 2 dados (escala 5/11/17), mod +2
+    expect(npc.magic!.cantripDamage).toBe('2d8+2')
+  })
+})
+
+describe('generateNpc (Starfinder)', () => {
+  it('SF1 inclui stamina/KAC/EAC/resolve', () => {
+    const npc = generateNpc({
+      systemId: 'starfinder-1e',
+      level: 5,
+      role: 'soldier',
+      abilityMethod: 'standard',
+      name: 'Veteran',
+    })
+    expect(npc.starfinder).toBeDefined()
+    expect(npc.starfinder!.kac).toBe(npc.ac)
+    expect(npc.starfinder!.eac).toBe(npc.ac - 1)
+    expect(npc.starfinder!.stamina).toBeGreaterThan(0)
+    expect(npc.starfinder!.resolve).toBeGreaterThanOrEqual(1)
+    expect(npc.proficiencyRank).toBeUndefined() // SF1 não tem rank
+  })
+
+  it('SF2 inclui starfinder + proficiencyRank', () => {
+    const npc = generateNpc({
+      systemId: 'starfinder-2e',
+      level: 11,
+      role: 'archer',
+      abilityMethod: 'standard',
+      name: 'Sniper',
+    })
+    expect(npc.starfinder).toBeDefined()
+    expect(npc.proficiencyRank).toBe('master')
+  })
+})
+
+describe('generateNpc (PF2)', () => {
+  it('inclui proficiencyRank, sem starfinder', () => {
+    const npc = generateNpc({
+      systemId: 'pathfinder-2e',
+      level: 6,
+      role: 'brute',
+      abilityMethod: 'standard',
+      name: 'Ogre',
+    })
+    expect(npc.proficiencyRank).toBe('expert')
+    expect(npc.starfinder).toBeUndefined()
   })
 })
 
