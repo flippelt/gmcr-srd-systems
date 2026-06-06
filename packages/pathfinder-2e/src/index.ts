@@ -275,6 +275,40 @@ const RULES: SystemRules = {
   },
 }
 
+/**
+ * Hooks pra refinar a geração de NPC do `@lippelt/srd-npcgen`. Implementa
+ * a matemática real do PF2e:
+ *
+ * - `attackProgression`: level + rank bonus (em vez do prof 5e).
+ * - `cantripDamageDice`: heightening a cada 2 níveis (1 dado por 2 níveis).
+ * - `skills`: lista canônica das 16 perícias do PRD.
+ */
+function profRankBonus(level: number): number {
+  if (level >= 17) return 8 // legendary
+  if (level >= 11) return 6 // master
+  if (level >= 5) return 4 // expert
+  return 2 // trained
+}
+
+const PF2_SKILLS = [
+  'acrobatics',
+  'arcana',
+  'athletics',
+  'crafting',
+  'deception',
+  'diplomacy',
+  'intimidation',
+  'medicine',
+  'nature',
+  'occultism',
+  'performance',
+  'religion',
+  'society',
+  'stealth',
+  'survival',
+  'thievery',
+] as const
+
 export const pathfinder2e: System = {
   id: 'pathfinder-2e',
   name: 'Pathfinder 2nd Edition',
@@ -285,4 +319,9 @@ export const pathfinder2e: System = {
   conditions: CONDITIONS,
   trackerFields: TRACKER_FIELDS,
   rules: RULES,
+  npc: {
+    attackProgression: (level) => level + profRankBonus(level),
+    cantripDamageDice: (level) => Math.max(1, Math.ceil(level / 2)),
+    skills: PF2_SKILLS,
+  },
 }

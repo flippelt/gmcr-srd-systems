@@ -1,6 +1,6 @@
 {
   "name": "@lippelt/srd-starfinder-2e",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Starfinder 2e system module for @lippelt/srd-core — ORC License (Paizo)",
   "type": "module",
   "main": "./dist/index.cjs",
