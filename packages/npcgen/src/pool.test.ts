@@ -9,7 +9,6 @@ import {
   type DaggerheartExtra,
   type CandelaExtra,
   type GumshoeExtra,
-  type PoolGeneratedNpc,
 } from './index'
 import { toTrackerCombatant, toCodexMarkdown } from './adapters'
 import { setRng, seededRoller, resetRng } from './rng'

@@ -1,4 +1,4 @@
-import type { D20GeneratedNpc, GeneratedNpc, NpcOptions, NpcRole, PoolGeneratedNpc } from './types'
+import type { D20GeneratedNpc, GeneratedNpc, NpcOptions, NpcRole } from './types'
 import { D20_MODEL, ROLES, getSystemFamily } from './data'
 import { generateDaggerheartNpc } from './pool/daggerheart'
 import { generateCandelaNpc } from './pool/candela'
