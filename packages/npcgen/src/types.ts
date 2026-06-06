@@ -35,6 +35,18 @@ export type AbilityMethod = 'standard' | 'elite' | 'rolled' | 'average'
 /** Modelo de progressão de ataque/resistência da família d20. */
 export type D20Model = 'proficiency' | 'bab'
 
+/**
+ * Hooks opcionais pra refinar a geração por sistema. Espelha o
+ * `SystemNpcHooks` do `@lippelt/srd-core` (declarado aqui pra evitar dep
+ * obrigatória — o consumidor passa o objeto via `NpcOptions.npc`).
+ */
+export interface NpcGenHooks {
+  attackProgression?: (level: number, role: string) => number
+  cantripDamageDice?: (level: number) => number
+  skills?: readonly string[]
+  defaultLanguages?: (creatureType: string) => string[]
+}
+
 export interface NpcOptions {
   /** Id do sistema (família d20). Ex.: 'dnd5e-2024'. */
   systemId: string
@@ -56,6 +68,12 @@ export interface NpcOptions {
   nameStyle?: NameStyle
   /** Quando `true`, anexa um epíteto/título ao nome (ex.: "Korak o Astuto"). */
   withEpithet?: boolean
+  /**
+   * Hooks de sistema. Quando o consumidor passa um `System` do
+   * `@lippelt/srd-core`, ele tipicamente faz `npc: system.npc`. O npcgen
+   * usa os hooks pra refinar a geração; sem hooks cai no genérico d20.
+   */
+  npc?: NpcGenHooks
 }
 
 export type NameStyle = 'fantasy' | 'sci-fi' | 'lovecraftian' | 'cyberpunk' | 'plain'

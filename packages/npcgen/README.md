@@ -67,6 +67,32 @@ Cada NPC gerado tem `attacks: NpcAttack[]` (lista) além do `attack` (alias do p
 
 `getBenchmark(level)` retorna HP/CA/ataque/CD/dano-por-round esperados pelo estilo 5e DMG. Cada NPC gerado já vem com `npc.benchmark` pra você comparar a saída com o alvo do CR.
 
+## Hook de sistema (v0.1.4)
+
+Cada sistema do `@lippelt/srd-*` pode opcionalmente expor `npc: SystemNpcHooks` no objeto System (definido no `@lippelt/srd-core`). O npcgen aceita os mesmos hooks via `NpcOptions.npc`:
+
+```ts
+import { getSystem } from '@lippelt/srd-core'
+import { generateNpc } from '@lippelt/srd-npcgen'
+
+const pf2 = getSystem('pathfinder-2e')!
+const npc = generateNpc({
+  systemId: 'pathfinder-2e',
+  level: 10,
+  role: 'soldier',
+  npc: pf2.npc, // passa hooks do sistema se existirem
+})
+```
+
+| Hook | Default genérico | Quando faz sentido |
+|---|---|---|
+| `attackProgression(level, role)` | 5e: `2 + ⌊(lvl−1)/4⌋` (proficiency) ou BAB cheio | PF2/SF2: `level + rank bonus` (rank trained +2 / expert +4 / master +6 / legendary +8) |
+| `cantripDamageDice(level)` | 5e: 1/2/3/4 dados em 1/5/11/17 | PF2: heightening a cada 2 níveis |
+| `skills` | (não usado ainda) | Lista canônica de perícias do sistema |
+| `defaultLanguages(creatureType)` | Português padrão por tipo (Comum, Abissal, etc) | Settings exóticos (Starfinder: Galáctico, Vesk, Ysoki etc) |
+
+Sem hook → cai no genérico. Hook parcial é OK: só os campos definidos são usados.
+
 ## Criatura, armas e resistências (v0.1.3)
 
 Todo NPC vem com:

@@ -42,7 +42,9 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
   const role: NpcRole = opts.role ?? ROLE_LIST[d(ROLE_LIST.length) - 1]!
   const def = ROLES[role]
   const abilities = generateAbilityScores(opts.abilityMethod ?? 'standard', role)
-  const prog = attackProgression(model, level)
+  // Hook do sistema sobrescreve a progressão (útil pra PF2: level + rank).
+  const prog =
+    opts.npc?.attackProgression?.(level, role) ?? attackProgression(model, level)
 
   const skills: Record<string, number> = {}
   for (const skill of Object.keys(def.skills)) {
@@ -58,7 +60,14 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
   // Tuning condicional por papel/sistema.
   const magic =
     role === 'caster'
-      ? getMagicStats(def.attackAbility, dmgMod, prog, model, level)
+      ? getMagicStats(
+          def.attackAbility,
+          dmgMod,
+          prog,
+          model,
+          level,
+          opts.npc?.cantripDamageDice,
+        )
       : undefined
   const starfinder = STARFINDER_SYSTEMS.has(opts.systemId)
     ? getStarfinderTuning(ac, abilities.con.mod, level, model)
@@ -71,6 +80,11 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
   const creatureType = opts.creatureType ?? 'humanoid'
   const creatureSize = opts.creatureSize ?? 'medium'
   const creature = buildCreature(creatureType, creatureSize)
+  // Hook do sistema pode sobrescrever idiomas (settings com fauna exótica).
+  if (opts.npc?.defaultLanguages) {
+    const fromHook = opts.npc.defaultLanguages(creatureType)
+    if (Array.isArray(fromHook)) creature.languages = [...fromHook]
+  }
   const resistances = getResistancesForType(creatureType)
   const weapon = getRoleWeapon(role)
   const speed = creature.movements.walk

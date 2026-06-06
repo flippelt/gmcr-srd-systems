@@ -85,6 +85,25 @@ rules?: {
 
 `kind` é convenção do sistema (ex.: `'attack'`, `'save'`, `'damage'`).
 
+### `SystemNpcHooks` (opcional, v0.1.3+)
+
+Hooks consumidos pelo [`@lippelt/srd-npcgen`](https://www.npmjs.com/package/@lippelt/srd-npcgen) pra refinar a geração de NPCs por sistema. Cada um é independente:
+
+```ts
+npc?: {
+  /** Override da progressão de ataque (PF2: level + rank bonus). */
+  attackProgression?: (level: number, role: string) => number
+  /** Override do nº de dados de cantrip (PF2 heightening). */
+  cantripDamageDice?: (level: number) => number
+  /** Lista canônica de perícias do sistema. */
+  skills?: readonly string[]
+  /** Idiomas default pra um tipo de criatura no setting. */
+  defaultLanguages?: (creatureType: string) => string[]
+}
+```
+
+Sem hook, o npcgen usa defaults d20 genéricos.
+
 ## Sistemas implementados
 
 Veja o monorepo [gmcr-srd-systems](https://github.com/flippelt/gmcr-srd-systems): D&D 3.5, D&D 5e (2014/2024), Pathfinder 1e/2e, Starfinder 1e/2e, Lancer, GUMSHOE, Daggerheart, Candela Obscura.
