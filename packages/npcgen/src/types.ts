@@ -257,7 +257,14 @@ export interface CRBenchmark {
   saveDC: number
 }
 
-export interface GeneratedNpc {
+/**
+ * NPC d20 (D&D-like). Família tradicional do gerador: HP, CA, ataques,
+ * saves, perícias.
+ *
+ * Discriminador: `family: 'd20'`.
+ */
+export interface D20GeneratedNpc {
+  family: 'd20'
   systemId: string
   name: string
   role: NpcRole
@@ -310,6 +317,89 @@ export interface GeneratedNpc {
   weapon: NpcWeapon
   /** Benchmark esperado pra esse nível/CR (referência). */
   benchmark: CRBenchmark
+}
+
+// ============================================================================
+// Pool systems (Daggerheart, Candela Obscura, GUMSHOE)
+// ============================================================================
+
+/** Identificadores de sistemas de pool suportados. */
+export type PoolSystemId = 'daggerheart' | 'candela-obscura' | 'gumshoe'
+
+/**
+ * Track com valor atual e máximo (HP/Stress/Armor no Daggerheart,
+ * Stability/Sanidade no GUMSHOE etc.).
+ */
+export interface PoolTrack {
+  current: number
+  max: number
+}
+
+/**
+ * Recurso "ataque/ação" pra sistemas de pool. Não tem `bonus` no estilo
+ * d20 — o sistema decide como aplicar (rolagem de pool, dado de dualidade,
+ * d6 GUMSHOE etc.).
+ */
+export interface PoolAttack {
+  name: string
+  /** Notação humana do dano (ex.: '1d8+2', '1d10', '+3 dado de Stress'). */
+  damage: string
+  /** Range opcional ("Melee", "Far", "Long"). */
+  range?: string
+  /** Notas de mecânica (ex.: "gasta 1 Hope", "Persistente"). */
+  notes?: string[]
+}
+
+/**
+ * NPC genérico de sistema de pool. Cada sistema preenche o `extra` com
+ * stats específicos via campo `system`-discriminado:
+ *
+ * - daggerheart: thresholds major/severe, Hope, Evasion, Stress
+ * - candela-obscura: Drives (Nerve/Cunning/Intuition), marks
+ * - gumshoe: Hit Threshold, pools investigativos/gerais
+ *
+ * Discriminador interno: `family: 'pool'` + `system`.
+ */
+export interface PoolGeneratedNpc {
+  family: 'pool'
+  /** Id do sistema. */
+  systemId: string
+  /** Subtipo de sistema de pool. */
+  system: PoolSystemId
+  /** Nome (gerado ou fornecido). */
+  name: string
+  /** Papel/arquétipo (string livre por sistema). */
+  role: string
+  /** Tier/nível (1..4 em Daggerheart, equivalente em outros). */
+  tier: number
+  /** Tracks principais (vida/estresse/etc). Estrutura comum entre os sistemas. */
+  tracks: Record<string, PoolTrack>
+  /** Ataques/ações principais. */
+  attacks: PoolAttack[]
+  /** Tipo/tamanho/sentidos compartilhados (sempre presente, igual ao d20). */
+  creature: NpcCreature
+  /** Stats específicos do sistema (formato livre, documentado por sistema). */
+  extra: Record<string, unknown>
+}
+
+/**
+ * União principal exportada: NPC d20 OU pool. Use `npc.family === 'd20'`
+ * (ou os type guards `isD20Npc`/`isPoolNpc`) pra narrow.
+ *
+ * **Backward-compat**: o `family` é novo (v0.2.0). Código que consumia
+ * o shape antigo precisa adicionar `if (npc.family === 'd20') { ... }`
+ * ou usar `isD20Npc(npc)`.
+ */
+export type GeneratedNpc = D20GeneratedNpc | PoolGeneratedNpc
+
+/** Type guard: o NPC é da família d20? */
+export function isD20Npc(npc: GeneratedNpc): npc is D20GeneratedNpc {
+  return npc.family === 'd20'
+}
+
+/** Type guard: o NPC é de sistema de pool? */
+export function isPoolNpc(npc: GeneratedNpc): npc is PoolGeneratedNpc {
+  return npc.family === 'pool'
 }
 
 /** Combatente no formato do tracker do GM Control Room. Desacoplado: espelha

@@ -1,5 +1,8 @@
-import type { GeneratedNpc, NpcOptions, NpcRole } from './types'
-import { D20_MODEL, ROLES } from './data'
+import type { D20GeneratedNpc, GeneratedNpc, NpcOptions, NpcRole, PoolGeneratedNpc } from './types'
+import { D20_MODEL, ROLES, getSystemFamily } from './data'
+import { generateDaggerheartNpc } from './pool/daggerheart'
+import { generateCandelaNpc } from './pool/candela'
+import { generateGumshoeNpc } from './pool/gumshoe'
 import {
   attackProgression,
   clampLevel,
@@ -29,14 +32,62 @@ export function isD20System(systemId: string): boolean {
   return systemId in D20_MODEL
 }
 
-/** Gera um NPC/stat block para um sistema da família d20. Determinístico
- *  quando `seed` é informado (e quando role/abilityMethod/name são fixos). */
+/** Diz se o sistema é um sistema de pool suportado. */
+export function isPoolSystem(systemId: string): boolean {
+  return getSystemFamily(systemId) === 'pool'
+}
+
+/** Sistemas suportados (d20 + pool). */
+export function isSupportedSystem(systemId: string): boolean {
+  return getSystemFamily(systemId) !== null
+}
+
+/** Gera um NPC/stat block. Despacha por família:
+ *
+ * - Sistemas d20 (D&D 5e, PF1/2, SF1/2, D&D 3.5) → D20GeneratedNpc
+ * - Sistemas pool (Daggerheart, Candela Obscura, GUMSHOE) → PoolGeneratedNpc
+ *
+ * Determinístico quando `seed` é informado.
+ *
+ * Use os type guards `isD20Npc(npc)` / `isPoolNpc(npc)` pra narrow no
+ * consumidor. */
 export function generateNpc(opts: NpcOptions): GeneratedNpc {
+  if (opts.seed !== undefined) setRng(seededRoller(opts.seed))
+
+  const family = getSystemFamily(opts.systemId)
+
+  if (family === 'pool') {
+    switch (opts.systemId) {
+      case 'daggerheart':
+        return generateDaggerheartNpc({
+          level: opts.level,
+          name: opts.name,
+          creatureType: opts.creatureType,
+          creatureSize: opts.creatureSize,
+        })
+      case 'candela-obscura':
+        return generateCandelaNpc({
+          tier: opts.level ? Math.min(3, Math.max(1, opts.level)) as 1 | 2 | 3 : undefined,
+          name: opts.name,
+          creatureType: opts.creatureType,
+          creatureSize: opts.creatureSize,
+        })
+      case 'gumshoe':
+        return generateGumshoeNpc({
+          tier: opts.level ? Math.min(3, Math.max(1, opts.level)) as 1 | 2 | 3 : undefined,
+          name: opts.name,
+          creatureType: opts.creatureType,
+          creatureSize: opts.creatureSize,
+        })
+      default:
+        throw new Error(`[srd-npcgen] sistema pool "${opts.systemId}" não tem gerador implementado`)
+    }
+  }
+
   const model = D20_MODEL[opts.systemId]
   if (!model) {
-    throw new Error(`[srd-npcgen] sistema "${opts.systemId}" não é da família d20 suportada`)
+    throw new Error(`[srd-npcgen] sistema "${opts.systemId}" não suportado (não-d20 e não-pool)`)
   }
-  if (opts.seed !== undefined) setRng(seededRoller(opts.seed))
 
   const level = clampLevel(opts.level ?? 1)
   const role: NpcRole = opts.role ?? ROLE_LIST[d(ROLE_LIST.length) - 1]!
@@ -94,7 +145,8 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
     opts.name ??
     generateName({ style: opts.nameStyle, withEpithet: opts.withEpithet })
 
-  return {
+  const d20Npc: D20GeneratedNpc = {
+    family: 'd20',
     systemId: opts.systemId,
     name,
     role,
@@ -121,4 +173,8 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
     weapon,
     benchmark: getBenchmark(level),
   }
+  return d20Npc
 }
+
+// Re-export type alias pra compat (consumidores que esperavam só d20).
+export type { D20GeneratedNpc, PoolGeneratedNpc, GeneratedNpc } from './types'

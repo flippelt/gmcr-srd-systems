@@ -125,6 +125,35 @@ export const D20_MODEL: Record<string, D20Model> = {
 
 export const D20_SYSTEMS: string[] = Object.keys(D20_MODEL)
 
+/**
+ * Família mecânica do sistema. `d20` cobre D&D-likes (rolagem d20 + AC + saves);
+ * `pool` cobre sistemas de pool de dados (2d12 dualidade, d6 pool, etc) com
+ * track/threshold em vez de HP/AC.
+ *
+ * NPCs gerados pra cada família têm shapes diferentes — ver `D20GeneratedNpc`
+ * e `PoolGeneratedNpc`.
+ */
+export type SystemFamily = 'd20' | 'pool'
+
+export const SYSTEM_FAMILY: Record<string, SystemFamily> = {
+  // d20 family
+  'dnd5e-2024': 'd20',
+  'dnd5e-2014': 'd20',
+  'dnd-3.5': 'd20',
+  'pathfinder-1e': 'd20',
+  'pathfinder-2e': 'd20',
+  'starfinder-1e': 'd20',
+  'starfinder-2e': 'd20',
+  // pool family
+  daggerheart: 'pool',
+  'candela-obscura': 'pool',
+  gumshoe: 'pool',
+}
+
+export function getSystemFamily(systemId: string): SystemFamily | null {
+  return SYSTEM_FAMILY[systemId] ?? null
+}
+
 /** Sílabas para nomes gerados. */
 export const NAME_PREFIX = [
   'Kor', 'Var', 'Mal', 'Thar', 'Ser', 'Bel', 'Dra', 'Gor', 'Lyr', 'Nyx',

@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { generateNpc, isD20System } from './generate'
+import { generateNpc as generateNpcRaw, isD20System } from './generate'
+import type { D20GeneratedNpc, NpcOptions } from './types'
+
+/** Wrapper local pra narrow do union em testes que esperam d20. */
+const generateNpc = (opts: NpcOptions): D20GeneratedNpc =>
+  generateNpcRaw(opts) as D20GeneratedNpc
 
 describe('generateNpc (opções fixas → determinístico)', () => {
   const npc = generateNpc({
@@ -221,7 +226,11 @@ describe('isD20System / erros', () => {
     expect(isD20System('daggerheart')).toBe(false)
   })
 
-  it('lança para sistema fora da família d20', () => {
-    expect(() => generateNpc({ systemId: 'daggerheart' })).toThrowError(/família d20/)
+  it('lança para sistema desconhecido (não-d20 e não-pool)', () => {
+    expect(() => generateNpc({ systemId: 'unknown-system' })).toThrowError(/não suportado/)
+  })
+
+  it('daggerheart é aceito (gera PoolGeneratedNpc)', () => {
+    expect(() => generateNpcRaw({ systemId: 'daggerheart' })).not.toThrow()
   })
 })

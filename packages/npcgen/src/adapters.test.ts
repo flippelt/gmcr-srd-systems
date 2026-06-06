@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { generateNpc } from './generate'
+import { generateNpc as generateNpcRaw } from './generate'
+import type { D20GeneratedNpc, NpcOptions } from './types'
 import { toTrackerCombatant, toCodexMarkdown } from './adapters'
+
+const generateNpc = (opts: NpcOptions): D20GeneratedNpc =>
+  generateNpcRaw(opts) as D20GeneratedNpc
 
 const npc = generateNpc({
   systemId: 'dnd5e-2024',

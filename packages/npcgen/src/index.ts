@@ -16,7 +16,15 @@
 export * from './types'
 export { setRng, resetRng, seededRoller, type Roller } from './rng'
 export { abilityMod, proficiencyBonus, fullBab, attackProgression, clampLevel } from './d20'
-export { ROLES, D20_MODEL, D20_SYSTEMS, type RoleDef } from './data'
+export {
+  ROLES,
+  D20_MODEL,
+  D20_SYSTEMS,
+  SYSTEM_FAMILY,
+  getSystemFamily,
+  type RoleDef,
+  type SystemFamily,
+} from './data'
 export {
   attackCount,
   damageDiceCount,
@@ -34,6 +42,28 @@ export {
 export { buildCreature } from './creature'
 export { getResistancesForType } from './resistances'
 export { WEAPONS, ROLE_WEAPON, getRoleWeapon, type WeaponId } from './weapons'
-export { generateNpc, isD20System } from './generate'
+export { generateNpc, isD20System, isPoolSystem, isSupportedSystem } from './generate'
+export {
+  generateDaggerheartNpc,
+  tierForLevel,
+  DH_ROLES,
+  type DhOptions,
+  type DhRole,
+  type DaggerheartExtra,
+} from './pool/daggerheart'
+export {
+  generateCandelaNpc,
+  CANDELA_ROLES,
+  type CandelaOptions,
+  type CandelaRole,
+  type CandelaExtra,
+} from './pool/candela'
+export {
+  generateGumshoeNpc,
+  GUMSHOE_ROLES,
+  type GumshoeOptions,
+  type GumshoeRole,
+  type GumshoeExtra,
+} from './pool/gumshoe'
 export { toTrackerCombatant, toCodexMarkdown } from './adapters'
 export { generateName, type NameOptions } from './names'
