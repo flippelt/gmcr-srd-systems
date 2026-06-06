@@ -1,25 +1,68 @@
-import type { Ability, GeneratedNpc, TrackerCombatant } from './types'
+import type {
+  Ability,
+  D20GeneratedNpc,
+  GeneratedNpc,
+  PoolGeneratedNpc,
+  TrackerCombatant,
+} from './types'
+import { isD20Npc } from './types'
 
 const ORDER: readonly Ability[] = ['str', 'dex', 'con', 'int', 'wis', 'cha']
 
 const sign = (n: number): string => (n >= 0 ? `+${n}` : `${n}`)
 
-/** Converte o NPC para o formato do tracker do GM Control Room. A iniciativa
- *  é o modificador de Destreza (o GM rola na mesa); `fields.ac` alimenta o
- *  trackerField 'ac' dos sistemas d20. */
+/**
+ * Converte o NPC para o formato do tracker do GM Control Room.
+ *
+ * - d20: hp/maxHp = npc.hp; initiative = dex mod; fields.ac = npc.ac
+ * - pool: hp/maxHp = tracks.hp.max (fallback pra primeiro track); initiative = 0
+ *   (sistemas de pool tipicamente não usam iniciativa numérica); fields = stats
+ *   relevantes do sistema (difficulty/evasion/hitThreshold).
+ */
 export function toTrackerCombatant(npc: GeneratedNpc): TrackerCombatant {
+  if (isD20Npc(npc)) {
+    return {
+      name: npc.name,
+      initiative: npc.abilities.dex.mod,
+      hp: npc.hp,
+      maxHp: npc.hp,
+      statuses: [],
+      fields: { ac: npc.ac },
+    }
+  }
+
+  // Pool NPC: extrai HP do track primário.
+  const hpTrack = npc.tracks.hp ?? npc.tracks.health ?? Object.values(npc.tracks)[0]
+  const hpMax = hpTrack?.max ?? 1
+
+  // Fields conforme o sistema (lookup conservador no extra).
+  const fields: Record<string, number> = {}
+  const extra = npc.extra as Record<string, unknown>
+  if (typeof extra.evasion === 'number') fields['evasion'] = extra.evasion as number
+  if (typeof extra.difficulty === 'number') fields['difficulty'] = extra.difficulty as number
+  if (typeof extra.hitThreshold === 'number') fields['hitThreshold'] = extra.hitThreshold as number
+
   return {
     name: npc.name,
-    initiative: npc.abilities.dex.mod,
-    hp: npc.hp,
-    maxHp: npc.hp,
+    initiative: 0,
+    hp: hpMax,
+    maxHp: hpMax,
     statuses: [],
-    fields: { ac: npc.ac },
+    fields,
   }
 }
 
 /** Stat block em Markdown para colar no Campaign Codex. */
 export function toCodexMarkdown(npc: GeneratedNpc): string {
+  if (isD20Npc(npc)) return d20Markdown(npc)
+  return poolMarkdown(npc)
+}
+
+// ----------------------------------------------------------------------------
+// D20 markdown (mesma lógica anterior, agora encapsulada)
+// ----------------------------------------------------------------------------
+
+function d20Markdown(npc: D20GeneratedNpc): string {
   const abilities = ORDER.map(
     (ab) => `${ab.toUpperCase()} ${npc.abilities[ab].score} (${sign(npc.abilities[ab].mod)})`,
   ).join(' · ')
@@ -29,8 +72,6 @@ export function toCodexMarkdown(npc: GeneratedNpc): string {
     .join(', ')
   const progLabel = npc.model === 'proficiency' ? 'Proficiência' : 'BAB'
 
-  // Multiataque: lista cada ataque numa linha quando > 1. Modelo bab tem
-  // bônus decrescente, então a forma "1d8+3 / 1d8−2 / 1d8−7" é informativa.
   const attackLines =
     npc.attacks.length === 1
       ? [`- **Ataque** ${npc.attacks[0]!.name} ${sign(npc.attacks[0]!.bonus)}, dano ${npc.attacks[0]!.damage}`]
@@ -41,14 +82,12 @@ export function toCodexMarkdown(npc: GeneratedNpc): string {
           ),
         ]
 
-  // Header com criatura + proficiency rank.
   const creatureDesc = `${npc.creature.size} ${npc.creature.type}`
   const subtitle =
     `*${creatureDesc} • ${npc.role} • nível ${npc.level} • ${npc.systemId}` +
     (npc.proficiencyRank ? ` • ${npc.proficiencyRank}` : '') +
     `*`
 
-  // Linha de defesa: CA padrão; em Starfinder mostra KAC/EAC + Stamina/Resolve.
   const defenseLine = npc.starfinder
     ? `- **KAC** ${npc.starfinder.kac}  **EAC** ${npc.starfinder.eac}  ` +
       `**PV** ${npc.hp}  **SP** ${npc.starfinder.stamina}  ` +
@@ -68,7 +107,6 @@ export function toCodexMarkdown(npc: GeneratedNpc): string {
     ...attackLines,
   ]
 
-  // Sentidos/idiomas (se houver).
   if (npc.creature.senses.length > 0 || npc.creature.languages.length > 0) {
     const sensesPart =
       npc.creature.senses.length > 0
@@ -82,7 +120,6 @@ export function toCodexMarkdown(npc: GeneratedNpc): string {
     if (parts.length > 0) lines.push(`- ${parts.join('  ·  ')}`)
   }
 
-  // Deslocamentos extras (voo, natação, etc.).
   const m = npc.creature.movements
   const extraMov: string[] = []
   if (m.fly) extraMov.push(`voo ${m.fly} ft`)
@@ -93,7 +130,6 @@ export function toCodexMarkdown(npc: GeneratedNpc): string {
     lines.push(`- **Movimentos extras** ${extraMov.join(', ')}`)
   }
 
-  // Resistências/imunidades (só se tiver algo).
   const r = npc.resistances
   if (r.damageResistances.length > 0) {
     lines.push(`- **Resistente a** ${r.damageResistances.join(', ')}`)
@@ -108,7 +144,6 @@ export function toCodexMarkdown(npc: GeneratedNpc): string {
     lines.push(`- **Imune a condições** ${r.conditionImmunities.join(', ')}`)
   }
 
-  // Bloco de magia (se for caster).
   if (npc.magic) {
     lines.push(
       `- **Magia** ${npc.magic.spellAbility.toUpperCase()}` +
@@ -116,6 +151,84 @@ export function toCodexMarkdown(npc: GeneratedNpc): string {
         ` · ataque ${sign(npc.magic.spellAttackBonus)}` +
         ` · cantrip ${npc.magic.cantripDamage}`,
     )
+  }
+
+  return lines.join('\n')
+}
+
+// ----------------------------------------------------------------------------
+// Pool markdown (Daggerheart / Candela / GUMSHOE)
+// ----------------------------------------------------------------------------
+
+function poolMarkdown(npc: PoolGeneratedNpc): string {
+  const creatureDesc = `${npc.creature.size} ${npc.creature.type}`
+  const subtitle = `*${creatureDesc} • ${npc.role} • tier ${npc.tier} • ${npc.systemId}*`
+
+  const lines = [`### ${npc.name}`, subtitle, '']
+
+  // Tracks (HP/Stress/Armor/etc).
+  const trackKeys = Object.keys(npc.tracks)
+  if (trackKeys.length > 0) {
+    const trackParts = trackKeys.map((k) => {
+      const t = npc.tracks[k]!
+      return `**${k.charAt(0).toUpperCase()}${k.slice(1)}** ${t.current}/${t.max}`
+    })
+    lines.push(`- ${trackParts.join('  ·  ')}`)
+  }
+
+  // Stats específicos do sistema (extra).
+  const extra = npc.extra as Record<string, unknown>
+  if (npc.system === 'daggerheart') {
+    if (typeof extra.difficulty === 'number') {
+      lines.push(
+        `- **Dificuldade** ${extra.difficulty as number}  ` +
+          `**Evasão** ${extra.evasion as number}  ` +
+          `**Limiar Maior** ${extra.majorThreshold as number}  ` +
+          `**Limiar Severo** ${extra.severeThreshold as number}`,
+      )
+    }
+  } else if (npc.system === 'candela-obscura') {
+    if (typeof extra.hitThreshold === 'number') {
+      const drives = extra.drives as Record<string, number> | undefined
+      lines.push(
+        `- **Hit Threshold** ${extra.hitThreshold as number}` +
+          (drives
+            ? `  ·  **Drives** Nerve ${drives.nerve}, Cunning ${drives.cunning}, Intuition ${drives.intuition}`
+            : ''),
+      )
+    }
+  } else if (npc.system === 'gumshoe') {
+    if (typeof extra.hitThreshold === 'number') {
+      const pools = extra.pools as Record<string, number> | undefined
+      lines.push(
+        `- **Hit Threshold** ${extra.hitThreshold as number}` +
+          (pools
+            ? `  ·  **Pools** Athletics ${pools.athletics}, Fighting ${pools.fighting}, Weapons ${pools.weapons}`
+            : ''),
+      )
+    }
+  }
+
+  // Ataques.
+  npc.attacks.forEach((a, i) => {
+    const rangePart = a.range ? ` [${a.range}]` : ''
+    const notesPart = a.notes && a.notes.length > 0 ? ` — ${a.notes.join('; ')}` : ''
+    const label = npc.attacks.length === 1 ? '**Ataque**' : `**Ataque ${i + 1}**`
+    lines.push(`- ${label} ${a.name}${rangePart}, dano ${a.damage}${notesPart}`)
+  })
+
+  // Sentidos/idiomas.
+  if (npc.creature.senses.length > 0 || npc.creature.languages.length > 0) {
+    const sensesPart =
+      npc.creature.senses.length > 0
+        ? `**Sentidos** ${npc.creature.senses.join(', ')}`
+        : ''
+    const langsPart =
+      npc.creature.languages.length > 0
+        ? `**Idiomas** ${npc.creature.languages.join(', ')}`
+        : ''
+    const parts = [sensesPart, langsPart].filter(Boolean)
+    if (parts.length > 0) lines.push(`- ${parts.join('  ·  ')}`)
   }
 
   return lines.join('\n')

@@ -40,15 +40,17 @@ deve vir com teste determinístico (use `seed`/`setRng`). Manter `typecheck`,
 - [x] **Nomes melhores**: listas com sabor por sistema/cultura + títulos/epítetos. *(v0.1.3 — `NameStyle`: fantasy/sci-fi/lovecraftian/cyberpunk/plain + `withEpithet`)*
 - [x] **Hook opcional `System.npc?`** no `@lippelt/srd-core`: cada pacote de sistema pode refinar a geração; `npcgen` usa o hook se existir, senão cai no genérico d20. *(v0.1.4 — `attackProgression`/`cantripDamageDice`/`skills`/`defaultLanguages` em `SystemNpcHooks`; passa via `NpcOptions.npc`)*
 
-## Bloco B — Sistemas de pool (começar)
+## Bloco B — Sistemas de pool (v0.2.0)
 
-- [ ] **Generalizar `generateNpc`**: despachar por *família* do sistema (d20 vs pool) em vez de lançar erro. Criar `SYSTEM_FAMILY` em `data.ts`.
-- [ ] **Forma de NPC de pool** em `types.ts` (sem CA/mods d20; com pools, defesas, faixas/limiares).
-- [ ] **Daggerheart**: dificuldade, limiares (major/severe), HP/Stress/Armor, experiências, ataque.
-- [ ] **Candela Obscura**: drives/resistances, papel (role), marcas (gilded/marked).
-- [ ] **GUMSHOE**: pools de perícias gerais/investigativas, Health/Stability, Hit Threshold.
-- [ ] **Adapters de pool** → `toTrackerCombatant` (mapear pools para os `trackerFields` de cada sistema) e `toCodexMarkdown`.
-- [ ] **Testes por sistema de pool**: geração determinística + integridade (a saída casa com os `trackerFields` reais do pacote, via `validateSystem`/o tracker).
+- [x] **Generalizar `generateNpc`**: despacha por *família* do sistema (d20 vs pool) em vez de lançar erro. `SYSTEM_FAMILY` em `data.ts`, `getSystemFamily()` exposto. *(v0.2.0)*
+- [x] **Forma de NPC de pool** em `types.ts`: `PoolGeneratedNpc` com `tracks: Record<string, PoolTrack>`, `attacks: PoolAttack[]`, `extra: Record<string, unknown>` específico por sistema. `GeneratedNpc` agora é union `D20GeneratedNpc | PoolGeneratedNpc`; type guards `isD20Npc`/`isPoolNpc`. *(v0.2.0 — breaking shape)*
+- [x] **Daggerheart**: dificuldade, limiares (major/severe), HP/Stress/Armor/Hope, 10 roles (bruiser, horde, leader, minion, ranged, skulk, social, solo, standard, support), 4 tiers. *(v0.2.0)*
+- [x] **Candela Obscura**: 7 roles, Hit Threshold, drives (nerve/cunning/intuition), marks (body/brain/bleed). *(v0.2.0)*
+- [x] **GUMSHOE**: 7 roles, Hit Threshold, pools (athletics/fighting/weapons), Health/Stability tracks. *(v0.2.0)*
+- [x] **Adapters de pool** — `toTrackerCombatant` e `toCodexMarkdown` cobrem `PoolGeneratedNpc` com lógica por sistema. *(v0.2.0)*
+- [x] **Testes determinísticos** — 20 cases novos em `pool.test.ts` + dispatch por família. *(v0.2.0)*
+
+> **Próximo (pendente)**: integridade contra `trackerFields` reais — validar que `toTrackerCombatant(pool).fields` casa com os campos declarados pelo pacote do sistema (`@lippelt/srd-daggerheart` etc.).
 
 ## Bloco C — Integração com o GM Control Room
 

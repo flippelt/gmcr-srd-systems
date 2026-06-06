@@ -36,8 +36,9 @@ Dois modelos cobrem a família d20:
 - **`bab`** (D&D 3.5, Pathfinder 1e, Starfinder 1e): BAB cheio aproximado
   (= nível) e saves bom/fraco. Ataques iterativos com bônus decrescente (−5).
 
-Sistemas baseados em pool (Daggerheart, Candela Obscura, GUMSHOE) ficam para
-uma versão futura — o gerador lança erro para ids fora da família d20.
+Sistemas baseados em pool (Daggerheart, Candela Obscura, GUMSHOE) **agora são
+suportados** (v0.2.0+) — `generateNpc` despacha automaticamente por família.
+Veja seção [Sistemas de pool](#sistemas-de-pool-v020) abaixo.
 
 > As fórmulas são aproximações ao estilo "NPC de mesa" (não builds completos de
 > PC): atributos por arquétipo, HP por dado de vida + CON, CA por armadura +
@@ -66,6 +67,42 @@ Cada NPC gerado tem `attacks: NpcAttack[]` (lista) além do `attack` (alias do p
 ### Benchmarks de CR
 
 `getBenchmark(level)` retorna HP/CA/ataque/CD/dano-por-round esperados pelo estilo 5e DMG. Cada NPC gerado já vem com `npc.benchmark` pra você comparar a saída com o alvo do CR.
+
+## Sistemas de pool (v0.2.0)
+
+`generateNpc({ systemId: 'daggerheart' | 'candela-obscura' | 'gumshoe' })` agora retorna `PoolGeneratedNpc` em vez de lançar erro. O retorno é uma **união discriminada** — use os type guards `isD20Npc` / `isPoolNpc` pra narrow.
+
+```ts
+import { generateNpc, isD20Npc, isPoolNpc } from '@lippelt/srd-npcgen'
+
+const npc = generateNpc({ systemId: 'daggerheart', level: 5, name: 'Boss' })
+
+if (isPoolNpc(npc)) {
+  npc.tracks.hp        // { current: 12, max: 12 }
+  npc.extra            // sistema-específico (Daggerheart: tier/difficulty/evasion/thresholds)
+}
+```
+
+### Daggerheart
+
+- 10 roles: `bruiser`, `horde`, `leader`, `minion`, `ranged`, `skulk`, `social`, `solo`, `standard`, `support`
+- 4 tiers (lvls 1-3 / 4-6 / 7-9 / 10)
+- Tracks: HP, Stress, Armor, Hope
+- Extra: `difficulty`, `evasion`, `majorThreshold`, `severeThreshold`, `range`
+
+### Candela Obscura
+
+- 7 roles: `cultist`, `investigator`, `mundane`, `occultist`, `spectre`, `thug`, `whisper`
+- 3 tiers (capacho / padrão / chefe)
+- Tracks: marcas de body, brain, bleed (0..3 cada)
+- Extra: `hitThreshold`, `drives` (nerve/cunning/intuition)
+
+### GUMSHOE
+
+- 7 roles: `cultist`, `investigator`, `mook`, `monster`, `professional`, `thug`, `witness`
+- 3 tiers (escalando pools)
+- Tracks: Health, Stability + Athletics, Fighting, Weapons (pools)
+- Extra: `hitThreshold`, `pools`, `attackDamageMod`
 
 ## Hook de sistema (v0.1.4)
 
