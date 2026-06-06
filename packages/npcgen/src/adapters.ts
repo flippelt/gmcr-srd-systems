@@ -41,9 +41,10 @@ export function toCodexMarkdown(npc: GeneratedNpc): string {
           ),
         ]
 
-  // Header com proficiency rank se for PF2/SF2.
+  // Header com criatura + proficiency rank.
+  const creatureDesc = `${npc.creature.size} ${npc.creature.type}`
   const subtitle =
-    `*${npc.role} • nível ${npc.level} • ${npc.systemId}` +
+    `*${creatureDesc} • ${npc.role} • nível ${npc.level} • ${npc.systemId}` +
     (npc.proficiencyRank ? ` • ${npc.proficiencyRank}` : '') +
     `*`
 
@@ -66,6 +67,46 @@ export function toCodexMarkdown(npc: GeneratedNpc): string {
     `- **Perícias** ${skills}`,
     ...attackLines,
   ]
+
+  // Sentidos/idiomas (se houver).
+  if (npc.creature.senses.length > 0 || npc.creature.languages.length > 0) {
+    const sensesPart =
+      npc.creature.senses.length > 0
+        ? `**Sentidos** ${npc.creature.senses.join(', ')}`
+        : ''
+    const langsPart =
+      npc.creature.languages.length > 0
+        ? `**Idiomas** ${npc.creature.languages.join(', ')}`
+        : ''
+    const parts = [sensesPart, langsPart].filter(Boolean)
+    if (parts.length > 0) lines.push(`- ${parts.join('  ·  ')}`)
+  }
+
+  // Deslocamentos extras (voo, natação, etc.).
+  const m = npc.creature.movements
+  const extraMov: string[] = []
+  if (m.fly) extraMov.push(`voo ${m.fly} ft`)
+  if (m.swim) extraMov.push(`natação ${m.swim} ft`)
+  if (m.climb) extraMov.push(`escalada ${m.climb} ft`)
+  if (m.burrow) extraMov.push(`escavação ${m.burrow} ft`)
+  if (extraMov.length > 0) {
+    lines.push(`- **Movimentos extras** ${extraMov.join(', ')}`)
+  }
+
+  // Resistências/imunidades (só se tiver algo).
+  const r = npc.resistances
+  if (r.damageResistances.length > 0) {
+    lines.push(`- **Resistente a** ${r.damageResistances.join(', ')}`)
+  }
+  if (r.damageImmunities.length > 0) {
+    lines.push(`- **Imune a** ${r.damageImmunities.join(', ')}`)
+  }
+  if (r.damageVulnerabilities.length > 0) {
+    lines.push(`- **Vulnerável a** ${r.damageVulnerabilities.join(', ')}`)
+  }
+  if (r.conditionImmunities.length > 0) {
+    lines.push(`- **Imune a condições** ${r.conditionImmunities.join(', ')}`)
+  }
 
   // Bloco de magia (se for caster).
   if (npc.magic) {

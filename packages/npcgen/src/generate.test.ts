@@ -149,6 +149,72 @@ describe('generateNpc (PF2)', () => {
   })
 })
 
+describe('generateNpc (criatura/arma/resistências — v0.1.3)', () => {
+  it('humanoide default sem resistências e walking 30', () => {
+    const n = generateNpc({
+      systemId: 'dnd5e-2024',
+      level: 3,
+      role: 'soldier',
+      name: 'Guarda',
+    })
+    expect(n.creature.type).toBe('humanoid')
+    expect(n.creature.size).toBe('medium')
+    expect(n.creature.movements.walk).toBe(30)
+    expect(n.speed).toBe(30)
+    expect(n.resistances.damageResistances).toEqual([])
+    expect(n.weapon.name).toBe('Espada Longa')
+  })
+
+  it('undead ganha resistências apropriadas e darkvision', () => {
+    const n = generateNpc({
+      systemId: 'dnd5e-2024',
+      level: 3,
+      role: 'lurker',
+      creatureType: 'undead',
+      name: 'Zumbi',
+    })
+    expect(n.creature.type).toBe('undead')
+    expect(n.creature.senses).toContain('darkvision-60')
+    expect(n.resistances.damageImmunities).toContain('poison')
+  })
+
+  it('dragão tem voo e o speed do NPC vem do walking da criatura', () => {
+    const n = generateNpc({
+      systemId: 'dnd5e-2024',
+      level: 10,
+      role: 'brute',
+      creatureType: 'dragon',
+      creatureSize: 'large',
+      name: 'Wyrm',
+    })
+    expect(n.creature.movements.fly).toBe(80)
+    expect(n.speed).toBe(40) // large = walk 40
+  })
+})
+
+describe('generateNpc (nomes com estilo)', () => {
+  it('nameStyle sci-fi muda o pool', () => {
+    const a = generateNpc({ systemId: 'starfinder-1e', seed: 100, nameStyle: 'sci-fi' })
+    const b = generateNpc({ systemId: 'starfinder-1e', seed: 100, nameStyle: 'fantasy' })
+    expect(a.name).not.toBe(b.name)
+  })
+
+  it('withEpithet anexa "o Astuto" e similares', () => {
+    const n = generateNpc({
+      systemId: 'dnd5e-2024',
+      seed: 7,
+      nameStyle: 'fantasy',
+      withEpithet: true,
+    })
+    expect(n.name).toContain(' ')
+  })
+
+  it('opts.name explícito tem prioridade sobre nameStyle', () => {
+    const n = generateNpc({ systemId: 'dnd5e-2024', name: 'Aragorn', nameStyle: 'sci-fi' })
+    expect(n.name).toBe('Aragorn')
+  })
+})
+
 describe('isD20System / erros', () => {
   it('reconhece sistemas d20', () => {
     expect(isD20System('dnd5e-2024')).toBe(true)

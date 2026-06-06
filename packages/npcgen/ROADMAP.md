@@ -33,11 +33,11 @@ deve vir com teste determinístico (use `seed`/`setRng`). Manter `typecheck`,
   - [ ] PF2e: proficiência = nível + bônus; graus de sucesso no ataque. *(parcial v0.1.2: `proficiencyRank` exposto; matemática real fica pra PR 4 com hook `System.npc?`)*
   - [x] Starfinder: Stamina + HP, KAC/EAC no lugar de CA única. *(v0.1.2 — `npc.starfinder`)*
   - [x] D&D 3.5/PF1: saves Fort/Ref/Will explícitos *(v0.1.2 — atalhos `fortSave/refSave/willSave`)*; iterativos de BAB *(v0.1.1)*.
-- [ ] **Tipo/tamanho de criatura**, sentidos (visão no escuro), deslocamentos (voo/natação), idiomas.
-- [ ] **Resistências/imunidades/imunidade a condições** por tipo/papel, ligadas ao `applyDamage` do sistema.
-- [ ] **Perícias completas** por sistema + seleção de proficiências por papel.
-- [ ] **Tabela de armas/equipamento** → derivar nome/dano do ataque a partir de uma arma.
-- [ ] **Nomes melhores**: listas com sabor por sistema/cultura + títulos/epítetos.
+- [x] **Tipo/tamanho de criatura**, sentidos (visão no escuro), deslocamentos (voo/natação), idiomas. *(v0.1.3 — `npc.creature`)*
+- [x] **Resistências/imunidades/imunidade a condições** por tipo/papel. *(v0.1.3 — `npc.resistances`, derivado do `creatureType`)*
+- [ ] **Perícias completas** por sistema + seleção de proficiências por papel. *(parcial: perícias por papel já existem; a "lista completa por sistema" depende do hook `System.npc?` do PR 4 — cada pacote vai expor sua skill list)*
+- [x] **Tabela de armas/equipamento** → derivar nome/dano do ataque a partir de uma arma. *(v0.1.3 — `WEAPONS`, `getRoleWeapon`, `npc.weapon`)*
+- [x] **Nomes melhores**: listas com sabor por sistema/cultura + títulos/epítetos. *(v0.1.3 — `NameStyle`: fantasy/sci-fi/lovecraftian/cyberpunk/plain + `withEpithet`)*
 - [ ] **Hook opcional `System.npc?`** no `@lippelt/srd-core`: cada pacote de sistema pode refinar a geração (padrão de plugin já usado); `npcgen` usa o hook se existir, senão cai no genérico d20. *(Pré-requisito p/ o tuning fino por sistema.)*
 
 ## Bloco B — Sistemas de pool (começar)
