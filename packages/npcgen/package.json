@@ -1,0 +1,37 @@
+{
+  "name": "@lippelt/srd-npcgen",
+  "version": "0.1.0",
+  "description": "Gerador de NPCs/stat blocks para a família d20 (D&D, Pathfinder, Starfinder), com saída para o tracker do GM Control Room e para o Campaign Codex.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flippelt/gmcr-srd-systems.git",
+    "directory": "packages/npcgen"
+  }
+}
