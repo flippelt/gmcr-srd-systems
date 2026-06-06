@@ -238,6 +238,55 @@ const RULES: SystemRules = {
   },
 }
 
+/**
+ * Hooks pra `@lippelt/srd-npcgen`. SF1 usa BAB (D20_MODEL já trata).
+ * Cantrips em SF1 não escalam por nível (texto fixo dos 0-levels) — override
+ * pra 1 dado. Skills SF1 são as 20 perícias canônicas do SRD sci-fi.
+ *
+ * defaultLanguages: SF1 não tem "Common" — usa Common (≈ Standard) +
+ * idiomas raciais. Tentativa razoável por tipo de criatura.
+ */
+const SF1_SKILLS = [
+  'acrobatics',
+  'athletics',
+  'bluff',
+  'computers',
+  'culture',
+  'diplomacy',
+  'disguise',
+  'engineering',
+  'intimidate',
+  'life-science',
+  'medicine',
+  'mysticism',
+  'perception',
+  'physical-science',
+  'piloting',
+  'profession',
+  'sense-motive',
+  'sleight-of-hand',
+  'stealth',
+  'survival',
+] as const
+
+function sf1DefaultLanguages(creatureType: string): string[] {
+  const langs = ['Common']
+  switch (creatureType) {
+    case 'humanoid':
+    case 'aberration':
+      return langs
+    case 'construct':
+      return ['Common', 'Castrovelian']
+    case 'undead':
+      return ['Common', 'Necril']
+    case 'celestial':
+    case 'fiend':
+      return ['Common', 'Celestial', 'Infernal']
+    default:
+      return langs
+  }
+}
+
 export const starfinder1e: System = {
   id: 'starfinder-1e',
   name: 'Starfinder 1st Edition',
@@ -248,4 +297,9 @@ export const starfinder1e: System = {
   conditions: CONDITIONS,
   trackerFields: TRACKER_FIELDS,
   rules: RULES,
+  npc: {
+    cantripDamageDice: () => 1,
+    skills: SF1_SKILLS,
+    defaultLanguages: sf1DefaultLanguages,
+  },
 }

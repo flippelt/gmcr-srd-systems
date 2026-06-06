@@ -293,6 +293,32 @@ const RULES: SystemRules = {
   },
 }
 
+/**
+ * Hooks pra `@lippelt/srd-npcgen`. 5e usa proficiency bonus + ability mod
+ * (default do npcgen já bate). Só listamos skills canônicas do SRD 5.1;
+ * cantripDamageDice fica no default (1/5/11/17 → 1/2/3/4) que já segue 5e.
+ */
+const DND5E_2014_SKILLS = [
+  'acrobatics',
+  'animal-handling',
+  'arcana',
+  'athletics',
+  'deception',
+  'history',
+  'insight',
+  'intimidation',
+  'investigation',
+  'medicine',
+  'nature',
+  'perception',
+  'performance',
+  'persuasion',
+  'religion',
+  'sleight-of-hand',
+  'stealth',
+  'survival',
+] as const
+
 export const dnd5e2014: System = {
   id: 'dnd5e-2014',
   name: 'Dungeons & Dragons 5e (2014)',
@@ -303,4 +329,7 @@ export const dnd5e2014: System = {
   conditions: CONDITIONS,
   trackerFields: TRACKER_FIELDS,
   rules: RULES,
+  npc: {
+    skills: DND5E_2014_SKILLS,
+  },
 }

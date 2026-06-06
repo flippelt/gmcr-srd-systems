@@ -1,6 +1,6 @@
 {
   "name": "@lippelt/srd-dnd-3.5",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "D&D 3.5 system module for @lippelt/srd-core — SRD 3.5, OGL 1.0a",
   "type": "module",
   "main": "./dist/index.cjs",
