@@ -28,6 +28,20 @@ describe('generateNpc (opções fixas → determinístico)', () => {
     expect(npc.skills.perception).toBe(4)
   })
 
+  it('soldier nível 5: 2 ataques (Extra Attack)', () => {
+    expect(npc.attacks).toHaveLength(2)
+    expect(npc.attack).toEqual(npc.attacks[0]) // alias retro-compat
+    // ambos com mesmo bônus (proficiency model)
+    expect(npc.attacks[0]!.bonus).toBe(5)
+    expect(npc.attacks[1]!.bonus).toBe(5)
+  })
+
+  it('inclui benchmark de CR pra nível 5', () => {
+    expect(npc.benchmark.level).toBe(5)
+    expect(npc.benchmark.hp).toBe(115)
+    expect(npc.benchmark.attackBonus).toBe(6)
+  })
+
   it('todos os mods conferem com os scores', () => {
     for (const ab of ['str', 'dex', 'con', 'int', 'wis', 'cha'] as const) {
       expect(npc.abilities[ab].mod).toBe(Math.floor((npc.abilities[ab].score - 10) / 2))

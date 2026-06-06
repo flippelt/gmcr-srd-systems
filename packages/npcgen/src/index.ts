@@ -17,6 +17,13 @@ export * from './types'
 export { setRng, resetRng, seededRoller, type Roller } from './rng'
 export { abilityMod, proficiencyBonus, fullBab, attackProgression, clampLevel } from './d20'
 export { ROLES, D20_MODEL, D20_SYSTEMS, type RoleDef } from './data'
+export {
+  attackCount,
+  damageDiceCount,
+  formatDamage,
+  buildAttacks,
+  getBenchmark,
+} from './combat'
 export { generateNpc, isD20System } from './generate'
 export { toTrackerCombatant, toCodexMarkdown } from './adapters'
 export { generateName } from './names'

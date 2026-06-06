@@ -31,4 +31,19 @@ describe('toCodexMarkdown', () => {
     expect(md).toContain('Golpe de arma')
     expect(md).toContain('1d8+2')
   })
+
+  it('lista múltiplos ataques quando multiattack ativo', () => {
+    const multi = generateNpc({
+      systemId: 'dnd5e-2024',
+      level: 11,
+      role: 'soldier',
+      abilityMethod: 'standard',
+      name: 'Veterano',
+    })
+    expect(multi.attacks).toHaveLength(3)
+    const md = toCodexMarkdown(multi)
+    expect(md).toContain('Ataques** (3 por turno)')
+    expect(md).toContain('1. Golpe de arma')
+    expect(md).toContain('3. Golpe de arma')
+  })
 })
