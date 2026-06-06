@@ -20,6 +20,9 @@ export type {
   RollResult,
 } from './types.js'
 
+export { validateSystem } from './validate.js'
+export type { SystemValidationResult } from './validate.js'
+
 import type { System, SystemId } from './types.js'
 
 const registry = new Map<SystemId, System>()
