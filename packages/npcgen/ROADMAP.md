@@ -52,14 +52,15 @@ deve vir com teste determinístico (use `seed`/`setRng`). Manter `typecheck`,
 
 > **Próximo (pendente)**: integridade contra `trackerFields` reais — validar que `toTrackerCombatant(pool).fields` casa com os campos declarados pelo pacote do sistema (`@lippelt/srd-daggerheart` etc.).
 
-## Bloco C — Integração com o GM Control Room
+## Bloco C — Integração com o GM Control Room ✅
 
-- [ ] **Publicar `@lippelt/srd-npcgen` no npm** (como `rpgterm-engine`/`srd-core`) para o GMCR consumir como dependência versionada. *(Pré-requisito da integração.)*
-- [ ] **Ação "Gerar NPC" no GMCR**: usar `generateNpc` com o sistema da campanha ativa (mapear `campaign` → `systemId`).
-- [ ] **Jogar no tracker**: ao gerar, enviar `toTrackerCombatant(npc)` pelo evento de socket existente (`addCombatant`) — fechar o ciclo de uso.
-- [ ] **UI**: controles de papel/nível/método + *preview* do stat block (`toCodexMarkdown`).
-- [ ] **Mapeamento de `trackerFields`**: `fields.ac` → o `trackerField` 'ac' do sistema (genérico, sem acoplar a um sistema específico).
-- [ ] **(Opcional) "Copiar pro codex"**: botão que gera o markdown (`toCodexMarkdown`) para colar no Campaign Codex.
+- [x] **Publicar `@lippelt/srd-npcgen` no npm** — publicado (0.2.0). No GMCR é consumido via `file:` do repo irmão `gmcr-srd-systems`.
+- [x] **Ação "Gerar NPC" no GMCR**: `client/src/features/npcgen/NpcGenPanel.tsx` chama `generateNpc` com o sistema da campanha ativa (`campaign.system` → `getSystem` → `npc` hooks).
+- [x] **Jogar no tracker**: `toTrackerCombatant(npc)` → `socket.emit('addCombatant', …)`, fechando o ciclo.
+- [x] **UI**: controles de nível/papel/tipo/tamanho/estilo de nome + *preview* em markdown (`toCodexMarkdown`).
+- [x] **Mapeamento de `trackerFields`**: `toTrackerCombatant().fields` vai como `extras` do `addCombatant` (genérico — `ac` etc.).
+- [x] **"Copiar pro codex"**: botão "📋 Copiar" copia o markdown (`toCodexMarkdown`) pro clipboard.
+- [x] **Sistemas de pool no painel**: Daggerheart/Candela/GUMSHOE também geram pelo painel (não só d20). *(gm-control-room — esconde controles só-d20 em pool.)*
 
 ---
 
