@@ -66,8 +66,10 @@ jobs:
       - name: Build core (typegen for downstream)
         run: npm run build -w packages/core
 
-      - name: Build target package
-        run: npm run build -w packages/${{ steps.parse.outputs.pkg }}
+      # Builda todos: alguns pacotes (ex.: npcgen) têm testes que importam o
+      # dist de outros pacotes do monorepo. Publica só o alvo mais abaixo.
+      - name: Build all
+        run: npm run build
 
       - name: Run target package tests
         run: npm test -w packages/${{ steps.parse.outputs.pkg }}
