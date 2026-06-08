@@ -1,4 +1,12 @@
-import type { D20GeneratedNpc, GeneratedNpc, NpcOptions, NpcRole } from './types'
+import type {
+  D20GeneratedNpc,
+  GeneratedNpc,
+  NpcGenFamily,
+  NpcGenHooks,
+  NpcOptions,
+  NpcRole,
+  PoolGeneratedNpc,
+} from './types'
 import { D20_MODEL, ROLES, getSystemFamily } from './data'
 import { generateDaggerheartNpc } from './pool/daggerheart'
 import { generateCandelaNpc } from './pool/candela'
@@ -55,7 +63,10 @@ export function isSupportedSystem(systemId: string): boolean {
 export function generateNpc(opts: NpcOptions): GeneratedNpc {
   if (opts.seed !== undefined) setRng(seededRoller(opts.seed))
 
-  const family = getSystemFamily(opts.systemId)
+  // Família: embutida (npcgen conhece o id) ou declarada pelo hook do sistema
+  // (sistema externo/privado que o npcgen público não conhece).
+  const builtinFamily = getSystemFamily(opts.systemId)
+  const family: NpcGenFamily | null = builtinFamily ?? opts.npc?.family ?? null
 
   if (family === 'pool') {
     switch (opts.systemId) {
@@ -80,14 +91,26 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
           creatureType: opts.creatureType,
           creatureSize: opts.creatureSize,
         })
-      default:
-        throw new Error(`[srd-npcgen] sistema pool "${opts.systemId}" não tem gerador implementado`)
+      default: {
+        // Sistema de pool externo/privado: o gerador vem do próprio sistema.
+        const gen = opts.npc?.generatePool
+        if (!gen) {
+          throw new Error(
+            `[srd-npcgen] sistema pool "${opts.systemId}" sem generatePool no hook npc`,
+          )
+        }
+        return assembleExternalPool(opts, gen)
+      }
     }
   }
 
-  const model = D20_MODEL[opts.systemId]
+  // Família d20 (embutida ou declarada via hook). O modelo vem da lista
+  // embutida ou do hook `model` (sistema d20 externo).
+  const model = D20_MODEL[opts.systemId] ?? opts.npc?.model
   if (!model) {
-    throw new Error(`[srd-npcgen] sistema "${opts.systemId}" não suportado (não-d20 e não-pool)`)
+    throw new Error(
+      `[srd-npcgen] sistema "${opts.systemId}" não suportado — declare family/model (ou generatePool) no hook npc`,
+    )
   }
 
   const level = clampLevel(opts.level ?? 1)
@@ -173,6 +196,38 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
     benchmark: getBenchmark(level),
   }
   return d20Npc
+}
+
+/**
+ * Monta um `PoolGeneratedNpc` a partir do bloco específico do sistema que um
+ * `generatePool` externo retorna, acoplando criatura/família/systemId. Mantém
+ * a separação: o npcgen público não conhece o sistema, só chama o hook.
+ */
+function assembleExternalPool(
+  opts: NpcOptions,
+  gen: NonNullable<NpcGenHooks['generatePool']>,
+): PoolGeneratedNpc {
+  const creatureType = opts.creatureType ?? 'humanoid'
+  const creatureSize = opts.creatureSize ?? 'medium'
+  const block = gen({
+    systemId: opts.systemId,
+    level: clampLevel(opts.level ?? 1),
+    name: opts.name,
+    creatureType,
+    creatureSize,
+  })
+  return {
+    family: 'pool',
+    systemId: opts.systemId,
+    system: opts.systemId,
+    name: block.name ?? opts.name ?? generateName(),
+    role: block.role,
+    tier: block.tier,
+    tracks: block.tracks,
+    attacks: block.attacks,
+    creature: buildCreature(creatureType, creatureSize),
+    extra: block.extra ?? {},
+  }
 }
 
 // Re-export type alias pra compat (consumidores que esperavam só d20).

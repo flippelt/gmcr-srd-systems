@@ -62,6 +62,23 @@ deve vir com teste determinístico (use `seed`/`setRng`). Manter `typecheck`,
 - [x] **"Copiar pro codex"**: botão "📋 Copiar" copia o markdown (`toCodexMarkdown`) pro clipboard.
 - [x] **Sistemas de pool no painel**: Daggerheart/Candela/GUMSHOE também geram pelo painel (não só d20). *(gm-control-room — esconde controles só-d20 em pool.)*
 
+## Bloco D — Extensibilidade por hook (sistemas externos/privados) ✅
+
+Permite que sistemas **fora das listas embutidas** (ex.: os privados de
+`gmcr-srd-systems-private`) se plugem no gerador **sem o npcgen público citar
+o id** — a ponte é só o hook `System.npc`.
+
+- [x] **`family` no hook**: o sistema externo declara `npc.family` ('d20' | 'pool'); o npcgen resolve família por id embutido **ou** por essa declaração.
+- [x] **d20 externo**: com `family: 'd20'` + `model` (+ `attackProgression`/`skills` opcionais), um sistema d20 desconhecido gera pelo motor genérico.
+- [x] **pool externo**: com `family: 'pool'` + `generatePool(input) → NpcPoolBlock`, o pacote fornece o gerador; o npcgen acopla criatura/família/systemId em volta (`PoolGeneratedNpc.system` afrouxado para `string`).
+- [x] **Contrato no core**: `NpcGenFamily`, `D20AttackModel`, `NpcGenInput`, `NpcPoolBlock` + campos `family`/`model`/`generatePool` em `SystemNpcHooks`.
+- [x] **Testes** (`external-hook.test.ts`): d20 externo, pool externo e erros (id sem hook; pool sem `generatePool`).
+
+> **Aplicar aos privados** (quando quiser): os 6 de `gmcr-srd-systems-private`
+> (blade-runner, cyberpunk-red, fallout-2d20, imperium-maledictum, vampire-v5,
+> wng) são todos não-d20 → cada um ganha `npc: { family: 'pool', generatePool }`
+> retornando seu `NpcPoolBlock`. O repo público continua sem conhecê-los.
+
 ---
 
 ## Notas de design
