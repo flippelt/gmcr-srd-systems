@@ -35,12 +35,23 @@ export function toTrackerCombatant(npc: GeneratedNpc): TrackerCombatant {
   const hpTrack = npc.tracks.hp ?? npc.tracks.health ?? Object.values(npc.tracks)[0]
   const hpMax = hpTrack?.max ?? 1
 
-  // Fields conforme o sistema (lookup conservador no extra).
+  // Fields do tracker a partir do `extra`:
+  // - embutidos (daggerheart/candela/gumshoe): o `extra` mistura metadados
+  //   (tier, attackDamageMod…), então usamos um whitelist conservador.
+  // - externos: por convenção o `extra` traz só stats (chaves dos próprios
+  //   trackerFields), então emitimos todos os valores numéricos.
+  const BUILTIN_POOL = new Set(['daggerheart', 'candela-obscura', 'gumshoe'])
   const fields: Record<string, number> = {}
   const extra = npc.extra as Record<string, unknown>
-  if (typeof extra.evasion === 'number') fields['evasion'] = extra.evasion as number
-  if (typeof extra.difficulty === 'number') fields['difficulty'] = extra.difficulty as number
-  if (typeof extra.hitThreshold === 'number') fields['hitThreshold'] = extra.hitThreshold as number
+  if (BUILTIN_POOL.has(npc.system)) {
+    for (const key of ['evasion', 'difficulty', 'hitThreshold']) {
+      if (typeof extra[key] === 'number') fields[key] = extra[key] as number
+    }
+  } else {
+    for (const [key, value] of Object.entries(extra)) {
+      if (typeof value === 'number') fields[key] = value
+    }
+  }
 
   return {
     name: npc.name,
@@ -205,6 +216,18 @@ function poolMarkdown(npc: PoolGeneratedNpc): string {
           (pools
             ? `  ·  **Pools** Athletics ${pools.athletics}, Fighting ${pools.fighting}, Weapons ${pools.weapons}`
             : ''),
+      )
+    }
+  } else {
+    // Sistema externo (ex.: privados): renderiza os stats numéricos do extra
+    // genericamente, em uma linha.
+    const numeric = Object.entries(extra).filter(([, v]) => typeof v === 'number')
+    if (numeric.length > 0) {
+      lines.push(
+        '- ' +
+          numeric
+            .map(([k, v]) => `**${k.charAt(0).toUpperCase()}${k.slice(1)}** ${v as number}`)
+            .join('  ·  '),
       )
     }
   }
