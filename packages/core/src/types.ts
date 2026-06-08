@@ -114,15 +114,70 @@ export interface SystemRules {
 // Hooks de geração de NPC (consumidos pelo @lippelt/srd-npcgen)
 // ============================================================================
 
+/** Família de geração de NPC. */
+export type NpcGenFamily = 'd20' | 'pool'
+
+/** Modelo de matemática d20 (proficiência tipo 5e/PF2 vs BAB tipo 3.5/PF1). */
+export type D20AttackModel = 'proficiency' | 'bab'
+
+/** Entrada que o npcgen passa a um gerador de pool externo (hook). */
+export interface NpcGenInput {
+  systemId: string
+  level: number
+  name?: string
+  creatureType: string
+  creatureSize: string
+}
+
+/**
+ * Bloco que um `generatePool` retorna — as partes específicas do sistema. O
+ * npcgen acopla o restante (criatura, família, systemId) ao redor disto.
+ */
+export interface NpcPoolBlock {
+  /** Papel/arquétipo (string livre por sistema). */
+  role: string
+  /** Tier/nível (1..4). */
+  tier: number
+  /** Nome (se o gerador quiser definir; senão o npcgen gera). */
+  name?: string
+  /** Tracks principais (vida/estresse/sanidade/etc). */
+  tracks: Record<string, { current: number; max: number }>
+  /** Ataques/ações principais. */
+  attacks: { name: string; damage: string; range?: string; notes?: string[] }[]
+  /** Stats específicos do sistema (formato livre). */
+  extra?: Record<string, unknown>
+}
+
 /**
  * Hooks opcionais para refinar a geração de NPCs por sistema. Quando o
  * `@lippelt/srd-npcgen` encontra um destes preenchidos em `System.npc`,
- * usa em vez dos defaults genéricos da família d20.
+ * usa em vez dos defaults genéricos.
  *
- * Cada hook é puro e independente — implemente só os que fizerem sentido
- * pra mecânica do seu sistema.
+ * Cada hook é puro e independente — implemente só os que fizerem sentido pra
+ * mecânica do seu sistema. Sistemas FORA das famílias embutidas (d20 e os
+ * pools daggerheart/candela/gumshoe) se plugam declarando `family` e, para
+ * pool, um `generatePool` — o npcgen público nunca precisa conhecer o id.
  */
 export interface SystemNpcHooks {
+  /**
+   * Família de geração. Opcional pros sistemas embutidos (o npcgen já sabe);
+   * obrigatória pra um sistema externo/privado fora das listas embutidas.
+   */
+  family?: NpcGenFamily
+
+  /**
+   * Modelo de matemática pra um sistema d20 externo (quando `family` é 'd20'
+   * e o id não é embutido). Ignorado pros embutidos.
+   */
+  model?: D20AttackModel
+
+  /**
+   * Gerador de NPC de pool do próprio sistema. Quando `family` é 'pool' e o
+   * sistema não é embutido, o npcgen chama isto e acopla criatura/metadata em
+   * volta — mantendo a separação (o npcgen público não importa o pacote).
+   */
+  generatePool?: (input: NpcGenInput) => NpcPoolBlock
+
   /**
    * Override da progressão de ataque (default 5e: prof = 2 + ⌊(lvl−1)/4⌋).
    *

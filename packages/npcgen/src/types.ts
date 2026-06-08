@@ -35,12 +35,46 @@ export type AbilityMethod = 'standard' | 'elite' | 'rolled' | 'average'
 /** Modelo de progressão de ataque/resistência da família d20. */
 export type D20Model = 'proficiency' | 'bab'
 
+/** Família de geração de NPC. */
+export type NpcGenFamily = 'd20' | 'pool'
+
+/** Entrada passada a um gerador de pool externo (hook `generatePool`). */
+export interface NpcGenInput {
+  systemId: string
+  level: number
+  name?: string
+  creatureType: CreatureType
+  creatureSize: CreatureSize
+}
+
+/**
+ * Bloco específico do sistema que um `generatePool` retorna; o npcgen acopla
+ * criatura/família/systemId em volta para formar o `PoolGeneratedNpc`.
+ */
+export interface NpcPoolBlock {
+  role: string
+  tier: number
+  name?: string
+  tracks: Record<string, PoolTrack>
+  attacks: PoolAttack[]
+  extra?: Record<string, unknown>
+}
+
 /**
  * Hooks opcionais pra refinar a geração por sistema. Espelha o
  * `SystemNpcHooks` do `@lippelt/srd-core` (declarado aqui pra evitar dep
  * obrigatória — o consumidor passa o objeto via `NpcOptions.npc`).
+ *
+ * Sistemas fora das famílias embutidas (d20 e os pools daggerheart/candela/
+ * gumshoe) se plugam declarando `family` e, para pool, `generatePool`.
  */
 export interface NpcGenHooks {
+  /** Família de um sistema externo (não-embutido). */
+  family?: NpcGenFamily
+  /** Modelo d20 de um sistema d20 externo. */
+  model?: D20Model
+  /** Gerador de pool do próprio sistema (sistemas de pool externos). */
+  generatePool?: (input: NpcGenInput) => NpcPoolBlock
   attackProgression?: (level: number, role: string) => number
   cantripDamageDice?: (level: number) => number
   skills?: readonly string[]
@@ -370,8 +404,9 @@ export interface PoolGeneratedNpc {
   family: 'pool'
   /** Id do sistema. */
   systemId: string
-  /** Subtipo de sistema de pool. */
-  system: PoolSystemId
+  /** Subtipo de sistema de pool. Embutidos usam um `PoolSystemId`; sistemas
+   *  externos (via hook `generatePool`) usam o próprio id. */
+  system: string
   /** Nome (gerado ou fornecido). */
   name: string
   /** Papel/arquétipo (string livre por sistema). */
