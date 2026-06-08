@@ -5,6 +5,7 @@
  */
 import { describe, it, expect } from 'vitest'
 import { generateNpc } from './generate'
+import { toTrackerCombatant, toCodexMarkdown } from './adapters'
 import { isD20Npc, isPoolNpc } from './types'
 import type { NpcPoolBlock } from './types'
 
@@ -52,6 +53,13 @@ describe('sistema de pool externo via hook (generatePool)', () => {
     expect(npc.name).toBe('Besta')
     // o npcgen acopla a criatura em volta do bloco específico do sistema
     expect(npc.creature.type).toBe('monstrosity')
+
+    // adapters genéricos cobrem o sistema externo: o extra numérico vira
+    // campo do tracker e aparece no markdown.
+    const c = toTrackerCombatant(npc)
+    expect(c.fields.hitThreshold).toBe(4)
+    expect(c.hp).toBe(8) // do track health
+    expect(toCodexMarkdown(npc)).toContain('HitThreshold')
   })
 })
 
