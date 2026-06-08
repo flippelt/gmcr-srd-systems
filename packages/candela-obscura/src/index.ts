@@ -177,6 +177,7 @@ const TRACKER_FIELDS: TrackerField[] = [
   { key: 'driveNerve', label: 'Nerve', kind: 'integer', min: 0, max: 3, default: 1, description: 'Drive do grupo Nerve — gasta pra adicionar d6 em pools relacionados.' },
   { key: 'driveCunning', label: 'Cunning', kind: 'integer', min: 0, max: 3, default: 1, description: 'Drive do grupo Cunning.' },
   { key: 'driveIntuition', label: 'Intuit', kind: 'integer', min: 0, max: 3, default: 1, description: 'Drive do grupo Intuition.' },
+  { key: 'hitThreshold', label: 'Hit', kind: 'integer', min: 0, max: 12, default: 1, description: 'Hit Threshold do adversário — alvo pra acertá-lo em combate.' },
 ]
 
 // ============================================================================

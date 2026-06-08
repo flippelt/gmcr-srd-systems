@@ -173,6 +173,15 @@ const TRACKER_FIELDS: TrackerField[] = [
     default: 6,
     description: 'Pool da perícia Sense Trouble (gasto em testes de percepção/iniciativa).',
   },
+  {
+    key: 'hitThreshold',
+    label: 'Hit',
+    kind: 'integer',
+    min: 0,
+    max: 12,
+    default: 4,
+    description: 'Hit Threshold do adversário — dificuldade pra acertá-lo (tipicamente 3–4).',
+  },
 ]
 
 // ============================================================================
