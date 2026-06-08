@@ -243,6 +243,7 @@ const TRACKER_FIELDS: TrackerField[] = [
   { key: 'evasion', label: 'Eva', kind: 'integer', min: 1, max: 30, default: 10, description: 'Evasion — DC pra ser atingido por ataques físicos.' },
   { key: 'majorThreshold', label: 'Major', kind: 'integer', min: 1, max: 30, default: 6, description: 'Limite de Major threshold de dano: ≥ marca 2 HP.' },
   { key: 'severeThreshold', label: 'Severe', kind: 'integer', min: 1, max: 30, default: 12, description: 'Limite de Severe threshold de dano: ≥ marca 3 HP.' },
+  { key: 'difficulty', label: 'Diff', kind: 'integer', min: 1, max: 30, default: 12, description: 'Difficulty do adversário — alvo pra acertá-lo (adversários usam Difficulty no lugar de Evasion dos PCs).' },
 ]
 
 // ============================================================================

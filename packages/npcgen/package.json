@@ -29,6 +29,11 @@
     "test:watch": "vitest"
   },
   "license": "MIT",
+  "devDependencies": {
+    "@lippelt/srd-candela-obscura": "*",
+    "@lippelt/srd-daggerheart": "*",
+    "@lippelt/srd-gumshoe": "*"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/flippelt/gmcr-srd-systems.git",

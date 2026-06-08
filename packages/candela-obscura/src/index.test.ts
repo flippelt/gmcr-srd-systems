@@ -101,6 +101,7 @@ describe('system bundle', () => {
       'driveNerve',
       'driveCunning',
       'driveIntuition',
+      'hitThreshold',
     ])
   })
 

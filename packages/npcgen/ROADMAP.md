@@ -50,7 +50,7 @@ deve vir com teste determinístico (use `seed`/`setRng`). Manter `typecheck`,
 - [x] **Adapters de pool** — `toTrackerCombatant` e `toCodexMarkdown` cobrem `PoolGeneratedNpc` com lógica por sistema. *(v0.2.0)*
 - [x] **Testes determinísticos** — 20 cases novos em `pool.test.ts` + dispatch por família. *(v0.2.0)*
 
-> **Próximo (pendente)**: integridade contra `trackerFields` reais — validar que `toTrackerCombatant(pool).fields` casa com os campos declarados pelo pacote do sistema (`@lippelt/srd-daggerheart` etc.).
+- [x] **Integridade contra `trackerFields` reais** — `pool-integrity.test.ts` no npcgen valida que `toTrackerCombatant(pool).fields` ⊆ `trackerFields` de cada pacote. Revelou e corrigiu 3 gaps: `difficulty` (daggerheart) e `hitThreshold` (candela/gumshoe) passaram a ser `trackerFields` declarados.
 
 ## Bloco C — Integração com o GM Control Room ✅
 
