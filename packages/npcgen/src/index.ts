@@ -41,6 +41,7 @@ export {
 } from './tuning'
 export { buildCreature } from './creature'
 export { getResistancesForType } from './resistances'
+export { selectSkills, SKILL_ABILITY, type SelectSkillsParams } from './skills'
 export { WEAPONS, ROLE_WEAPON, getRoleWeapon, type WeaponId } from './weapons'
 export { generateNpc, isD20System, isPoolSystem, isSupportedSystem } from './generate'
 export {

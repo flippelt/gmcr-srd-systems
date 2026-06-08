@@ -5,10 +5,10 @@
  * - Starfinder (1e/2e): Stamina, KAC/EAC, Resolve
  * - PF2e/SF2e: patente de proficiência por nível
  *
- * Observação sobre PF2e: a matemática real é `level + rank bonus`
- * (rank 2/4/6/8 pra trained/expert/master/legendary). O `attackProgression`
- * deste pacote ainda usa o modelo 5e — a `proficiencyRank` aqui é informativa.
- * Tuning matemático fino do PF2 fica como item futuro do Bloco A.
+ * Observação sobre PF2e/SF2e: a matemática real é `level + rank bonus`
+ * (rank 2/4/6/8 pra trained/expert/master/legendary). Os pacotes pathfinder-2e
+ * e starfinder-2e passam isso via `System.npc.attackProgression`, que o gerador
+ * aplica; a `proficiencyRank` aqui é só a etiqueta legível correspondente.
  */
 
 import type {
