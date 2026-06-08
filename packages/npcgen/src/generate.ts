@@ -22,6 +22,7 @@ import {
 import { buildCreature } from './creature'
 import { getResistancesForType } from './resistances'
 import { getRoleWeapon } from './weapons'
+import { selectSkills } from './skills'
 import { d, seededRoller, setRng } from './rng'
 import { generateName } from './names'
 
@@ -97,11 +98,8 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
   const prog =
     opts.npc?.attackProgression?.(level, role) ?? attackProgression(model, level)
 
-  const skills: Record<string, number> = {}
-  for (const skill of Object.keys(def.skills)) {
-    const ab = def.skills[skill]!
-    skills[skill] = abilities[ab].mod + prog
-  }
+  // Perícias: arquétipo + extras da lista canônica do sistema (hook npc.skills).
+  const skills = selectSkills({ role, def, level, abilities, prog, systemSkills: opts.npc?.skills })
 
   const dmgMod = abilities[def.attackAbility].mod
   const attacks = buildAttacks(role, def, model, level, dmgMod, prog)
@@ -163,6 +161,7 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
     refSave: saves.dex,
     willSave: saves.wis,
     skills,
+    ...(opts.npc?.skills ? { availableSkills: [...opts.npc.skills] } : {}),
     attacks,
     attack: attacks[0]!,
     ...(magic ? { magic } : {}),

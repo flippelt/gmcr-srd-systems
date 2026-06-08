@@ -119,9 +119,10 @@ export interface NpcStarfinderTuning {
 }
 
 /**
- * Patente de proficiência do PF2/SF2. Determinada pelo nível e usada como
- * referência informativa (a matemática real do PF2 é `level + bônus de patente`,
- * que difere do 5e — o `attackProgression` atual ainda usa o modelo 5e).
+ * Patente de proficiência do PF2/SF2, determinada pelo nível. Quando o sistema
+ * passa o hook `attackProgression` (PF2e/SF2e o fazem), a matemática real
+ * `level + bônus de patente` é aplicada ao `attackProgression` do NPC; este
+ * tipo expõe a patente correspondente de forma legível.
  */
 export type ProficiencyRank = 'trained' | 'expert' | 'master' | 'legendary'
 
@@ -287,6 +288,11 @@ export interface D20GeneratedNpc {
   willSave: number
   skills: Record<string, number>
   /**
+   * Lista canônica de perícias do sistema (de `System.npc.skills`), quando o
+   * sistema a fornece — útil pra UI mostrar o vocabulário completo de perícias.
+   */
+  availableSkills?: string[]
+  /**
    * Lista de ataques por turno.
    * - Modelo `proficiency` (5e/PF2/SF2): todos com mesmo bônus (multiattack).
    * - Modelo `bab` (3.5/PF1/SF1): iterativos (BAB, BAB−5, BAB−10, BAB−15).
@@ -304,9 +310,9 @@ export interface D20GeneratedNpc {
   /** Stats específicos de Starfinder (1e/2e) — só preenchido pra esses sistemas. */
   starfinder?: NpcStarfinderTuning
   /**
-   * Patente de proficiência (PF2/SF2). Informativa — a matemática do
-   * `attackProgression` ainda usa o modelo 5e (5e e PF2 diferem; ver
-   * ROADMAP Bloco A item 5).
+   * Patente de proficiência (PF2/SF2). Quando os pacotes PF2e/SF2e passam seu
+   * hook `npc.attackProgression`, o `attackProgression` deste NPC já reflete a
+   * matemática `level + bônus de patente`; esta patente é só a etiqueta legível.
    */
   proficiencyRank?: ProficiencyRank
   /** Tipo/tamanho/sentidos/deslocamentos/idiomas (sempre presente). */
