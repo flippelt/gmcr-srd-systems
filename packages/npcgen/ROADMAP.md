@@ -74,10 +74,7 @@ o id** — a ponte é só o hook `System.npc`.
 - [x] **Contrato no core**: `NpcGenFamily`, `D20AttackModel`, `NpcGenInput`, `NpcPoolBlock` + campos `family`/`model`/`generatePool` em `SystemNpcHooks`.
 - [x] **Testes** (`external-hook.test.ts`): d20 externo, pool externo e erros (id sem hook; pool sem `generatePool`).
 
-> **Aplicar aos privados** (quando quiser): os 6 de `gmcr-srd-systems-private`
-> (blade-runner, cyberpunk-red, fallout-2d20, imperium-maledictum, vampire-v5,
-> wng) são todos não-d20 → cada um ganha `npc: { family: 'pool', generatePool }`
-> retornando seu `NpcPoolBlock`. O repo público continua sem conhecê-los.
+- [x] **Aplicado aos privados** (`gmcr-srd-systems-private`): os 6 (blade-runner, cyberpunk-red, fallout-2d20, imperium-maledictum, vampire-v5, wng) declaram `npc: { family: 'pool', generatePool }` retornando seu `NpcPoolBlock` (tracks/extra com chaves dos `trackerFields`). Consomem `@lippelt/srd-core ^0.1.4`. O repo público segue sem conhecê-los.
 
 ---
 
