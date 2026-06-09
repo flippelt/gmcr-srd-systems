@@ -58,19 +58,22 @@ de um seed base) e **balanceia** o grupo. `src/encounter.ts`.
 - [x] **`generateFlavor`** avulso (com `seed`/`style` próprios) e **`flavorMarkdown`** (seção "Interpretação"), integrado ao `toCodexMarkdown`.
 - [x] **Testes** (`flavor.test.ts`, 9 cases): determinismo, disjunção por estilo, withFlavor em d20 e pool, markdown.
 
-## Bloco D — Aprofundar d20 / pool 🔧
+## Bloco D — Aprofundar d20 / pool 🔧 ✅ (v0.6.0)
 
-- [ ] **Mais armas/magias**: ampliar `WEAPONS` e o bloco de magia (lista de truques/efeitos por papel).
-- [ ] **Variações de papel**: subtipos (ex.: caster arcano vs divino) influenciando perícias/ataques.
-- [ ] **Cobrir mais sistemas de pool** que o Felipe use (avaliar sob demanda).
-- [ ] **Testes** por item.
+- [x] **Mais armas**: `WEAPONS` ampliado (+11: warhammer/battleaxe/scimitar/morningstar/glaive/handaxe/javelin/lightCrossbow/sling/quarterstaff…). `ROLE_WEAPON_OPTIONS` + `getRoleWeaponOptions`; `getRoleWeapon(role, variant?)` dá variedade opt-in sem mexer no dano (a arma é metadata do stat block). Default preservado (compat).
+- [x] **Mais magias**: `NpcMagic` ganha `cantrips`/`spells` (sabor). Seleção **determinística por nível** (sem RNG — não desloca o stream de geração): mais truques no 11+, lista de magias por banda de poder. Renderizado em "Truques"/"Magias" no markdown d20.
+- [ ] **Variações de papel** (subtipos caster arcano vs divino): **deferido** — exige refatorar a definição de papel; fica pra um v3.x se houver demanda.
+- [ ] **Cobrir mais sistemas de pool**: **deferido** — sob demanda, quando surgir um sistema novo na mesa do Felipe.
+- [x] **Testes** (`weapons.test.ts` 4 cases + magias no `tuning.test.ts` 2 cases).
 
-## Bloco E — Integração com o GM Control Room 🎮
+## Bloco E — Integração com o GM Control Room 🎮 ✅
 
-- [ ] **Modo "Gerar encontro"** no `NpcGenPanel`: controles de tamanho do grupo/nível/dificuldade; preview do encontro (markdown) + XP alvo/ajustado.
-- [ ] **"Jogar encontro no tracker"**: `encounterToTrackerCombatants` → vários `socket.emit('addCombatant', …)` num clique.
-- [ ] **Recompensa/flavor** visíveis no preview quando ligados.
-- [ ] Esconder controles só-d20 quando o sistema for pool (como já é no NPC avulso).
+Implementado em `gm-control-room` (PR #35). Consome `@lippelt/srd-npcgen` via `file:`.
+
+- [x] **Modo "Encontro"** no `NpcGenPanel` (alternador NPC avulso / Encontro): controles de nível do grupo, nº de jogadores e dificuldade; preview do encontro (`encounterToCodexMarkdown`) com XP alvo/ajustado.
+- [x] **"Jogar encontro no tracker"**: `encounterToTrackerCombatants` → vários `socket.emit('addCombatant', …)` num clique.
+- [x] **Recompensa/flavor** no preview quando ligados (checkboxes; `withLoot`/`withFlavor`; este último propagado por NPC via `EncounterInput.withFlavor`, npcgen 0.5.1).
+- [x] Esconde controles só-d20 quando o sistema é pool (como no NPC avulso).
 
 ---
 

@@ -103,6 +103,81 @@ export const WEAPONS = {
     damageType: 'bludgeoning',
     properties: ['versatile'],
   },
+  quarterstaff: {
+    name: 'Bordão',
+    category: 'simple-melee',
+    damageDie: 6,
+    damageType: 'bludgeoning',
+    properties: ['versatile'],
+  },
+  warhammer: {
+    name: 'Martelo de Guerra',
+    category: 'martial-melee',
+    damageDie: 8,
+    damageType: 'bludgeoning',
+    properties: ['versatile'],
+  },
+  battleaxe: {
+    name: 'Machado de Batalha',
+    category: 'martial-melee',
+    damageDie: 8,
+    damageType: 'slashing',
+    properties: ['versatile'],
+  },
+  scimitar: {
+    name: 'Cimitarra',
+    category: 'martial-melee',
+    damageDie: 6,
+    damageType: 'slashing',
+    properties: ['finesse', 'light'],
+  },
+  morningstar: {
+    name: 'Estrela-da-manhã',
+    category: 'martial-melee',
+    damageDie: 8,
+    damageType: 'piercing',
+    properties: [],
+  },
+  glaive: {
+    name: 'Glaive',
+    category: 'martial-melee',
+    damageDie: 10,
+    damageType: 'slashing',
+    properties: ['two-handed', 'heavy', 'reach'],
+    reach: 10,
+  },
+  handaxe: {
+    name: 'Machadinha',
+    category: 'simple-melee',
+    damageDie: 6,
+    damageType: 'slashing',
+    properties: ['light', 'thrown'],
+    range: { normal: 20, long: 60 },
+  },
+  javelin: {
+    name: 'Azagaia',
+    category: 'simple-melee',
+    damageDie: 6,
+    damageType: 'piercing',
+    properties: ['thrown'],
+    range: { normal: 30, long: 120 },
+  },
+  lightCrossbow: {
+    name: 'Besta Leve',
+    category: 'simple-ranged',
+    damageDie: 8,
+    damageType: 'piercing',
+    properties: ['two-handed', 'ammunition'],
+    range: { normal: 80, long: 320 },
+  },
+  sling: {
+    name: 'Funda',
+    category: 'simple-ranged',
+    damageDie: 4,
+    damageType: 'bludgeoning',
+    properties: ['ammunition'],
+    range: { normal: 30, long: 120 },
+  },
   arcaneDart: {
     name: 'Dardo Arcano',
     category: 'natural',
@@ -134,9 +209,40 @@ export const ROLE_WEAPON: Record<NpcRole, WeaponId> = {
   minion: 'club',
 }
 
-/** Retorna o NpcWeapon completo da arma assinatura do role. */
-export function getRoleWeapon(role: NpcRole): NpcWeapon {
+/**
+ * Opções de arma por papel (a primeira é a default de `ROLE_WEAPON`).
+ * Permite variar a arma assinatura sem mudar a matemática do ataque (o dano
+ * segue vindo do `damageDie` do papel; a arma é metadata do stat block).
+ */
+export const ROLE_WEAPON_OPTIONS: Record<NpcRole, WeaponId[]> = {
+  brute: ['greataxe', 'greatsword', 'warhammer'],
+  soldier: ['longsword', 'battleaxe', 'morningstar'],
+  skirmisher: ['shortsword', 'scimitar', 'rapier'],
+  archer: ['longbow', 'shortbow', 'lightCrossbow'],
+  caster: ['arcaneDart', 'staff', 'quarterstaff'],
+  leader: ['longsword', 'rapier', 'warhammer'],
+  lurker: ['dagger', 'shortsword', 'handaxe'],
+  minion: ['club', 'spear', 'sling'],
+}
+
+/** Lista de armas candidatas do papel (default + alternativas). */
+export function getRoleWeaponOptions(role: NpcRole): WeaponId[] {
+  return ROLE_WEAPON_OPTIONS[role]
+}
+
+/**
+ * Retorna o NpcWeapon completo da arma assinatura do role.
+ *
+ * Sem `variant`: a arma default (compat). Com `variant` (índice): escolhe
+ * deterministicamente entre as opções do papel — útil pra dar variedade ao
+ * stat block sem afetar o dano.
+ */
+export function getRoleWeapon(role: NpcRole, variant?: number): NpcWeapon {
+  const id =
+    variant === undefined
+      ? ROLE_WEAPON[role]
+      : ROLE_WEAPON_OPTIONS[role][variant % ROLE_WEAPON_OPTIONS[role].length]!
   // Widen pro tipo público (o `as const` deixa as propriedades readonly
   // literais; consumidores esperam NpcWeapon mutable).
-  return WEAPONS[ROLE_WEAPON[role]] as NpcWeapon
+  return WEAPONS[id] as NpcWeapon
 }
