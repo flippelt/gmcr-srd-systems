@@ -170,6 +170,7 @@ export function generateEncounter(input: EncounterInput): GeneratedEncounter {
       ...(input.creatureSize ? { creatureSize: input.creatureSize } : {}),
       ...(input.nameStyle ? { nameStyle: input.nameStyle } : {}),
       ...(input.withEpithet ? { withEpithet: input.withEpithet } : {}),
+      ...(input.withFlavor ? { withFlavor: input.withFlavor } : {}),
       ...(input.npc ? { npc: input.npc } : {}),
     }),
   )

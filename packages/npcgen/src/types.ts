@@ -519,6 +519,8 @@ export interface EncounterInput {
   maxEnemies?: number
   /** Quando `true`, anexa uma recompensa (`loot`) ao encontro. */
   withLoot?: boolean
+  /** Quando `true`, cada NPC do encontro ganha `flavor` de interpretação. */
+  withFlavor?: boolean
 }
 
 /** Metadados do encontro gerado (orçamento/contagem/avisos). */
