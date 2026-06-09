@@ -453,3 +453,75 @@ export interface TrackerCombatant {
   statuses: string[]
   fields: Record<string, number>
 }
+
+// ----------------------------------------------------------------------------
+// Encontros (v3) — grupo balanceado de NPCs
+// ----------------------------------------------------------------------------
+
+/** Dificuldade-alvo de um encontro (escala do orçamento de XP no d20). */
+export type EncounterDifficulty = 'easy' | 'medium' | 'hard' | 'deadly'
+
+/** Um slot de composição: N inimigos de um papel/nível. */
+export interface EncounterRoleSlot {
+  /** Papel d20 (ignorado em pool, onde o sistema decide o papel). */
+  role?: NpcRole
+  /** Quantidade de inimigos neste slot. */
+  count: number
+  /** Nível/CR (d20) ou tier (pool) deste slot. Padrão: `partyLevel`. */
+  level?: number
+}
+
+/** Entrada do gerador de encontros. */
+export interface EncounterInput {
+  /** Id do sistema (d20 ou pool; embutido ou via hook `npc.family`). */
+  systemId: string
+  /** Nº de jogadores (orçamento de XP no d20; contagem no pool). Padrão: 4. */
+  partySize?: number
+  /** Nível médio do grupo (1..20). Padrão: 1. */
+  partyLevel?: number
+  /** Dificuldade-alvo. Padrão: 'medium'. */
+  difficulty?: EncounterDifficulty
+  /** Composição fixa; se ausente, auto-balanceia (d20) ou usa contagem (pool). */
+  roleMix?: EncounterRoleSlot[]
+  /** Seed base — sub-seeds determinísticas por NPC derivam dela (`seed + idx`). */
+  seed?: number
+  /** Tipo de criatura aplicado a todos. Padrão: 'humanoid'. */
+  creatureType?: CreatureType
+  /** Tamanho aplicado a todos. Padrão: 'medium'. */
+  creatureSize?: CreatureSize
+  /** Estilo dos nomes gerados. */
+  nameStyle?: NameStyle
+  /** Anexa epíteto/título aos nomes. */
+  withEpithet?: boolean
+  /** Hooks de sistema (mesmos do NPC avulso). */
+  npc?: NpcGenHooks
+  /** Limite de inimigos (segurança contra estouro). Padrão: 16. */
+  maxEnemies?: number
+}
+
+/** Metadados do encontro gerado (orçamento/contagem/avisos). */
+export interface EncounterMeta {
+  systemId: string
+  family: NpcGenFamily
+  partySize: number
+  partyLevel: number
+  difficulty: EncounterDifficulty
+  /** Nº total de inimigos gerados. */
+  count: number
+  /** d20: orçamento-alvo de XP (threshold por jogador × `partySize`). */
+  targetXp?: number
+  /** d20: XP bruto somado dos inimigos. */
+  rawXp?: number
+  /** d20: multiplicador 5e por nº de inimigos. */
+  multiplier?: number
+  /** d20: XP ajustado (`rawXp × multiplier`) — o que se compara com o alvo. */
+  adjustedXp?: number
+  /** Avisos/explicações (ex.: pool sem orçamento de XP). */
+  notes?: string[]
+}
+
+/** Encontro completo: metadados + lista de NPCs. */
+export interface GeneratedEncounter {
+  meta: EncounterMeta
+  npcs: GeneratedNpc[]
+}
