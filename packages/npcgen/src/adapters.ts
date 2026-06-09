@@ -1,6 +1,7 @@
 import type {
   Ability,
   D20GeneratedNpc,
+  GeneratedEncounter,
   GeneratedNpc,
   PoolGeneratedNpc,
   TrackerCombatant,
@@ -67,6 +68,36 @@ export function toTrackerCombatant(npc: GeneratedNpc): TrackerCombatant {
 export function toCodexMarkdown(npc: GeneratedNpc): string {
   if (isD20Npc(npc)) return d20Markdown(npc)
   return poolMarkdown(npc)
+}
+
+// ----------------------------------------------------------------------------
+// Encontros (v3) — adapters do grupo inteiro
+// ----------------------------------------------------------------------------
+
+/** Converte o encontro inteiro para combatentes do tracker do GMCR.
+ *  Cada NPC vira um `TrackerCombatant` (jogue todos com vários addCombatant). */
+export function encounterToTrackerCombatants(enc: GeneratedEncounter): TrackerCombatant[] {
+  return enc.npcs.map(toTrackerCombatant)
+}
+
+/** Encontro em Markdown: cabeçalho (dificuldade/XP/contagem) + cada stat block. */
+export function encounterToCodexMarkdown(enc: GeneratedEncounter): string {
+  const m = enc.meta
+  const head = [`## Encontro — ${m.difficulty} (${m.count} inimigos)`]
+  if (m.family === 'd20' && m.targetXp !== undefined) {
+    head.push(
+      `*Grupo ${m.partySize} × nível ${m.partyLevel} • ` +
+        `orçamento ${m.targetXp} XP • ajustado ${m.adjustedXp} XP ` +
+        `(bruto ${m.rawXp} × ${m.multiplier})*`,
+    )
+  } else {
+    head.push(`*Grupo ${m.partySize} × tier ${m.partyLevel} • ${m.systemId}*`)
+  }
+  if (m.notes && m.notes.length > 0) {
+    head.push('', ...m.notes.map((n) => `> ${n}`))
+  }
+  const blocks = enc.npcs.map((npc) => toCodexMarkdown(npc))
+  return [...head, '', blocks.join('\n\n')].join('\n')
 }
 
 // ----------------------------------------------------------------------------

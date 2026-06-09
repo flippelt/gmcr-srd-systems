@@ -66,5 +66,16 @@ export {
   type GumshoeRole,
   type GumshoeExtra,
 } from './pool/gumshoe'
-export { toTrackerCombatant, toCodexMarkdown } from './adapters'
+export {
+  toTrackerCombatant,
+  toCodexMarkdown,
+  encounterToTrackerCombatants,
+  encounterToCodexMarkdown,
+} from './adapters'
+export {
+  generateEncounter,
+  encounterMultiplier,
+  xpThreshold,
+  XP_BY_CR,
+} from './encounter'
 export { generateName, type NameOptions } from './names'

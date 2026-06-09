@@ -1,86 +1,105 @@
-# `@lippelt/srd-npcgen` — Roadmap v2
+# `@lippelt/srd-npcgen` — Roadmap v3
 
 > TODO persistente e versionado (acessível de qualquer máquina/instância).
 > Marque os itens com `[x]` conforme forem concluídos e abra um PR por bloco.
 
-## Contexto / estado atual (v0.1.0)
+## Contexto / estado atual (v0.2.1)
 
-O pacote gera NPCs para a **família d20** (`D20_MODEL`: 5e 2024/2014, D&D 3.5,
-Pathfinder 1e/2e, Starfinder 1e/2e) e **lança erro** para sistemas de pool.
+O **v2 está completo** (NPC avulso d20 aprofundado + sistemas de pool +
+integração GMCR + hook pra sistemas externos/privados). Veja o histórico no
+rodapé. O pacote hoje gera **um** NPC por chamada (`generateNpc`), d20 ou pool,
+determinístico via `seed`/`setRng`.
 
-Já faz: atributos por arquétipo (8 papéis), HP (dado de vida + CON), CA
-(`10 + armadura + Dex limitada`), saves (proficiência ou bom/fraco), **um**
-ataque assinatura, algumas perícias, nome por sílabas. RNG injetável +
-`seededRoller` (determinístico). Adapters: `toTrackerCombatant` (GMCR) e
-`toCodexMarkdown` (codex).
+O **v3** sobe um degrau: de NPC avulso para **mesa de jogo** — gerar um
+**encontro inteiro** balanceado, com **recompensa**, **flavor de roleplay**, e
+refinos no motor d20/pool. Tudo determinístico por seed e desacoplado (o
+npcgen produz dados/markdown; adapters espelham GMCR/codex sem dep).
 
-Arquivos: `src/{types,rng,data,d20,names,generate,adapters,index}.ts` +
-testes `*.test.ts`. Build tsup (esm+cjs+dts).
+**Como retomar:** começar pelo **Bloco A** (gerador de encontros — base sobre
+a qual loot/flavor se penduram). Cada item vem com teste determinístico
+(`seed`). Manter `typecheck`, `lint` e `test` verdes (CI builda o core antes).
 
-**Como retomar:** começar pelo Bloco A (mais isolado e testável). Cada item
-deve vir com teste determinístico (use `seed`/`setRng`). Manter `typecheck`,
-`lint` e `test` verdes (CI builda o core antes dos testes).
+Arquivos atuais: `src/{types,rng,data,d20,combat,tuning,creature,resistances,
+skills,weapons,names,generate,adapters,index}.ts` + `src/pool/*` + testes
+`*.test.ts`. Build tsup (esm+cjs+dts).
 
 ---
 
-## Bloco A — Aprofundar o d20
+## Bloco A — Gerador de encontros (headline) ✅ (v0.3.0)
 
-- [x] **Multiataque por nível**: papéis marciais ganham ataques extras (ex.: 5/11/20 no estilo 5e; iterativos no modelo BAB). Expor `attacks: NpcAttack[]`. *(v0.1.1)*
-- [x] **Escala de dano**: número de dados/bônus do ataque cresce com nível/CR (caster como cantrip 1/2/3/4; brute ganha dado extra no lvl 11). *(v0.1.1)*
-- [x] **Benchmarks por CR/nível**: tabela alvo de HP/CA/ataque/DC por CR para *calibrar* a saída (não só derivar dos atributos), evitando NPCs fracos/fortes demais. *(v0.1.1 — função `getBenchmark`, anexado em `npc.benchmark`)*
-- [x] **Bloco de magia para `caster`**: `spellSaveDC`/`spellAttackBonus`, cantrip que escala. *(v0.1.2 — `npc.magic`)*
-- [x] **Tuning por sistema** (em vez de só os 2 modelos genéricos):
-  - [x] PF2e: proficiência = nível + bônus de patente. *(v0.2.1 — hook `npc.attackProgression` em pathfinder-2e/starfinder-2e; o gerador aplica. Graus de sucesso são mecânica de rolagem, fora do escopo de um stat block.)*
-  - [x] Starfinder: Stamina + HP, KAC/EAC no lugar de CA única. *(v0.1.2 — `npc.starfinder`)*
-  - [x] D&D 3.5/PF1: saves Fort/Ref/Will explícitos *(v0.1.2 — atalhos `fortSave/refSave/willSave`)*; iterativos de BAB *(v0.1.1)*.
-- [x] **Tipo/tamanho de criatura**, sentidos (visão no escuro), deslocamentos (voo/natação), idiomas. *(v0.1.3 — `npc.creature`)*
-- [x] **Resistências/imunidades/imunidade a condições** por tipo/papel. *(v0.1.3 — `npc.resistances`, derivado do `creatureType`)*
-- [x] **Perícias completas** por sistema + seleção de proficiências por papel. *(v0.2.1 — todos os pacotes d20 preenchem `npc.skills`; o gerador consome via `selectSkills` (perícias do papel + extras escalando com o nível) e expõe `availableSkills`.)*
-- [x] **Tabela de armas/equipamento** → derivar nome/dano do ataque a partir de uma arma. *(v0.1.3 — `WEAPONS`, `getRoleWeapon`, `npc.weapon`)*
-- [x] **Nomes melhores**: listas com sabor por sistema/cultura + títulos/epítetos. *(v0.1.3 — `NameStyle`: fantasy/sci-fi/lovecraftian/cyberpunk/plain + `withEpithet`)*
-- [x] **Hook opcional `System.npc?`** no `@lippelt/srd-core`: cada pacote de sistema pode refinar a geração; `npcgen` usa o hook se existir, senão cai no genérico d20. *(v0.1.4 — `attackProgression`/`cantripDamageDice`/`skills`/`defaultLanguages` em `SystemNpcHooks`; passa via `NpcOptions.npc`)*
+Orquestra `generateNpc` N vezes (sub-seeds determinísticas por índice a partir
+de um seed base) e **balanceia** o grupo. `src/encounter.ts`.
 
-## Bloco B — Sistemas de pool (v0.2.0)
+- [x] **Tipos** em `types.ts`: `EncounterDifficulty` ('easy'|'medium'|'hard'|'deadly'), `EncounterRoleSlot` ({ role?, count, level? }), `EncounterInput` (systemId, partySize?, partyLevel?, difficulty?, roleMix?, seed?, creatureType?, creatureSize?, nameStyle?, withEpithet?, npc?, maxEnemies?), `EncounterMeta`, `GeneratedEncounter` ({ meta, npcs }).
+- [x] **Balanceamento d20 = orçamento de XP do 5e**: `XP_BY_CR` (nível 1..20 como proxy), thresholds por nível × dificuldade × `partySize`, e `encounterMultiplier` por nº de inimigos (×1/×1.5/×2/×2.5/×3/×4). Auto-compõe papéis (rotação determinística com offset de nível por papel: minion −3 … leader +1) até o XP ajustado atingir o alvo, respeitando `maxEnemies`.
+- [x] **Balanceamento pool**: sistemas de pool **não têm orçamento de XP** → balanceia por **contagem** (easy `party−1` … deadly `party+2`) e **tier** (= `partyLevel`). `meta.notes` deixa isso explícito.
+- [x] **`roleMix` explícito**: quando informado, gera exatamente os slots (papel/nível/contagem), sem auto-balancear; a meta ainda calcula XP pra informação.
+- [x] **`generateEncounter(input): GeneratedEncounter`** — determinístico (sub-seed `seed + idx` por NPC); detecta família (embutida ou `npc.family`) igual ao `generateNpc`; lança erro claro pra sistema sem suporte.
+- [x] **Adapters de encontro** em `adapters.ts`: `encounterToTrackerCombatants(enc)` (→ `TrackerCombatant[]`) e `encounterToCodexMarkdown(enc)` (cabeçalho do encontro com dificuldade/XP + cada stat block).
+- [x] **Export** no `index.ts` (tipos + `generateEncounter`/`encounterMultiplier`/`xpThreshold`/`XP_BY_CR` + adapters).
+- [x] **Testes** (`encounter.test.ts`, 16 cases): determinismo, orçamento d20 (alvo batido sem estourar `maxEnemies`), contagem por dificuldade no pool, `roleMix` respeitado, erro em sistema sem suporte, adapters.
 
-- [x] **Generalizar `generateNpc`**: despacha por *família* do sistema (d20 vs pool) em vez de lançar erro. `SYSTEM_FAMILY` em `data.ts`, `getSystemFamily()` exposto. *(v0.2.0)*
-- [x] **Forma de NPC de pool** em `types.ts`: `PoolGeneratedNpc` com `tracks: Record<string, PoolTrack>`, `attacks: PoolAttack[]`, `extra: Record<string, unknown>` específico por sistema. `GeneratedNpc` agora é union `D20GeneratedNpc | PoolGeneratedNpc`; type guards `isD20Npc`/`isPoolNpc`. *(v0.2.0 — breaking shape)*
-- [x] **Daggerheart**: dificuldade, limiares (major/severe), HP/Stress/Armor/Hope, 10 roles (bruiser, horde, leader, minion, ranged, skulk, social, solo, standard, support), 4 tiers. *(v0.2.0)*
-- [x] **Candela Obscura**: 7 roles, Hit Threshold, drives (nerve/cunning/intuition), marks (body/brain/bleed). *(v0.2.0)*
-- [x] **GUMSHOE**: 7 roles, Hit Threshold, pools (athletics/fighting/weapons), Health/Stability tracks. *(v0.2.0)*
-- [x] **Adapters de pool** — `toTrackerCombatant` e `toCodexMarkdown` cobrem `PoolGeneratedNpc` com lógica por sistema. *(v0.2.0)*
-- [x] **Testes determinísticos** — 20 cases novos em `pool.test.ts` + dispatch por família. *(v0.2.0)*
+## Bloco B — Loot / recompensa 💰
 
-- [x] **Integridade contra `trackerFields` reais** — `pool-integrity.test.ts` no npcgen valida que `toTrackerCombatant(pool).fields` ⊆ `trackerFields` de cada pacote. Revelou e corrigiu 3 gaps: `difficulty` (daggerheart) e `hitThreshold` (candela/gumshoe) passaram a ser `trackerFields` declarados.
+- [ ] **Tabela de XP/recompensa por CR**: reaproveita a tabela de XP do Bloco A; recompensa em moedas por CR/encontro (faixas determinísticas).
+- [ ] **Itens por raridade**: tabela simples de itens (common→legendary) sorteada por seed, escalando com CR/dificuldade do encontro.
+- [ ] **`generateLoot(input)`** avulso **e** `encounter.loot` opcional (recompensa do encontro inteiro).
+- [ ] **Markdown** no `toCodexMarkdown`/`encounterToCodexMarkdown` (seção "Recompensa").
+- [ ] **Testes** determinísticos.
 
-## Bloco C — Integração com o GM Control Room ✅
+## Bloco C — Flavor de roleplay 🎭
 
-- [x] **Publicar `@lippelt/srd-npcgen` no npm** — publicado (0.2.0). No GMCR é consumido via `file:` do repo irmão `gmcr-srd-systems`.
-- [x] **Ação "Gerar NPC" no GMCR**: `client/src/features/npcgen/NpcGenPanel.tsx` chama `generateNpc` com o sistema da campanha ativa (`campaign.system` → `getSystem` → `npc` hooks).
-- [x] **Jogar no tracker**: `toTrackerCombatant(npc)` → `socket.emit('addCombatant', …)`, fechando o ciclo.
-- [x] **UI**: controles de nível/papel/tipo/tamanho/estilo de nome + *preview* em markdown (`toCodexMarkdown`).
-- [x] **Mapeamento de `trackerFields`**: `toTrackerCombatant().fields` vai como `extras` do `addCombatant` (genérico — `ac` etc.).
-- [x] **"Copiar pro codex"**: botão "📋 Copiar" copia o markdown (`toCodexMarkdown`) pro clipboard.
-- [x] **Sistemas de pool no painel**: Daggerheart/Candela/GUMSHOE também geram pelo painel (não só d20). *(gm-control-room — esconde controles só-d20 em pool.)*
+- [ ] **Banco de traços** por seed: personalidade, motivação, maneirismo, tática de combate, segredo/gancho. Listas com sabor por `NameStyle`/`creatureType`.
+- [ ] **`NpcFlavor`** anexado opcionalmente ao NPC (flag `withFlavor`), sem inflar o shape padrão.
+- [ ] **Markdown**: seção "Interpretação" no `toCodexMarkdown`.
+- [ ] **Testes** determinísticos (seed → mesmo flavor).
 
-## Bloco D — Extensibilidade por hook (sistemas externos/privados) ✅
+## Bloco D — Aprofundar d20 / pool 🔧
 
-Permite que sistemas **fora das listas embutidas** (ex.: os privados de
-`gmcr-srd-systems-private`) se plugem no gerador **sem o npcgen público citar
-o id** — a ponte é só o hook `System.npc`.
+- [ ] **Mais armas/magias**: ampliar `WEAPONS` e o bloco de magia (lista de truques/efeitos por papel).
+- [ ] **Variações de papel**: subtipos (ex.: caster arcano vs divino) influenciando perícias/ataques.
+- [ ] **Cobrir mais sistemas de pool** que o Felipe use (avaliar sob demanda).
+- [ ] **Testes** por item.
 
-- [x] **`family` no hook**: o sistema externo declara `npc.family` ('d20' | 'pool'); o npcgen resolve família por id embutido **ou** por essa declaração.
-- [x] **d20 externo**: com `family: 'd20'` + `model` (+ `attackProgression`/`skills` opcionais), um sistema d20 desconhecido gera pelo motor genérico.
-- [x] **pool externo**: com `family: 'pool'` + `generatePool(input) → NpcPoolBlock`, o pacote fornece o gerador; o npcgen acopla criatura/família/systemId em volta (`PoolGeneratedNpc.system` afrouxado para `string`).
-- [x] **Contrato no core**: `NpcGenFamily`, `D20AttackModel`, `NpcGenInput`, `NpcPoolBlock` + campos `family`/`model`/`generatePool` em `SystemNpcHooks`.
-- [x] **Testes** (`external-hook.test.ts`): d20 externo, pool externo e erros (id sem hook; pool sem `generatePool`).
+## Bloco E — Integração com o GM Control Room 🎮
 
-- [x] **Aplicado aos privados** (`gmcr-srd-systems-private`): os 6 (blade-runner, cyberpunk-red, fallout-2d20, imperium-maledictum, vampire-v5, wng) declaram `npc: { family: 'pool', generatePool }` retornando seu `NpcPoolBlock` (tracks/extra com chaves dos `trackerFields`). Consomem `@lippelt/srd-core ^0.1.4`. O repo público segue sem conhecê-los.
+- [ ] **Modo "Gerar encontro"** no `NpcGenPanel`: controles de tamanho do grupo/nível/dificuldade; preview do encontro (markdown) + XP alvo/ajustado.
+- [ ] **"Jogar encontro no tracker"**: `encounterToTrackerCombatants` → vários `socket.emit('addCombatant', …)` num clique.
+- [ ] **Recompensa/flavor** visíveis no preview quando ligados.
+- [ ] Esconder controles só-d20 quando o sistema for pool (como já é no NPC avulso).
 
 ---
 
 ## Notas de design
 
-- **Determinismo é regra**: toda nova lógica deve ser testável com `seed`/`setRng`.
-- **Desacoplamento**: `npcgen` não importa GMCR nem codex — só produz dados/markdown; os adapters espelham os formatos sem dependência.
-- **Família d20 vs pool**: manter os dois caminhos isolados; o genérico cobre o grosso, o hook `System.npc?` refina.
-- **Atribuição/licenças**: ao adicionar dados de sistema, respeitar a `attribution` de cada pacote (SRD/CC-BY/ORC etc.).
+- **Determinismo é regra**: toda nova lógica testável com `seed`. Encontro =
+  sub-seeds derivadas (`seed + idx`) → reproduzível e cada NPC distinto.
+- **Desacoplamento**: `npcgen` não importa GMCR nem codex — só produz dados/
+  markdown; os adapters espelham os formatos sem dependência.
+- **d20 vs pool**: d20 usa orçamento de XP (5e); pool não tem XP → balanceia por
+  contagem/tier. Manter os dois caminhos isolados.
+- **Hook `System.npc?`**: o gerador de encontros respeita os mesmos hooks do
+  NPC avulso (família/model/generatePool), então sistemas externos/privados
+  entram no encontro sem o público citar o id.
+- **Atribuição/licenças**: ao adicionar dados de sistema, respeitar a
+  `attribution` de cada pacote (SRD/CC-BY/ORC etc.). As tabelas de XP/orçamento
+  do d20 seguem o SRD 5.1 (CC-BY-4.0).
+
+---
+
+## Histórico — v2 (concluído ✅)
+
+NPC avulso completo. Resumo dos blocos entregues:
+
+- **Bloco A (v0.1.x–0.2.1)** — d20 aprofundado: multiataque/escala de dano,
+  benchmarks por CR, magia pro caster, tuning por sistema (PF2e/Starfinder/
+  3.5/PF1), criatura (tipo/tamanho/sentidos/movimentos/idiomas), resistências,
+  perícias completas, armas/equipamento, nomes com sabor, hook `System.npc?`.
+- **Bloco B (v0.2.0)** — sistemas de pool: dispatch por família, shape
+  `PoolGeneratedNpc`, Daggerheart/Candela/GUMSHOE, adapters de pool, integridade
+  contra `trackerFields` reais.
+- **Bloco C** — integração GMCR: painel "Gerar NPC", jogar no tracker, copiar
+  pro codex, sistemas de pool no painel.
+- **Bloco D** — extensibilidade por hook: sistemas externos/privados se plugam
+  via `family`/`model`/`generatePool` sem o público citar o id; aplicado aos 6
+  privados (`gmcr-srd-systems-private`).
