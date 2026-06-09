@@ -102,12 +102,28 @@ export interface NpcOptions {
   nameStyle?: NameStyle
   /** Quando `true`, anexa um epíteto/título ao nome (ex.: "Korak o Astuto"). */
   withEpithet?: boolean
+  /** Quando `true`, anexa flavor de interpretação (`flavor`) ao NPC. */
+  withFlavor?: boolean
   /**
    * Hooks de sistema. Quando o consumidor passa um `System` do
    * `@lippelt/srd-core`, ele tipicamente faz `npc: system.npc`. O npcgen
    * usa os hooks pra refinar a geração; sem hooks cai no genérico d20.
    */
   npc?: NpcGenHooks
+}
+
+/** Flavor de interpretação: ganchos de roleplay/tática, determinísticos por seed. */
+export interface NpcFlavor {
+  /** Traço de personalidade dominante. */
+  personality: string
+  /** O que move o NPC. */
+  motivation: string
+  /** Tique/maneirismo marcante. */
+  mannerism: string
+  /** Como age em combate. */
+  tactic: string
+  /** Gancho/segredo pra puxar história. */
+  hook: string
 }
 
 export type NameStyle = 'fantasy' | 'sci-fi' | 'lovecraftian' | 'cyberpunk' | 'plain'
@@ -357,6 +373,8 @@ export interface D20GeneratedNpc {
   weapon: NpcWeapon
   /** Benchmark esperado pra esse nível/CR (referência). */
   benchmark: CRBenchmark
+  /** Flavor de interpretação (quando `withFlavor` é pedido). */
+  flavor?: NpcFlavor
 }
 
 // ============================================================================
@@ -421,6 +439,8 @@ export interface PoolGeneratedNpc {
   creature: NpcCreature
   /** Stats específicos do sistema (formato livre, documentado por sistema). */
   extra: Record<string, unknown>
+  /** Flavor de interpretação (quando `withFlavor` é pedido). */
+  flavor?: NpcFlavor
 }
 
 /**

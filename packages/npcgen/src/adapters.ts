@@ -8,6 +8,7 @@ import type {
 } from './types'
 import { isD20Npc } from './types'
 import { lootToMarkdown } from './loot'
+import { flavorMarkdown } from './flavor'
 
 const ORDER: readonly Ability[] = ['str', 'dex', 'con', 'int', 'wis', 'cha']
 
@@ -67,8 +68,8 @@ export function toTrackerCombatant(npc: GeneratedNpc): TrackerCombatant {
 
 /** Stat block em Markdown para colar no Campaign Codex. */
 export function toCodexMarkdown(npc: GeneratedNpc): string {
-  if (isD20Npc(npc)) return d20Markdown(npc)
-  return poolMarkdown(npc)
+  const block = isD20Npc(npc) ? d20Markdown(npc) : poolMarkdown(npc)
+  return npc.flavor ? `${block}\n${flavorMarkdown(npc.flavor)}` : block
 }
 
 // ----------------------------------------------------------------------------

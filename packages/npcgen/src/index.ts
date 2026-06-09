@@ -79,4 +79,5 @@ export {
   XP_BY_CR,
 } from './encounter'
 export { generateLoot, lootToMarkdown } from './loot'
+export { generateFlavor, flavorMarkdown } from './flavor'
 export { generateName, type NameOptions } from './names'

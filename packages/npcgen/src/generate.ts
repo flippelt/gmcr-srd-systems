@@ -33,6 +33,14 @@ import { getRoleWeapon } from './weapons'
 import { selectSkills } from './skills'
 import { d, seededRoller, setRng } from './rng'
 import { generateName } from './names'
+import { generateFlavor } from './flavor'
+
+/** Anexa flavor de interpretação ao NPC quando `withFlavor` é pedido.
+ *  Sem seed próprio: usa o RNG global (já fixado pelo seed do NPC). */
+function attachFlavor<T extends GeneratedNpc>(npc: T, opts: NpcOptions): T {
+  if (opts.withFlavor) npc.flavor = generateFlavor({ style: opts.nameStyle })
+  return npc
+}
 
 const ROLE_LIST = Object.keys(ROLES) as NpcRole[]
 
@@ -71,26 +79,26 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
   if (family === 'pool') {
     switch (opts.systemId) {
       case 'daggerheart':
-        return generateDaggerheartNpc({
+        return attachFlavor(generateDaggerheartNpc({
           level: opts.level,
           name: opts.name,
           creatureType: opts.creatureType,
           creatureSize: opts.creatureSize,
-        })
+        }), opts)
       case 'candela-obscura':
-        return generateCandelaNpc({
+        return attachFlavor(generateCandelaNpc({
           tier: opts.level ? Math.min(3, Math.max(1, opts.level)) as 1 | 2 | 3 : undefined,
           name: opts.name,
           creatureType: opts.creatureType,
           creatureSize: opts.creatureSize,
-        })
+        }), opts)
       case 'gumshoe':
-        return generateGumshoeNpc({
+        return attachFlavor(generateGumshoeNpc({
           tier: opts.level ? Math.min(3, Math.max(1, opts.level)) as 1 | 2 | 3 : undefined,
           name: opts.name,
           creatureType: opts.creatureType,
           creatureSize: opts.creatureSize,
-        })
+        }), opts)
       default: {
         // Sistema de pool externo/privado: o gerador vem do próprio sistema.
         const gen = opts.npc?.generatePool
@@ -99,7 +107,7 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
             `[srd-npcgen] sistema pool "${opts.systemId}" sem generatePool no hook npc`,
           )
         }
-        return assembleExternalPool(opts, gen)
+        return attachFlavor(assembleExternalPool(opts, gen), opts)
       }
     }
   }
@@ -195,7 +203,7 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
     weapon,
     benchmark: getBenchmark(level),
   }
-  return d20Npc
+  return attachFlavor(d20Npc, opts)
 }
 
 /**
