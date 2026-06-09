@@ -497,6 +497,8 @@ export interface EncounterInput {
   npc?: NpcGenHooks
   /** Limite de inimigos (segurança contra estouro). Padrão: 16. */
   maxEnemies?: number
+  /** Quando `true`, anexa uma recompensa (`loot`) ao encontro. */
+  withLoot?: boolean
 }
 
 /** Metadados do encontro gerado (orçamento/contagem/avisos). */
@@ -520,8 +522,54 @@ export interface EncounterMeta {
   notes?: string[]
 }
 
-/** Encontro completo: metadados + lista de NPCs. */
+/** Encontro completo: metadados + lista de NPCs (+ recompensa opcional). */
 export interface GeneratedEncounter {
   meta: EncounterMeta
   npcs: GeneratedNpc[]
+  /** Recompensa do encontro (quando `withLoot` é pedido). */
+  loot?: GeneratedLoot
+}
+
+// ----------------------------------------------------------------------------
+// Loot / recompensa (v3)
+// ----------------------------------------------------------------------------
+
+/** Raridade de item mágico (escala 5e). */
+export type LootRarity = 'common' | 'uncommon' | 'rare' | 'very-rare' | 'legendary'
+
+/** Moedas (peças de cobre/prata/ouro). */
+export interface LootCoins {
+  cp: number
+  sp: number
+  gp: number
+}
+
+/** Um item de recompensa. */
+export interface LootItem {
+  name: string
+  rarity: LootRarity
+}
+
+/** Recompensa gerada: moedas + itens. */
+export interface GeneratedLoot {
+  /** Nível/CR usado pra escalar a recompensa. */
+  level: number
+  coins: LootCoins
+  items: LootItem[]
+  /** Valor total aproximado das moedas em peças de ouro. */
+  totalGp: number
+}
+
+/** Entrada do gerador de loot. */
+export interface LootInput {
+  /** Nível/CR (1..20). Padrão: 1. */
+  level?: number
+  /** Dificuldade — define a quantidade-padrão de itens mágicos. Padrão: 'medium'. */
+  difficulty?: EncounterDifficulty
+  /** Seed para recompensa reproduzível. */
+  seed?: number
+  /** Nº de itens mágicos (sobrescreve o padrão por dificuldade). */
+  itemCount?: number
+  /** Multiplicador de moedas (ex.: hoard maior). Padrão: 1. */
+  coinMultiplier?: number
 }

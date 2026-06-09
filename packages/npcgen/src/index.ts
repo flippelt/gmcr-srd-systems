@@ -78,4 +78,5 @@ export {
   xpThreshold,
   XP_BY_CR,
 } from './encounter'
+export { generateLoot, lootToMarkdown } from './loot'
 export { generateName, type NameOptions } from './names'

@@ -15,6 +15,7 @@
 import type {
   EncounterDifficulty,
   EncounterInput,
+  EncounterMeta,
   EncounterRoleSlot,
   GeneratedEncounter,
   GeneratedNpc,
@@ -22,6 +23,7 @@ import type {
   NpcRole,
 } from './types'
 import { generateNpc } from './generate'
+import { generateLoot } from './loot'
 import { getSystemFamily } from './data'
 import { clampLevel } from './d20'
 
@@ -174,29 +176,25 @@ export function generateEncounter(input: EncounterInput): GeneratedEncounter {
 
   // 3) Monta a meta (orçamento no d20; avisos no pool).
   const count = npcs.length
+  let meta: EncounterMeta
   if (family === 'd20') {
     const target = xpThreshold(partyLevel, difficulty) * partySize
     const rawXp = entries.reduce((sum, e) => sum + xpForLevel(e.level), 0)
     const multiplier = encounterMultiplier(count)
-    return {
-      meta: {
-        systemId: input.systemId,
-        family,
-        partySize,
-        partyLevel,
-        difficulty,
-        count,
-        targetXp: target,
-        rawXp,
-        multiplier,
-        adjustedXp: rawXp * multiplier,
-      },
-      npcs,
+    meta = {
+      systemId: input.systemId,
+      family,
+      partySize,
+      partyLevel,
+      difficulty,
+      count,
+      targetXp: target,
+      rawXp,
+      multiplier,
+      adjustedXp: rawXp * multiplier,
     }
-  }
-
-  return {
-    meta: {
+  } else {
+    meta = {
       systemId: input.systemId,
       family,
       partySize,
@@ -206,7 +204,18 @@ export function generateEncounter(input: EncounterInput): GeneratedEncounter {
       notes: [
         'Sistemas de pool não usam orçamento de XP; encontro balanceado por número de inimigos e tier.',
       ],
-    },
-    npcs,
+    }
   }
+
+  // 4) Recompensa opcional (um hoard pro encontro inteiro). Sub-seed afastada
+  //    das dos NPCs pra não correlacionar moedas com nomes.
+  const loot = input.withLoot
+    ? generateLoot({
+        level: partyLevel,
+        difficulty,
+        ...(input.seed !== undefined ? { seed: input.seed + 9973 } : {}),
+      })
+    : undefined
+
+  return { meta, npcs, ...(loot ? { loot } : {}) }
 }
