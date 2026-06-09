@@ -49,12 +49,14 @@ de um seed base) e **balanceia** o grupo. `src/encounter.ts`.
 - [x] **Markdown**: `lootToMarkdown` (seção "Recompensa") + integrado ao `encounterToCodexMarkdown`.
 - [x] **Testes** (`loot.test.ts`, 12 cases): determinismo, contagem por dificuldade, `itemCount`/`coinMultiplier`, raridade por banda, loot no encontro.
 
-## Bloco C — Flavor de roleplay 🎭
+## Bloco C — Flavor de roleplay ✅ (v0.5.0)
 
-- [ ] **Banco de traços** por seed: personalidade, motivação, maneirismo, tática de combate, segredo/gancho. Listas com sabor por `NameStyle`/`creatureType`.
-- [ ] **`NpcFlavor`** anexado opcionalmente ao NPC (flag `withFlavor`), sem inflar o shape padrão.
-- [ ] **Markdown**: seção "Interpretação" no `toCodexMarkdown`.
-- [ ] **Testes** determinísticos (seed → mesmo flavor).
+`src/flavor.ts`.
+
+- [x] **Banco de traços** por seed: personalidade, motivação, maneirismo, tática de combate, gancho. Listas com sabor por `NameStyle` (fantasy/sci-fi/lovecraftian/cyberpunk/plain); tática/maneirismo genéricos.
+- [x] **`NpcFlavor`** anexado opcionalmente (flag `withFlavor` no `NpcOptions`; campo `flavor?` em ambos os shapes, sem inflar o padrão). `attachFlavor` usa o RNG global já fixado pelo seed do NPC → determinístico.
+- [x] **`generateFlavor`** avulso (com `seed`/`style` próprios) e **`flavorMarkdown`** (seção "Interpretação"), integrado ao `toCodexMarkdown`.
+- [x] **Testes** (`flavor.test.ts`, 9 cases): determinismo, disjunção por estilo, withFlavor em d20 e pool, markdown.
 
 ## Bloco D — Aprofundar d20 / pool 🔧
 
