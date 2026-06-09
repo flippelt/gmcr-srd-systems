@@ -42,7 +42,14 @@ export {
 export { buildCreature } from './creature'
 export { getResistancesForType } from './resistances'
 export { selectSkills, SKILL_ABILITY, type SelectSkillsParams } from './skills'
-export { WEAPONS, ROLE_WEAPON, getRoleWeapon, type WeaponId } from './weapons'
+export {
+  WEAPONS,
+  ROLE_WEAPON,
+  ROLE_WEAPON_OPTIONS,
+  getRoleWeapon,
+  getRoleWeaponOptions,
+  type WeaponId,
+} from './weapons'
 export { generateNpc, isD20System, isPoolSystem, isSupportedSystem } from './generate'
 export {
   generateDaggerheartNpc,

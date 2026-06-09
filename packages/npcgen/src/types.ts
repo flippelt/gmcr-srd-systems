@@ -148,6 +148,10 @@ export interface NpcMagic {
   spellAttackBonus: number
   /** Dano de cantrip/feitiço at-will (escala com nível como em PR 1). */
   cantripDamage: string
+  /** Truques conhecidos (sabor; determinístico por nível). */
+  cantrips: string[]
+  /** Magias assinatura (sabor; escala a lista com o nível). */
+  spells: string[]
 }
 
 /**

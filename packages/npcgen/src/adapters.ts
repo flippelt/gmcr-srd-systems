@@ -197,6 +197,12 @@ function d20Markdown(npc: D20GeneratedNpc): string {
         ` · ataque ${sign(npc.magic.spellAttackBonus)}` +
         ` · cantrip ${npc.magic.cantripDamage}`,
     )
+    if (npc.magic.cantrips.length > 0) {
+      lines.push(`- **Truques** ${npc.magic.cantrips.join(', ')}`)
+    }
+    if (npc.magic.spells.length > 0) {
+      lines.push(`- **Magias** ${npc.magic.spells.join(', ')}`)
+    }
   }
 
   return lines.join('\n')

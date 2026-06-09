@@ -34,6 +34,26 @@ describe('getMagicStats', () => {
     const m = getMagicStats('int', 0, 2, 'proficiency', 1)
     expect(m.cantripDamage).toBe('1d8')
   })
+
+  it('flavor de magias: truques e magias conhecidas, escalando com nível', () => {
+    const low = getMagicStats('cha', 3, 2, 'proficiency', 1)
+    const high = getMagicStats('cha', 5, 6, 'proficiency', 17)
+    // truques: 2 em níveis baixos, 3 a partir do 11
+    expect(low.cantrips).toHaveLength(2)
+    expect(high.cantrips).toHaveLength(3)
+    // magias: 2 cedo, 3 a partir do 9
+    expect(low.spells).toHaveLength(2)
+    expect(high.spells).toHaveLength(3)
+    // banda de poder muda a lista (nível 17 não conhece magia de banda 1)
+    expect(low.spells).not.toEqual(high.spells)
+    expect(high.spells.some((s) => /Desejo|Meteoros|Parar o Tempo|Palavra de Poder/.test(s))).toBe(true)
+  })
+
+  it('é determinístico (mesmo nível → mesmas magias)', () => {
+    expect(getMagicStats('cha', 3, 4, 'proficiency', 7)).toEqual(
+      getMagicStats('cha', 3, 4, 'proficiency', 7),
+    )
+  })
 })
 
 describe('getStarfinderTuning', () => {

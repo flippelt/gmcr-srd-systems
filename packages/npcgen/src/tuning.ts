@@ -21,6 +21,39 @@ import type {
 import { clampLevel } from './d20'
 import { damageDiceCount, formatDamage } from './combat'
 
+/** Truques de sabor (escolhidos por rotação determinística no nível). */
+const CANTRIPS: readonly string[] = [
+  'Raio de Fogo',
+  'Toque Chocante',
+  'Rajada Mística',
+  'Lâmina de Gelo',
+  'Mãos Mágicas',
+  'Luz Tremeluzente',
+]
+
+/** Magias por banda de poder; o NPC conhece as da sua banda. */
+const SPELLS_BY_BAND: Record<1 | 2 | 3 | 4, readonly string[]> = {
+  1: ['Mísseis Mágicos', 'Escudo Arcano', 'Enfeitiçar Pessoa', 'Sono'],
+  2: ['Bola de Fogo', 'Voo', 'Contramágica', 'Relâmpago'],
+  3: ['Muralha de Fogo', 'Polimorfar', 'Cone de Frio', 'Banimento'],
+  4: ['Parar o Tempo', 'Chuva de Meteoros', 'Desejo', 'Palavra de Poder: Matar'],
+}
+
+function spellBand(level: number): 1 | 2 | 3 | 4 {
+  if (level <= 4) return 1
+  if (level <= 10) return 2
+  if (level <= 16) return 3
+  return 4
+}
+
+/** Pega `count` itens da lista a partir de um offset (rotação determinística). */
+function pickRotating(list: readonly string[], count: number, offset: number): string[] {
+  const out: string[] = []
+  const n = Math.min(count, list.length)
+  for (let i = 0; i < n; i++) out.push(list[(offset + i) % list.length]!)
+  return out
+}
+
 /**
  * Calcula CD e bônus de ataque mágico no estilo 5e SRD:
  *   spellSaveDC      = 8 + prof + mod
@@ -45,11 +78,18 @@ export function getMagicStats(
     cantripDamageDiceHook?.(level) ?? damageDiceCount('caster', level)
   // d8 padrão como dado de cantrip (similar ao Fire Bolt do 5e).
   const cantripDamage = formatDamage(cantripDieCount, 8, abilityMod)
+  // Sabor de magias: determinístico por nível (sem RNG, pra não mexer no
+  // stream de geração). Mais truques e mais magias conhecidas em níveis altos.
+  const lvl = clampLevel(level)
+  const cantrips = pickRotating(CANTRIPS, lvl >= 11 ? 3 : 2, lvl)
+  const spells = pickRotating(SPELLS_BY_BAND[spellBand(lvl)], lvl >= 9 ? 3 : 2, lvl)
   return {
     spellAbility,
     spellSaveDC: 8 + prof + abilityMod,
     spellAttackBonus: prof + abilityMod,
     cantripDamage,
+    cantrips,
+    spells,
   }
 }
 
