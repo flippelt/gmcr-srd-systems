@@ -137,6 +137,17 @@ describe('generateEncounter — erros e limites', () => {
     expect(enc.npcs.length).toBeGreaterThanOrEqual(1)
   })
 
+  it('withFlavor anexa flavor a cada NPC do encontro', () => {
+    const enc = generateEncounter({ systemId: D20, partyLevel: 5, seed: 2, withFlavor: true })
+    expect(enc.npcs.length).toBeGreaterThan(0)
+    for (const npc of enc.npcs) expect(npc.flavor).toBeDefined()
+  })
+
+  it('sem withFlavor os NPCs não têm flavor', () => {
+    const enc = generateEncounter({ systemId: D20, partyLevel: 5, seed: 2 })
+    for (const npc of enc.npcs) expect(npc.flavor).toBeUndefined()
+  })
+
   it('respeita maxEnemies como teto', () => {
     const enc = generateEncounter({
       systemId: D20,
