@@ -7,6 +7,7 @@ import type {
   TrackerCombatant,
 } from './types'
 import { isD20Npc } from './types'
+import { lootToMarkdown } from './loot'
 
 const ORDER: readonly Ability[] = ['str', 'dex', 'con', 'int', 'wis', 'cha']
 
@@ -97,7 +98,9 @@ export function encounterToCodexMarkdown(enc: GeneratedEncounter): string {
     head.push('', ...m.notes.map((n) => `> ${n}`))
   }
   const blocks = enc.npcs.map((npc) => toCodexMarkdown(npc))
-  return [...head, '', blocks.join('\n\n')].join('\n')
+  const parts = [head.join('\n'), '', blocks.join('\n\n')]
+  if (enc.loot) parts.push('', lootToMarkdown(enc.loot))
+  return parts.join('\n')
 }
 
 // ----------------------------------------------------------------------------

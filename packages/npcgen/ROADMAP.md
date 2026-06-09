@@ -39,13 +39,15 @@ de um seed base) e **balanceia** o grupo. `src/encounter.ts`.
 - [x] **Export** no `index.ts` (tipos + `generateEncounter`/`encounterMultiplier`/`xpThreshold`/`XP_BY_CR` + adapters).
 - [x] **Testes** (`encounter.test.ts`, 16 cases): determinismo, orçamento d20 (alvo batido sem estourar `maxEnemies`), contagem por dificuldade no pool, `roleMix` respeitado, erro em sistema sem suporte, adapters.
 
-## Bloco B — Loot / recompensa 💰
+## Bloco B — Loot / recompensa ✅ (v0.4.0)
 
-- [ ] **Tabela de XP/recompensa por CR**: reaproveita a tabela de XP do Bloco A; recompensa em moedas por CR/encontro (faixas determinísticas).
-- [ ] **Itens por raridade**: tabela simples de itens (common→legendary) sorteada por seed, escalando com CR/dificuldade do encontro.
-- [ ] **`generateLoot(input)`** avulso **e** `encounter.loot` opcional (recompensa do encontro inteiro).
-- [ ] **Markdown** no `toCodexMarkdown`/`encounterToCodexMarkdown` (seção "Recompensa").
-- [ ] **Testes** determinísticos.
+`src/loot.ts`.
+
+- [x] **Moedas por banda de CR**: faixas de gp por banda de nível (1-4/5-10/11-16/17-20), com troco em sp/cp; `coinMultiplier` pra hoards maiores; `totalGp` agregado.
+- [x] **Itens por raridade**: `ITEMS` (common→legendary) amostrados por `rarityPool(level)` (banda de nível), determinístico por seed.
+- [x] **`generateLoot(input)`** avulso **e** `encounter.loot` opcional (flag `withLoot` no `EncounterInput`; sub-seed afastada das dos NPCs).
+- [x] **Markdown**: `lootToMarkdown` (seção "Recompensa") + integrado ao `encounterToCodexMarkdown`.
+- [x] **Testes** (`loot.test.ts`, 12 cases): determinismo, contagem por dificuldade, `itemCount`/`coinMultiplier`, raridade por banda, loot no encontro.
 
 ## Bloco C — Flavor de roleplay 🎭
 
