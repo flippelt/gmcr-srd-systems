@@ -76,6 +76,41 @@ export interface TrackerField {
 }
 
 // ============================================================================
+// Recursos de party / sessão
+// ============================================================================
+
+/**
+ * Definição de um recurso compartilhado de nível de party/sessão
+ * (ex.: Wrath & Glory: Glory e Ruin). Diferente de `TrackerField`, que é
+ * por-combatente — estes são pools únicos da mesa, exibidos num painel
+ * próprio (não na ficha de cada combatente).
+ */
+export interface PartyResourceDef {
+  /** Chave estável (ex.: 'glory', 'ruin'). */
+  key: string
+  /** Rótulo de exibição (ex.: 'Glory', 'Ruin'). */
+  label: string
+  /** Valor mínimo (default 0). */
+  min?: number
+  /** Valor máximo (default 10). */
+  max?: number
+  /** Valor inicial (default = `min` ou 0). */
+  default?: number
+  /** Cor CSS opcional do contador. */
+  color?: string
+  /** Descrição/tooltip. */
+  description?: string
+  /**
+   * Dono do recurso:
+   *  - `'party'`: pool dos jogadores (ex.: Glory) — também exibido na 2ª tela.
+   *  - `'gm'`: pool do mestre (ex.: Ruin) — restrito ao painel de controle,
+   *    oculto da tela dos jogadores.
+   * Default: `'party'`.
+   */
+  owner?: 'party' | 'gm'
+}
+
+// ============================================================================
 // Regras automatizadas (hooks puros)
 // ============================================================================
 
@@ -230,6 +265,12 @@ export interface System {
   conditions: ConditionDef[]
   /** Campos extras do tracker (além de initiative/hp genéricos). */
   trackerFields: TrackerField[]
+  /**
+   * Recursos compartilhados de party/sessão (ex.: Glory e Ruin em W&G).
+   * Opcional — a maioria dos sistemas não tem. Exibidos num painel próprio,
+   * separado do tracker por-combatente.
+   */
+  partyResources?: PartyResourceDef[]
   /** Regras automatizáveis (opcionais). */
   rules?: SystemRules
   /** Hooks pra refinar a geração de NPCs (consumidos pelo @lippelt/srd-npcgen). */

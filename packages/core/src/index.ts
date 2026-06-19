@@ -22,6 +22,7 @@ export type {
   DicePreset,
   ConditionDef,
   TrackerField,
+  PartyResourceDef,
   RollResult,
 } from './types.js'
 
