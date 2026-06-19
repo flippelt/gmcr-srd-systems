@@ -98,6 +98,47 @@ describe('validateSystem', () => {
     ).toMatch(/default \(99\) > max/)
   })
 
+  it('aceita partyResources bem-formado (e ausente)', () => {
+    expect(validateSystem(valid).valid).toBe(true) // ausente é ok
+    expect(
+      validateSystem({
+        ...valid,
+        partyResources: [
+          { key: 'glory', label: 'Glory', min: 0, max: 10, default: 0, owner: 'party' },
+          { key: 'ruin', label: 'Ruin', min: 0, max: 10, default: 0, owner: 'gm' },
+        ],
+      }).valid,
+    ).toBe(true)
+  })
+
+  it('detecta partyResource com key duplicada', () => {
+    const r = validateSystem({
+      ...valid,
+      partyResources: [
+        { key: 'glory', label: 'A' },
+        { key: 'glory', label: 'B' },
+      ],
+    })
+    expect(r.errors.join()).toMatch(/partyResources: key duplicada "glory"/)
+  })
+
+  it('reprova owner de partyResource inválido e limites incoerentes', () => {
+    expect(
+      validateSystem({
+        ...valid,
+        // @ts-expect-error owner fora do contrato, de propósito
+        partyResources: [{ key: 'x', label: 'X', owner: 'enemy' }],
+      }).errors.join(),
+    ).toMatch(/owner inválido/)
+
+    expect(
+      validateSystem({
+        ...valid,
+        partyResources: [{ key: 'x', label: 'X', min: 0, max: 10, default: 99 }],
+      }).errors.join(),
+    ).toMatch(/default \(99\) > max/)
+  })
+
   it('reprova arrays ausentes', () => {
     // @ts-expect-error campos obrigatórios omitidos de propósito
     const r = validateSystem({ id: 'x', name: 'X', ruleVersion: '1' })

@@ -100,5 +100,40 @@ export function validateSystem(sys: System): SystemValidationResult {
     })
   }
 
+  // --- Party resources (opcional; key única; owner válido; min ≤ default ≤ max) ---
+  if (sys?.partyResources !== undefined) {
+    if (!Array.isArray(sys.partyResources)) {
+      errors.push('partyResources deve ser um array')
+    } else {
+      const seen = new Set<string>()
+      sys.partyResources.forEach((r, i) => {
+        check(isNonEmptyString(r?.key), `partyResources[${i}].key ausente ou vazio`)
+        check(isNonEmptyString(r?.label), `partyResources[${i}].label ausente ou vazio`)
+        if (isNonEmptyString(r?.key)) {
+          check(!seen.has(r.key), `partyResources: key duplicada "${r.key}"`)
+          seen.add(r.key)
+        }
+        if (r?.owner !== undefined) {
+          check(
+            r.owner === 'party' || r.owner === 'gm',
+            `partyResources[${i}] (${r?.key ?? '?'}): owner inválido "${r.owner}"`,
+          )
+        }
+        const { min, max, default: def } = r ?? {}
+        if (typeof min === 'number' && typeof max === 'number') {
+          check(min <= max, `partyResources[${i}] (${r.key}): min (${min}) > max (${max})`)
+        }
+        if (typeof def === 'number') {
+          if (typeof min === 'number') {
+            check(def >= min, `partyResources[${i}] (${r.key}): default (${def}) < min (${min})`)
+          }
+          if (typeof max === 'number') {
+            check(def <= max, `partyResources[${i}] (${r.key}): default (${def}) > max (${max})`)
+          }
+        }
+      })
+    }
+  }
+
   return { valid: errors.length === 0, errors }
 }
