@@ -1,5 +1,7 @@
 # gmcr-srd-systems
 
+[![Last commit](https://img.shields.io/github/last-commit/flippelt/gmcr-srd-systems)](https://github.com/flippelt/gmcr-srd-systems/commits)
+
 Monorepo de regras, presets e condições para sistemas de RPG de mesa. Pensado pra ser consumido por painéis de mesa e VTTs leves — **agnóstico de UI**. Usado em produção pelo [GM Control Room](https://github.com/flippelt/gm-control-room).
 
 Cada sistema é um pacote npm publicado independentemente — você instala só os que sua mesa usa.
