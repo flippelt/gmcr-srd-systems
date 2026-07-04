@@ -1,6 +1,6 @@
 # gmcr-srd-systems
 
-[![Last commit](https://img.shields.io/github/last-commit/flippelt/gmcr-srd-systems)](https://github.com/flippelt/gmcr-srd-systems/commits)
+[![CI](https://img.shields.io/github/actions/workflow/status/flippelt/gmcr-srd-systems/ci.yml?label=CI)](https://github.com/flippelt/gmcr-srd-systems/actions) [![npm](https://img.shields.io/npm/v/@lippelt/srd-core?label=%40lippelt%2Fsrd-core)](https://www.npmjs.com/package/@lippelt/srd-core) [![Last commit](https://img.shields.io/github/last-commit/flippelt/gmcr-srd-systems)](https://github.com/flippelt/gmcr-srd-systems/commits) [![License](https://img.shields.io/github/license/flippelt/gmcr-srd-systems)](https://github.com/flippelt/gmcr-srd-systems/blob/main/LICENSE) ![Top language](https://img.shields.io/github/languages/top/flippelt/gmcr-srd-systems) ![Repo size](https://img.shields.io/github/repo-size/flippelt/gmcr-srd-systems) ![Commit activity](https://img.shields.io/github/commit-activity/m/flippelt/gmcr-srd-systems) ![Issues](https://img.shields.io/github/issues/flippelt/gmcr-srd-systems)
 
 Monorepo de regras, presets e condições para sistemas de RPG de mesa. Pensado pra ser consumido por painéis de mesa e VTTs leves — **agnóstico de UI**. Usado em produção pelo [GM Control Room](https://github.com/flippelt/gm-control-room).
 
