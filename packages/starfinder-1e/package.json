@@ -1,6 +1,6 @@
 {
   "name": "@lippelt/srd-starfinder-1e",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "Starfinder 1e system module for @lippelt/srd-core — SRD, OGL 1.0a (Paizo)",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -16,7 +16,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "publishConfig": {
     "access": "public"
@@ -36,7 +37,7 @@
     "directory": "packages/starfinder-1e"
   },
   "peerDependencies": {
-    "@lippelt/srd-core": "^0.1.0"
+    "@lippelt/srd-core": "^1.0.0"
   },
   "devDependencies": {
     "@lippelt/srd-core": "*"

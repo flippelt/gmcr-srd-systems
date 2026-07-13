@@ -1,6 +1,6 @@
 {
   "name": "@lippelt/srd-dnd5e-2024",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "D&D 5e (2024) system module for @lippelt/srd-core — SRD 5.2, CC-BY 4.0",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -16,7 +16,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "publishConfig": {
     "access": "public"
@@ -36,7 +37,7 @@
     "directory": "packages/dnd5e-2024"
   },
   "peerDependencies": {
-    "@lippelt/srd-core": "^0.1.0"
+    "@lippelt/srd-core": "^1.0.0"
   },
   "devDependencies": {
     "@lippelt/srd-core": "*"
