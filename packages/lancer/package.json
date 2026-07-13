@@ -1,6 +1,6 @@
 {
   "name": "@lippelt/srd-lancer",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Lancer system module for @lippelt/srd-core — third party work under the Lancer Third Party License",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -16,7 +16,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "publishConfig": {
     "access": "public"
@@ -36,7 +37,7 @@
     "directory": "packages/lancer"
   },
   "peerDependencies": {
-    "@lippelt/srd-core": "^0.1.0"
+    "@lippelt/srd-core": "^1.0.0"
   },
   "devDependencies": {
     "@lippelt/srd-core": "*"

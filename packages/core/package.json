@@ -1,6 +1,6 @@
 {
   "name": "@lippelt/srd-core",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "description": "Plugin core for tabletop RPG system modules (types + registry). Each system ships in its own package.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -16,7 +16,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "publishConfig": {
     "access": "public"
