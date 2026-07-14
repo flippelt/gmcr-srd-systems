@@ -92,42 +92,42 @@ const DICE_PRESETS: DicePreset[] = [
 const CONDITIONS: ConditionDef[] = [
   {
     id: 'hurt',
-    label: 'Hurt',
+    label: 'Machucado',
     summary: 'Ferido — penalidades em testes envolvendo esforço físico até receber cuidados.',
   },
   {
     id: 'seriously-wounded',
-    label: 'Seriously Wounded',
+    label: 'Seriamente Machucado',
     summary: 'Gravemente ferido — em risco de morrer; ações limitadas até estabilizar.',
   },
   {
     id: 'shaken',
-    label: 'Shaken',
+    label: 'Abalado',
     summary: 'Abalado — penalidades em testes mentais até se recompor.',
   },
   {
     id: 'stunned',
-    label: 'Stunned',
+    label: 'Atordoado',
     summary: 'Atordoado — perde a próxima ação significativa.',
   },
   {
     id: 'unconscious',
-    label: 'Unconscious',
+    label: 'Inconsciente',
     summary: 'Inconsciente — não age, não percebe; vulnerável.',
   },
   {
     id: 'insane',
-    label: 'Insane',
+    label: 'Insano',
     summary: 'Insanidade temporária ou permanente — comportamento determinado pelo GM ou trauma.',
   },
   {
     id: 'pursued',
-    label: 'Pursued',
+    label: 'Perseguido',
     summary: 'Sob perseguição — encontros aleatórios mais frequentes até despistar.',
   },
   {
     id: 'connected',
-    label: 'Connected',
+    label: 'Conectado',
     summary: 'Em contato com o sobrenatural/anomalia — risco de Stability/Sanity loss em cenas adjacentes.',
   },
 ]
@@ -162,7 +162,7 @@ const TRACKER_FIELDS: TrackerField[] = [
     min: 0,
     max: 20,
     default: 8,
-    description: 'Pool da perícia geral Athletics (gasto em testes físicos/movimento).',
+    description: 'Pool da perícia geral Atletismo (Athletics) (gasto em testes físicos/movimento).',
   },
   {
     key: 'sense-trouble',
@@ -171,7 +171,7 @@ const TRACKER_FIELDS: TrackerField[] = [
     min: 0,
     max: 20,
     default: 6,
-    description: 'Pool da perícia Sense Trouble (gasto em testes de percepção/iniciativa).',
+    description: 'Pool da perícia Sentir Perigo (Sense Trouble) (gasto em testes de percepção/iniciativa).',
   },
   {
     key: 'hitThreshold',
@@ -180,7 +180,7 @@ const TRACKER_FIELDS: TrackerField[] = [
     min: 0,
     max: 12,
     default: 4,
-    description: 'Hit Threshold do adversário — dificuldade pra acertá-lo (tipicamente 3–4).',
+    description: 'Limiar de Acerto do adversário — dificuldade pra acertá-lo (tipicamente 3–4).',
   },
 ]
 
