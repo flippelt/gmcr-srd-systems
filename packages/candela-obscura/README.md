@@ -2,7 +2,7 @@
 
 Módulo Candela Obscura / Illuminated Worlds para [`@lippelt/srd-core`](../core).
 
-> Candela Obscura™ é trademark da [Darrington Press LLC](https://darringtonpress.com/). Mecânica derivada do sistema Illuminated Worlds sob a [Darrington Press Community Gaming License (DPCGL)](https://darringtonpress.com/license/). Candela Obscura não tem tradução oficial PT-BR; usamos termos próprios.
+> Candela Obscura™ é trademark da [Darrington Press LLC](https://darringtonpress.com/). Mecânica derivada do sistema Illuminated Worlds sob a [Darrington Press Community Gaming License (DPCGL)](https://darringtonpress.com/license/). Candela Obscura tem edição oficial em português (**Jambô Editora**) — os rótulos usam os termos oficiais dessa tradução (Impulso, Corpo/Mente/Sangria, Cicatrizes, Resistência); os resumos são paráfrases próprias.
 
 ## O que inclui
 
@@ -12,7 +12,7 @@ Módulo Candela Obscura / Illuminated Worlds para [`@lippelt/srd-core`](../core)
   - `1-3` → `failure` (falha)
   - `gilded: true` anota a recuperação de 1 Impulso (Drive).
 - **Rolagem de resistência** — `roll('resistance', { pool })` interpreta o resultado em termos de redução de consequência (−0/−1/−2 Impulso).
-- **6 condições** — Sangrando, Abalado, Caçado, Iluminado, Comprometido, Exausto (Bleeding, Shaken, Hunted, Illuminated, Compromised, Exhausted).
+- **6 condições** — Sangramento, Abalado, Caçado, Iluminado, Comprometido, Exausto.
 - **7 campos de status** — bodyMarks/brainMarks/bleedMarks (marcas no corpo / mentais / de sangramento, 0..3 cada), cicatrizes (0..9), Impulso em 3 grupos (Coragem, Astúcia, Intuição).
 - **Presets de dados** — reserva 1..6 + resistência.
 

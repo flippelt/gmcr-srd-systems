@@ -6,6 +6,17 @@ O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/)
 e o projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 
+## [1.1.0] — 2026-07-14
+
+### Mudou
+
+- **Localização oficial (Jambô Editora).** Os rótulos (`label`) passam a usar os
+  termos oficiais da edição brasileira: marcas Body/Brain/Bleed → Corpo/Mente/
+  Sangria, Scars → Cicatrizes, Drives Nerve/Cunning/Intuition → Coragem/Astúcia/
+  Intuição, Resistance → Resistência; condições traduzidas (Sangramento, Abalado,
+  Caçado, Iluminado, Comprometido, Exausto). Os `id`/`key` (API) permanecem
+  estáveis; resumos seguem paráfrases próprias. README atualizado.
+
 ## [1.0.0] — 2026-07-13
 
 ### Mudou
