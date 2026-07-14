@@ -112,6 +112,25 @@ export const ROLES: Record<NpcRole, RoleDef> = {
   },
 }
 
+/**
+ * Variante do papel `caster` com tradição divina (WIS). Selecionada via
+ * `NpcOptions.casterTradition: 'divine'` — o papel público continua sendo
+ * `caster` (não infla o union `NpcRole`), mas a def usa prioridade de
+ * Sabedoria, ataque/CD por WIS, armadura mais pesada (clérigo) e perícias
+ * religiosas. O default arcano preserva 100% o comportamento anterior.
+ */
+export const CASTER_DIVINE: RoleDef = {
+  priority: ['wis', 'con', 'cha', 'str', 'dex', 'int'],
+  hitDie: 6,
+  armor: 4,
+  maxDex: 3,
+  attackAbility: 'wis',
+  saveProfs: ['wis', 'cha'],
+  skills: { religion: 'wis', insight: 'wis' },
+  attackName: 'Chama sagrada',
+  damageDie: 8,
+}
+
 /** Mapa sistema d20 → modelo de matemática. */
 export const D20_MODEL: Record<string, D20Model> = {
   'dnd5e-2024': 'proficiency',

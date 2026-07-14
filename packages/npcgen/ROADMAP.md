@@ -62,8 +62,8 @@ de um seed base) e **balanceia** o grupo. `src/encounter.ts`.
 
 - [x] **Mais armas**: `WEAPONS` ampliado (+11: warhammer/battleaxe/scimitar/morningstar/glaive/handaxe/javelin/lightCrossbow/sling/quarterstaff…). `ROLE_WEAPON_OPTIONS` + `getRoleWeaponOptions`; `getRoleWeapon(role, variant?)` dá variedade opt-in sem mexer no dano (a arma é metadata do stat block). Default preservado (compat).
 - [x] **Mais magias**: `NpcMagic` ganha `cantrips`/`spells` (sabor). Seleção **determinística por nível** (sem RNG — não desloca o stream de geração): mais truques no 11+, lista de magias por banda de poder. Renderizado em "Truques"/"Magias" no markdown d20.
-- [ ] **Variações de papel** (subtipos caster arcano vs divino): **deferido** — exige refatorar a definição de papel; fica pra um v3.x se houver demanda.
-- [ ] **Cobrir mais sistemas de pool**: **deferido** — sob demanda, quando surgir um sistema novo na mesa do Felipe.
+- [x] **Variações de papel** (subtipos caster arcano vs divino) — ✅ **v0.7.0**. Opção opt-in `NpcOptions.casterTradition: 'arcane' | 'divine'` (default `arcane` = comportamento idêntico). Divino usa def de papel própria (`CASTER_DIVINE`: prioridade WIS, ataque/CD por WIS, armadura de clérigo, perícias religiosas) + listas de truques/magias divinas; `NpcMagic.tradition` exposto e mostrado no markdown. Sem inflar o union `NpcRole`. Testes em `tuning.test.ts` (4) + `generate.test.ts` (3).
+- [ ] **Cobrir mais sistemas de pool**: **N/A no momento** — o hook `family:'pool'`/`generatePool` já cobre todos os sistemas atuais (3 públicos + 6 privados). Reabrir só quando surgir um sistema novo na mesa do Felipe.
 - [x] **Testes** (`weapons.test.ts` 4 cases + magias no `tuning.test.ts` 2 cases).
 
 ## Bloco E — Integração com o GM Control Room 🎮 ✅

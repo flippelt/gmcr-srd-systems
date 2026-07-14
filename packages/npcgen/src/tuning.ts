@@ -13,6 +13,7 @@
 
 import type {
   Ability,
+  CasterTradition,
   D20Model,
   NpcMagic,
   NpcStarfinderTuning,
@@ -37,6 +38,33 @@ const SPELLS_BY_BAND: Record<1 | 2 | 3 | 4, readonly string[]> = {
   2: ['Bola de Fogo', 'Voo', 'Contramágica', 'Relâmpago'],
   3: ['Muralha de Fogo', 'Polimorfar', 'Cone de Frio', 'Banimento'],
   4: ['Parar o Tempo', 'Chuva de Meteoros', 'Desejo', 'Palavra de Poder: Matar'],
+}
+
+/** Truques de sabor da tradição divina. */
+const DIVINE_CANTRIPS: readonly string[] = [
+  'Chama Sagrada',
+  'Orientação',
+  'Taumaturgia',
+  'Resistência',
+  'Luz',
+  'Poupar os Moribundos',
+]
+
+/** Magias divinas por banda de poder. */
+const DIVINE_SPELLS_BY_BAND: Record<1 | 2 | 3 | 4, readonly string[]> = {
+  1: ['Curar Ferimentos', 'Palavra Curativa', 'Escudo da Fé', 'Bênção'],
+  2: ['Restauração Menor', 'Arma Espiritual', 'Silêncio', 'Auxílio'],
+  3: ['Guardiões Espirituais', 'Reviver os Mortos', 'Coluna de Chamas', 'Banimento'],
+  4: ['Palavra de Poder: Curar', 'Ressurreição Verdadeira', 'Tempestade de Vingança', 'Portão'],
+}
+
+const CANTRIPS_BY_TRADITION: Record<CasterTradition, readonly string[]> = {
+  arcane: CANTRIPS,
+  divine: DIVINE_CANTRIPS,
+}
+const SPELLS_BY_TRADITION: Record<CasterTradition, Record<1 | 2 | 3 | 4, readonly string[]>> = {
+  arcane: SPELLS_BY_BAND,
+  divine: DIVINE_SPELLS_BY_BAND,
 }
 
 function spellBand(level: number): 1 | 2 | 3 | 4 {
@@ -71,6 +99,8 @@ export function getMagicStats(
   level: number,
   /** Hook opcional do sistema pra override do nº de dados de cantrip. */
   cantripDamageDiceHook?: (level: number) => number,
+  /** Tradição do conjurador (seleciona as listas de sabor). Padrão: 'arcane'. */
+  tradition: CasterTradition = 'arcane',
 ): NpcMagic {
   // prof do 5e quando proficiency; senão BAB direto do PR 1 (já vem em prog).
   const prof = attackProg
@@ -81,9 +111,10 @@ export function getMagicStats(
   // Sabor de magias: determinístico por nível (sem RNG, pra não mexer no
   // stream de geração). Mais truques e mais magias conhecidas em níveis altos.
   const lvl = clampLevel(level)
-  const cantrips = pickRotating(CANTRIPS, lvl >= 11 ? 3 : 2, lvl)
-  const spells = pickRotating(SPELLS_BY_BAND[spellBand(lvl)], lvl >= 9 ? 3 : 2, lvl)
+  const cantrips = pickRotating(CANTRIPS_BY_TRADITION[tradition], lvl >= 11 ? 3 : 2, lvl)
+  const spells = pickRotating(SPELLS_BY_TRADITION[tradition][spellBand(lvl)], lvl >= 9 ? 3 : 2, lvl)
   return {
+    tradition,
     spellAbility,
     spellSaveDC: 8 + prof + abilityMod,
     spellAttackBonus: prof + abilityMod,

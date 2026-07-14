@@ -1,4 +1,5 @@
 import type {
+  CasterTradition,
   D20GeneratedNpc,
   GeneratedNpc,
   NpcGenFamily,
@@ -7,7 +8,7 @@ import type {
   NpcRole,
   PoolGeneratedNpc,
 } from './types'
-import { D20_MODEL, ROLES, getSystemFamily } from './data'
+import { CASTER_DIVINE, D20_MODEL, ROLES, getSystemFamily } from './data'
 import { generateDaggerheartNpc } from './pool/daggerheart'
 import { generateCandelaNpc } from './pool/candela'
 import { generateGumshoeNpc } from './pool/gumshoe'
@@ -123,8 +124,12 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
 
   const level = clampLevel(opts.level ?? 1)
   const role: NpcRole = opts.role ?? ROLE_LIST[d(ROLE_LIST.length) - 1]!
-  const def = ROLES[role]
-  const abilities = generateAbilityScores(opts.abilityMethod ?? 'standard', role)
+  const casterTradition: CasterTradition = opts.casterTradition ?? 'arcane'
+  // Caster divino usa uma def de papel própria (prioridade WIS, ataque sacro);
+  // qualquer outro caso mantém a def canônica. Default arcano = sem mudança.
+  const def =
+    role === 'caster' && casterTradition === 'divine' ? CASTER_DIVINE : ROLES[role]
+  const abilities = generateAbilityScores(opts.abilityMethod ?? 'standard', role, def)
   // Hook do sistema sobrescreve a progressão (útil pra PF2: level + rank).
   const prog =
     opts.npc?.attackProgression?.(level, role) ?? attackProgression(model, level)
@@ -147,6 +152,7 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
           model,
           level,
           opts.npc?.cantripDamageDice,
+          casterTradition,
         )
       : undefined
   const starfinder = STARFINDER_SYSTEMS.has(opts.systemId)

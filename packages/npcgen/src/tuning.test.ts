@@ -54,6 +54,30 @@ describe('getMagicStats', () => {
       getMagicStats('cha', 3, 4, 'proficiency', 7),
     )
   })
+
+  it('default é a tradição arcana (sem passar tradition)', () => {
+    const m = getMagicStats('cha', 3, 4, 'proficiency', 9)
+    expect(m.tradition).toBe('arcane')
+    // listas arcanas
+    expect(m.cantrips.every((c) => /Raio de Fogo|Toque Chocante|Rajada Mística|Lâmina de Gelo|Mãos Mágicas|Luz Tremeluzente/.test(c))).toBe(true)
+  })
+
+  it('tradição divina usa listas divinas e a flag tradition', () => {
+    const m = getMagicStats('wis', 3, 4, 'proficiency', 9, undefined, 'divine')
+    expect(m.tradition).toBe('divine')
+    expect(m.spellAbility).toBe('wis')
+    // truques divinos (ex.: Chama Sagrada / Orientação…), não arcanos
+    expect(m.cantrips.some((c) => /Chama Sagrada|Orientação|Taumaturgia|Resistência|Poupar/.test(c))).toBe(true)
+    expect(m.cantrips.some((c) => /Raio de Fogo|Rajada Mística/.test(c))).toBe(false)
+    // magias divinas na banda 2 (nível 9)
+    expect(m.spells.some((s) => /Restauração Menor|Arma Espiritual|Silêncio|Auxílio/.test(s))).toBe(true)
+  })
+
+  it('divino é determinístico', () => {
+    expect(getMagicStats('wis', 3, 4, 'proficiency', 7, undefined, 'divine')).toEqual(
+      getMagicStats('wis', 3, 4, 'proficiency', 7, undefined, 'divine'),
+    )
+  })
 })
 
 describe('getStarfinderTuning', () => {

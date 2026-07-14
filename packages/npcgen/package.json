@@ -1,6 +1,6 @@
 {
   "name": "@lippelt/srd-npcgen",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Gerador de NPCs/stat blocks para a família d20 (D&D, Pathfinder, Starfinder), com saída para o tracker do GM Control Room e para o Campaign Codex.",
   "type": "module",
   "main": "./dist/index.cjs",
