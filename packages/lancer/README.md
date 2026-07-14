@@ -2,12 +2,12 @@
 
 Módulo Lancer para [@lippelt/srd-core](../core).
 
-> Lancer™ é trademark da Massif Press. Este trabalho não é um produto oficial de Lancer; é um trabalho de terceiros, publicado sob a [Lancer Third Party License](https://massifpress.com/legal). Lancer não tem tradução oficial PT-BR — os rótulos das condições mantêm os nomes originais em inglês (Impaired, Slowed etc) com explicação em PT-BR no resumo.
+> Lancer™ é trademark da Massif Press. Este trabalho não é um produto oficial de Lancer; é um trabalho de terceiros, publicado sob a [Lancer Third Party License](https://massifpress.com/legal). Lancer tem edição oficial em português (**Tria Editora**) — os rótulos das condições/estados usam os termos oficiais dessa tradução; os resumos são paráfrases próprias (não redistribuímos texto oficial).
 
 ## O que inclui
 
 - **Presets de dados** — d20, d6/2d6/3d6/4d6, d3, "structure" (estrutura), "stress" (estresse)
-- **12 condições de status** (Impaired, Slowed, Immobilized, Lock On, Engaged, Stunned, Prone, Invisible, Shutdown, Hidden, Danger Zone, Burn) — nomes oficiais, resumos próprios em PT-BR.
+- **12 condições/estados** (Impedido, Lento, Imobilizado, Travado, Engajado, Atordoado, Prostrado, Invisível, Desligado, Escondido, Zona de Perigo, Queimadura) — termos oficiais da edição Tria; resumos próprios em PT-BR.
 - **Campos de status** — Structure (0–4), Stress (0–4), Heat, Armor (0–4), Evasion, E-Defense
 - **Regras automatizadas:**
   - `roll('check' | 'skill', { modifier, accuracy?, difficulty? })` — d20 + Accuracy/Difficulty (cancelam 1-1; rola o líquido, pega o maior pra accuracy / o menor pra difficulty).

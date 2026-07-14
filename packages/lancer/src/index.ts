@@ -110,62 +110,62 @@ const DICE_PRESETS: DicePreset[] = [
 const CONDITIONS: ConditionDef[] = [
   {
     id: 'impaired',
-    label: 'Impaired',
+    label: 'Impedido',
     summary: 'Falha em testes que importam — recebe dificuldade extra em rolagens críticas.',
   },
   {
     id: 'slowed',
-    label: 'Slowed',
+    label: 'Lento',
     summary: 'Velocidade reduzida; movimentação só com ação prolongada.',
   },
   {
     id: 'immobilized',
-    label: 'Immobilized',
+    label: 'Imobilizado',
     summary: 'Não pode se mover voluntariamente; reage como se estivesse parado.',
   },
   {
     id: 'lock-on',
-    label: 'Lock On',
+    label: 'Travado',
     summary: 'Próximo ataque contra o alvo ganha um bônus; consome o efeito.',
   },
   {
     id: 'engaged',
-    label: 'Engaged',
+    label: 'Engajado',
     summary: 'Em proximidade com uma unidade hostil — penalidade ao tentar sair.',
   },
   {
     id: 'stunned',
-    label: 'Stunned',
+    label: 'Atordoado',
     summary: 'Sem ações nesta rodada; ataques contra a unidade ganham vantagem.',
   },
   {
     id: 'prone',
-    label: 'Prone',
+    label: 'Prostrado',
     summary: 'Caído; movimento custa mais, ataques corpo-a-corpo são mais fáceis contra.',
   },
   {
     id: 'invisible',
-    label: 'Invisible',
+    label: 'Invisível',
     summary: 'Não é detectável visualmente; ataques contra a unidade têm dificuldade extra.',
   },
   {
     id: 'shutdown',
-    label: 'Shutdown',
+    label: 'Desligado',
     summary: 'Sistemas desligados — sem ações, mas resistente a efeitos baseados em sistemas.',
   },
   {
     id: 'hidden',
-    label: 'Hidden',
+    label: 'Escondido',
     summary: 'Posição oculta enquanto não tomar ação que revele; ataques têm dificuldade extra.',
   },
   {
     id: 'danger-zone',
-    label: 'Danger Zone',
+    label: 'Zona de Perigo',
     summary: 'Em zona de risco — alguns testes passam a precisar de checagem extra.',
   },
   {
     id: 'burn',
-    label: 'Burn',
+    label: 'Queimadura',
     summary: 'Acumula dano contínuo; teste a cada turno para apagar.',
   },
 ]

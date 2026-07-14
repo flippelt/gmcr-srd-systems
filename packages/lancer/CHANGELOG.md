@@ -6,6 +6,18 @@ O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/)
 e o projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 
+## [1.1.0] — 2026-07-14
+
+### Mudou
+
+- **Localização oficial (Tria Editora).** Os rótulos (`label`) das 12 condições/
+  estados passam a usar os termos oficiais da edição brasileira: Impaired→Impedido,
+  Slowed→Lento, Immobilized→Imobilizado, Lock On→Travado, Engaged→Engajado,
+  Stunned→Atordoado, Prone→Prostrado, Invisible→Invisível, Shutdown→Desligado,
+  Hidden→Escondido, Danger Zone→Zona de Perigo, Burn→Queimadura. Os `id` (chaves
+  de API) permanecem estáveis; os resumos seguem paráfrases próprias. README
+  atualizado.
+
 ## [1.0.0] — 2026-07-13
 
 ### Mudou
