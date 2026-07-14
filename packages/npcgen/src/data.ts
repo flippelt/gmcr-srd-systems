@@ -1,4 +1,4 @@
-import type { Ability, D20Model, NpcRole } from './types'
+import type { Ability, D20Model, NameStyle, NpcRole } from './types'
 
 export interface RoleDef {
   /** Ordem de prioridade dos atributos (melhor valor vai pro primeiro). */
@@ -140,6 +140,19 @@ export const D20_MODEL: Record<string, D20Model> = {
   'dnd-3.5': 'bab',
   'pathfinder-1e': 'bab',
   'starfinder-1e': 'bab',
+}
+
+/**
+ * Estilo de nome default por sistema d20 PÚBLICO embutido. Sistemas de fantasia
+ * caem no default global ('fantasy') e ficam de fora do mapa; só entra o que
+ * difere. Os sistemas de pool públicos (Daggerheart/Candela/GUMSHOE) já fixam o
+ * próprio estilo no gerador de pool. Sistemas externos/privados declaram o seu
+ * via `System.npc.defaults.nameStyle` (o npcgen não cita ids privados).
+ */
+export const BUILTIN_NAME_STYLE: Record<string, NameStyle> = {
+  'starfinder-1e': 'sci-fi',
+  'starfinder-2e': 'sci-fi',
+  lancer: 'sci-fi',
 }
 
 export const D20_SYSTEMS: string[] = Object.keys(D20_MODEL)

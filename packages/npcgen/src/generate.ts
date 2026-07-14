@@ -2,13 +2,14 @@ import type {
   CasterTradition,
   D20GeneratedNpc,
   GeneratedNpc,
+  NameStyle,
   NpcGenFamily,
   NpcGenHooks,
   NpcOptions,
   NpcRole,
   PoolGeneratedNpc,
 } from './types'
-import { CASTER_DIVINE, D20_MODEL, ROLES, getSystemFamily } from './data'
+import { BUILTIN_NAME_STYLE, CASTER_DIVINE, D20_MODEL, ROLES, getSystemFamily } from './data'
 import { generateDaggerheartNpc } from './pool/daggerheart'
 import { generateCandelaNpc } from './pool/candela'
 import { generateGumshoeNpc } from './pool/gumshoe'
@@ -36,10 +37,19 @@ import { d, seededRoller, setRng } from './rng'
 import { generateName } from './names'
 import { generateFlavor } from './flavor'
 
+/**
+ * Estilo de nome efetivo: opção explícita do chamador → default do sistema
+ * (hook `defaults.nameStyle`, usado por sistemas externos/privados) → mapa
+ * embutido dos sistemas d20 públicos → `undefined` (o gerador cai em 'fantasy').
+ */
+function resolveNameStyle(opts: NpcOptions): NameStyle | undefined {
+  return opts.nameStyle ?? opts.npc?.defaults?.nameStyle ?? BUILTIN_NAME_STYLE[opts.systemId]
+}
+
 /** Anexa flavor de interpretação ao NPC quando `withFlavor` é pedido.
  *  Sem seed próprio: usa o RNG global (já fixado pelo seed do NPC). */
 function attachFlavor<T extends GeneratedNpc>(npc: T, opts: NpcOptions): T {
-  if (opts.withFlavor) npc.flavor = generateFlavor({ style: opts.nameStyle })
+  if (opts.withFlavor) npc.flavor = generateFlavor({ style: resolveNameStyle(opts) })
   return npc
 }
 
@@ -124,7 +134,8 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
 
   const level = clampLevel(opts.level ?? 1)
   const role: NpcRole = opts.role ?? ROLE_LIST[d(ROLE_LIST.length) - 1]!
-  const casterTradition: CasterTradition = opts.casterTradition ?? 'arcane'
+  const casterTradition: CasterTradition =
+    opts.casterTradition ?? opts.npc?.defaults?.casterTradition ?? 'arcane'
   // Caster divino usa uma def de papel própria (prioridade WIS, ataque sacro);
   // qualquer outro caso mantém a def canônica. Default arcano = sem mudança.
   const def =
@@ -175,10 +186,10 @@ export function generateNpc(opts: NpcOptions): GeneratedNpc {
   const weapon = getRoleWeapon(role)
   const speed = creature.movements.walk
 
-  // Nome com estilo opcional.
+  // Nome com estilo opcional (resolvido: chamador → sistema → embutido).
   const name =
     opts.name ??
-    generateName({ style: opts.nameStyle, withEpithet: opts.withEpithet })
+    generateName({ style: resolveNameStyle(opts), withEpithet: opts.withEpithet })
 
   const d20Npc: D20GeneratedNpc = {
     family: 'd20',
@@ -234,7 +245,7 @@ function assembleExternalPool(
     family: 'pool',
     systemId: opts.systemId,
     system: opts.systemId,
-    name: block.name ?? opts.name ?? generateName(),
+    name: block.name ?? opts.name ?? generateName({ style: resolveNameStyle(opts) }),
     role: block.role,
     tier: block.tier,
     tracks: block.tracks,
