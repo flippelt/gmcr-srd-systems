@@ -20,14 +20,24 @@ Cada sistema é um pacote npm publicado independentemente — você instala só 
 | [`@lippelt/srd-pathfinder-2e`](packages/pathfinder-2e) | [`1.0.0`](https://www.npmjs.com/package/@lippelt/srd-pathfinder-2e) | Pathfinder 2e — PRD | ORC License (Paizo) |
 | [`@lippelt/srd-starfinder-1e`](packages/starfinder-1e) | [`1.0.0`](https://www.npmjs.com/package/@lippelt/srd-starfinder-1e) | Starfinder 1e — SRD | OGL 1.0a (Paizo) |
 | [`@lippelt/srd-starfinder-2e`](packages/starfinder-2e) | [`1.0.0`](https://www.npmjs.com/package/@lippelt/srd-starfinder-2e) | Starfinder 2e — SRD | ORC License (Paizo) |
-| [`@lippelt/srd-lancer`](packages/lancer) | [`1.0.0`](https://www.npmjs.com/package/@lippelt/srd-lancer) | Lancer (Massif Press) | Lancer 3PP License |
-| [`@lippelt/srd-gumshoe`](packages/gumshoe) | [`1.0.0`](https://www.npmjs.com/package/@lippelt/srd-gumshoe) | GUMSHOE (Pelgrane Press) | CC-BY 3.0 |
-| [`@lippelt/srd-daggerheart`](packages/daggerheart) | [`1.0.0`](https://www.npmjs.com/package/@lippelt/srd-daggerheart) | Daggerheart (Darrington Press) | DPCGL |
-| [`@lippelt/srd-candela-obscura`](packages/candela-obscura) | [`1.0.0`](https://www.npmjs.com/package/@lippelt/srd-candela-obscura) | Candela Obscura (Darrington Press) | DPCGL |
+| [`@lippelt/srd-lancer`](packages/lancer) | [`1.1.0`](https://www.npmjs.com/package/@lippelt/srd-lancer) | Lancer (Massif Press) | Lancer 3PP License |
+| [`@lippelt/srd-gumshoe`](packages/gumshoe) | [`1.1.0`](https://www.npmjs.com/package/@lippelt/srd-gumshoe) | GUMSHOE (Pelgrane Press) | CC-BY 3.0 |
+| [`@lippelt/srd-daggerheart`](packages/daggerheart) | [`1.1.0`](https://www.npmjs.com/package/@lippelt/srd-daggerheart) | Daggerheart (Darrington Press) | DPCGL |
+| [`@lippelt/srd-candela-obscura`](packages/candela-obscura) | [`1.1.0`](https://www.npmjs.com/package/@lippelt/srd-candela-obscura) | Candela Obscura (Darrington Press) | DPCGL |
 
 **11 sistemas implementados** + core. Cada um modela só mecânicas (dados, condições, modificadores derivados, campos de status) — **sem magias, classes, monstros ou itens específicos**, que devem vir do livro ou de uma camada superior.
 
-Termos em PT-BR seguem traduções oficiais quando existem (Galápagos pra D&D 5e, Devir pra D&D 3.5 e Pathfinder/Starfinder); sistemas sem tradução oficial PT-BR (Lancer, GUMSHOE, Daggerheart, Candela Obscura) usam termos próprios — ver README de cada pacote.
+Os rótulos em PT-BR seguem as **traduções oficiais** quando existem — ver README de cada pacote:
+
+| Sistema(s) | Editora BR |
+| --- | --- |
+| D&D 5e (2014/2024) | Galápagos Jogos |
+| D&D 3.5, Pathfinder 1e/2e, Starfinder 1e/2e | Devir |
+| Lancer | Tria Editora |
+| Daggerheart, Candela Obscura | Jambô Editora |
+| GUMSHOE (via *Rastro de Cthulhu*) | Retropunk |
+
+Só os **rótulos** (nomes de condições, campos etc.) usam os termos oficiais; os resumos são paráfrases próprias, sem redistribuir texto protegido.
 
 ## Instalação (consumidor)
 
