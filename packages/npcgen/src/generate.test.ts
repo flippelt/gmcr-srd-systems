@@ -268,3 +268,36 @@ describe('generateNpc — caster arcano vs divino', () => {
     expect(soldier.magic).toBeUndefined()
   })
 })
+
+describe('nameStyle pré-configurado pelo sistema', () => {
+  it('sistema d20 embutido aplica seu estilo (starfinder=sci-fi ≠ dnd=fantasy)', () => {
+    const sf = generateNpc({ systemId: 'starfinder-2e', role: 'soldier', seed: 5 })
+    const dnd = generateNpc({ systemId: 'dnd5e-2024', role: 'soldier', seed: 5 })
+    // mesmo seed, estilos diferentes (sci-fi vs fantasy) → nomes diferentes
+    expect(sf.name).not.toBe(dnd.name)
+  })
+
+  it('opção do chamador sobrepõe o default do sistema', () => {
+    const auto = generateNpc({ systemId: 'starfinder-2e', role: 'soldier', seed: 5 })
+    const forced = generateNpc({ systemId: 'starfinder-2e', role: 'soldier', seed: 5, nameStyle: 'fantasy' })
+    expect(auto.name).not.toBe(forced.name)
+  })
+
+  it('hook defaults.nameStyle define o estilo de um sistema externo', () => {
+    const base = { family: 'd20' as const, model: 'proficiency' as const }
+    const withDefault = generateNpc({
+      systemId: 'sistema-externo-x',
+      role: 'soldier',
+      seed: 5,
+      npc: { ...base, defaults: { nameStyle: 'cyberpunk' } },
+    })
+    const noDefault = generateNpc({
+      systemId: 'sistema-externo-x',
+      role: 'soldier',
+      seed: 5,
+      npc: base,
+    })
+    // com default cyberpunk vs sem (cai em fantasy) → nomes diferentes
+    expect(withDefault.name).not.toBe(noDefault.name)
+  })
+})

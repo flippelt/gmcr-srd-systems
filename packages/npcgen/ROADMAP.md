@@ -75,6 +75,16 @@ Implementado em `gm-control-room` (PR #35). Consome `@lippelt/srd-npcgen` via `f
 - [x] **Recompensa/flavor** no preview quando ligados (checkboxes; `withLoot`/`withFlavor`; este último propagado por NPC via `EncounterInput.withFlavor`, npcgen 0.5.1).
 - [x] Esconde controles só-d20 quando o sistema é pool (como no NPC avulso).
 
+## Bloco F — Pré-configuração por sistema 🎛️ ✅ (v0.8.0)
+
+- [x] **`System.npc.defaults`** (`NpcGenDefaults`): o sistema declara presets de
+  geração (`nameStyle`, `casterTradition`) aplicados quando o chamador não passa
+  a opção. Cascata em `generate.ts`: opção do chamador → `defaults` do hook →
+  mapa embutido `BUILTIN_NAME_STYLE` (só sistemas d20 públicos; ex.: starfinder/
+  lancer = sci-fi) → default global. Sistemas de pool públicos já fixavam o
+  estilo no gerador; sistemas externos/privados usam o hook (o público não cita
+  ids privados). Testes: +3 em `generate.test.ts`.
+
 ---
 
 ## Notas de design

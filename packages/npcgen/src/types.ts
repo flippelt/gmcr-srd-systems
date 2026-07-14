@@ -68,6 +68,19 @@ export interface NpcPoolBlock {
  * Sistemas fora das famílias embutidas (d20 e os pools daggerheart/candela/
  * gumshoe) se plugam declarando `family` e, para pool, `generatePool`.
  */
+/**
+ * Presets de geração que um sistema declara pra si. Aplicados quando o
+ * chamador não passa a opção correspondente. É como um sistema "pré-configura"
+ * o npcgen — sistemas externos/privados usam isto porque o npcgen não cita
+ * seus ids (sistemas públicos embutidos usam o mapa interno equivalente).
+ */
+export interface NpcGenDefaults {
+  /** Estilo de nome default do cenário (ex.: 'sci-fi' pro 40k). */
+  nameStyle?: NameStyle
+  /** Tradição de caster default quando o papel é `caster`. */
+  casterTradition?: CasterTradition
+}
+
 export interface NpcGenHooks {
   /** Família de um sistema externo (não-embutido). */
   family?: NpcGenFamily
@@ -79,6 +92,8 @@ export interface NpcGenHooks {
   cantripDamageDice?: (level: number) => number
   skills?: readonly string[]
   defaultLanguages?: (creatureType: string) => string[]
+  /** Presets de geração do sistema (aplicados quando o chamador não passa). */
+  defaults?: NpcGenDefaults
 }
 
 /** Tradição de conjuração de um NPC `caster` (d20). Padrão: 'arcane'. */
