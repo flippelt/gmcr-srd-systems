@@ -141,7 +141,7 @@ const DICE_PRESETS: DicePreset[] = [
   { id: 'pool-6', label: 'Pool 6', notation: '6d6', category: 'check', description: 'Pool máximo (6 dados).' },
   {
     id: 'resistance',
-    label: 'Resistance',
+    label: 'Resistência',
     notation: 'resistance',
     category: 'special',
     description: 'Rolagem de resistência — interpretação narrativa em vez de check.',
@@ -153,12 +153,12 @@ const DICE_PRESETS: DicePreset[] = [
 // ============================================================================
 
 const CONDITIONS: ConditionDef[] = [
-  { id: 'bleeding', label: 'Bleeding', summary: 'Sangrando — marca um Body mark a cada turno até estabilizar.' },
-  { id: 'shaken', label: 'Shaken', summary: 'Abalado — penalidade em ações que exigem concentração.' },
-  { id: 'hunted', label: 'Hunted', summary: 'Sendo caçado — encontros adicionais até despistar.' },
-  { id: 'illuminated', label: 'Illuminated', summary: 'Em contato com a Bruma — risco de marks de Bleed/Mind.' },
-  { id: 'compromised', label: 'Compromised', summary: 'Identidade ou disfarce exposto — perdeu vantagem narrativa.' },
-  { id: 'exhausted', label: 'Exhausted', summary: 'Esgotado — pools máximos reduzidos até descanso.' },
+  { id: 'bleeding', label: 'Sangramento', summary: 'Sangrando — marca um Body mark a cada turno até estabilizar.' },
+  { id: 'shaken', label: 'Abalado', summary: 'Abalado — penalidade em ações que exigem concentração.' },
+  { id: 'hunted', label: 'Caçado', summary: 'Sendo caçado — encontros adicionais até despistar.' },
+  { id: 'illuminated', label: 'Iluminado', summary: 'Em contato com a Bruma — risco de marks de Bleed/Mind.' },
+  { id: 'compromised', label: 'Comprometido', summary: 'Identidade ou disfarce exposto — perdeu vantagem narrativa.' },
+  { id: 'exhausted', label: 'Exausto', summary: 'Esgotado — pools máximos reduzidos até descanso.' },
 ]
 
 // ============================================================================
@@ -170,13 +170,13 @@ const CONDITIONS: ConditionDef[] = [
 // ============================================================================
 
 const TRACKER_FIELDS: TrackerField[] = [
-  { key: 'bodyMarks', label: 'Body', kind: 'integer', min: 0, max: 3, default: 0, description: 'Marcas físicas. Ao atingir 3, escolhe um Body Scar.' },
-  { key: 'brainMarks', label: 'Brain', kind: 'integer', min: 0, max: 3, default: 0, description: 'Marcas mentais. Ao atingir 3, escolhe um Brain Scar.' },
-  { key: 'bleedMarks', label: 'Bleed', kind: 'integer', min: 0, max: 3, default: 0, description: 'Marcas espirituais. Ao atingir 3, escolhe um Bleed Scar.' },
-  { key: 'scars', label: 'Scars', kind: 'integer', min: 0, max: 9, default: 0, description: 'Cicatrizes permanentes acumuladas (todas as categorias).' },
-  { key: 'driveNerve', label: 'Nerve', kind: 'integer', min: 0, max: 3, default: 1, description: 'Drive do grupo Nerve — gasta pra adicionar d6 em pools relacionados.' },
-  { key: 'driveCunning', label: 'Cunning', kind: 'integer', min: 0, max: 3, default: 1, description: 'Drive do grupo Cunning.' },
-  { key: 'driveIntuition', label: 'Intuit', kind: 'integer', min: 0, max: 3, default: 1, description: 'Drive do grupo Intuition.' },
+  { key: 'bodyMarks', label: 'Corpo', kind: 'integer', min: 0, max: 3, default: 0, description: 'Marcas físicas. Ao atingir 3, escolhe um Body Scar.' },
+  { key: 'brainMarks', label: 'Mente', kind: 'integer', min: 0, max: 3, default: 0, description: 'Marcas mentais. Ao atingir 3, escolhe um Brain Scar.' },
+  { key: 'bleedMarks', label: 'Sangria', kind: 'integer', min: 0, max: 3, default: 0, description: 'Marcas espirituais. Ao atingir 3, escolhe um Bleed Scar.' },
+  { key: 'scars', label: 'Cicatrizes', kind: 'integer', min: 0, max: 9, default: 0, description: 'Cicatrizes permanentes acumuladas (todas as categorias).' },
+  { key: 'driveNerve', label: 'Coragem', kind: 'integer', min: 0, max: 3, default: 1, description: 'Impulso Coragem — gasta pra adicionar d6 em pools relacionados.' },
+  { key: 'driveCunning', label: 'Astúcia', kind: 'integer', min: 0, max: 3, default: 1, description: 'Impulso Astúcia.' },
+  { key: 'driveIntuition', label: 'Intuição', kind: 'integer', min: 0, max: 3, default: 1, description: 'Impulso Intuição.' },
   { key: 'hitThreshold', label: 'Hit', kind: 'integer', min: 0, max: 12, default: 1, description: 'Hit Threshold do adversário — alvo pra acertá-lo em combate.' },
 ]
 
