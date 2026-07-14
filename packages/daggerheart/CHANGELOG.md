@@ -5,6 +5,16 @@ Todas as mudanças notáveis deste pacote são documentadas aqui.
 O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/)
 e o projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [1.1.0] — 2026-07-14
+
+### Mudou
+
+- **Localização oficial (Jambô Editora).** Os rótulos (`label`) passam a usar os
+  termos oficiais da edição brasileira: **Stress → Fadiga** (PV/PF), limiares
+  Major/Severe → **Maior/Grave**, Hope → **Esperança**; condições Restrained →
+  Imobilizado, Hidden → Oculto, Vulnerable → Vulnerável, etc. Os `id`/`key` (API)
+  e as notas de rolagem (Hope/Fear) permanecem estáveis; resumos seguem
+  paráfrases próprias. README alinhado aos termos oficiais.
 
 ## [1.0.0] — 2026-07-13
 

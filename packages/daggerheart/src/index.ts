@@ -216,16 +216,16 @@ const DICE_PRESETS: DicePreset[] = [
 // ============================================================================
 
 const CONDITIONS: ConditionDef[] = [
-  { id: 'restrained', label: 'Restrained', summary: 'Impedido de se mover ou agir livremente até se libertar.' },
-  { id: 'vulnerable', label: 'Vulnerable', summary: 'Rolagens contra a criatura são feitas com vantagem.' },
-  { id: 'hidden', label: 'Hidden', summary: 'Não pode ser alvo direto até ser revelado.' },
-  { id: 'burning', label: 'Burning', summary: 'Em chamas: dano contínuo a cada turno até apagar.' },
-  { id: 'poisoned', label: 'Poisoned', summary: 'Envenenado: penalidades a rolagens físicas; dano periódico em alguns casos.' },
-  { id: 'stunned', label: 'Stunned', summary: 'Atordoado: ações limitadas no próximo turno.' },
-  { id: 'distracted', label: 'Distracted', summary: 'Desatento: rolagens da criatura sofrem desvantagem.' },
-  { id: 'cloaked', label: 'Cloaked', summary: 'Encoberto: dificuldade extra pra ser detectado/atingido.' },
-  { id: 'charged', label: 'Charged', summary: 'Carregado: próxima ação ganha bônus específico de habilidade.' },
-  { id: 'down', label: 'Down', summary: 'Caído inconsciente — risco de morrer sem cuidados.' },
+  { id: 'restrained', label: 'Imobilizado', summary: 'Impedido de se mover ou agir livremente até se libertar.' },
+  { id: 'vulnerable', label: 'Vulnerável', summary: 'Rolagens contra a criatura são feitas com vantagem.' },
+  { id: 'hidden', label: 'Oculto', summary: 'Não pode ser alvo direto até ser revelado.' },
+  { id: 'burning', label: 'Em Chamas', summary: 'Em chamas: dano contínuo a cada turno até apagar.' },
+  { id: 'poisoned', label: 'Envenenado', summary: 'Envenenado: penalidades a rolagens físicas; dano periódico em alguns casos.' },
+  { id: 'stunned', label: 'Atordoado', summary: 'Atordoado: ações limitadas no próximo turno.' },
+  { id: 'distracted', label: 'Distraído', summary: 'Desatento: rolagens da criatura sofrem desvantagem.' },
+  { id: 'cloaked', label: 'Camuflado', summary: 'Encoberto: dificuldade extra pra ser detectado/atingido.' },
+  { id: 'charged', label: 'Carregado', summary: 'Carregado: próxima ação ganha bônus específico de habilidade.' },
+  { id: 'down', label: 'Caído', summary: 'Caído inconsciente — risco de morrer sem cuidados.' },
 ]
 
 // ============================================================================
@@ -233,16 +233,16 @@ const CONDITIONS: ConditionDef[] = [
 // ============================================================================
 
 const TRACKER_FIELDS: TrackerField[] = [
-  { key: 'hp', label: 'HP', kind: 'integer', min: 0, max: 12, default: 0, description: 'HP slots marcados (de 0 até max ~12 — quando todos marcados o personagem cai).' },
-  { key: 'hpMax', label: 'HPmax', kind: 'integer', min: 1, max: 12, default: 6, description: 'Total de HP slots da ficha.' },
-  { key: 'stress', label: 'Stress', kind: 'integer', min: 0, max: 12, default: 0, description: 'Stress slots marcados.' },
-  { key: 'stressMax', label: 'Stmax', kind: 'integer', min: 1, max: 12, default: 6, description: 'Total de Stress slots da ficha (geralmente 6).' },
+  { key: 'hp', label: 'PV', kind: 'integer', min: 0, max: 12, default: 0, description: 'HP slots marcados (de 0 até max ~12 — quando todos marcados o personagem cai).' },
+  { key: 'hpMax', label: 'PVmax', kind: 'integer', min: 1, max: 12, default: 6, description: 'Total de HP slots da ficha.' },
+  { key: 'stress', label: 'Fadiga', kind: 'integer', min: 0, max: 12, default: 0, description: 'Stress slots marcados.' },
+  { key: 'stressMax', label: 'PFmax', kind: 'integer', min: 1, max: 12, default: 6, description: 'Total de Stress slots da ficha (geralmente 6).' },
   { key: 'armor', label: 'Arm', kind: 'integer', min: 0, max: 12, default: 0, description: 'Armor slots marcados (consumidos pra reduzir severidade de dano).' },
   { key: 'armorMax', label: 'Armax', kind: 'integer', min: 0, max: 12, default: 3, description: 'Total de Armor slots disponíveis.' },
-  { key: 'hope', label: 'Hope', kind: 'integer', min: 0, max: 6, default: 2, description: 'Tokens de Hope acumulados.' },
+  { key: 'hope', label: 'Esperança', kind: 'integer', min: 0, max: 6, default: 2, description: 'Tokens de Hope acumulados.' },
   { key: 'evasion', label: 'Eva', kind: 'integer', min: 1, max: 30, default: 10, description: 'Evasion — DC pra ser atingido por ataques físicos.' },
-  { key: 'majorThreshold', label: 'Major', kind: 'integer', min: 1, max: 30, default: 6, description: 'Limite de Major threshold de dano: ≥ marca 2 HP.' },
-  { key: 'severeThreshold', label: 'Severe', kind: 'integer', min: 1, max: 30, default: 12, description: 'Limite de Severe threshold de dano: ≥ marca 3 HP.' },
+  { key: 'majorThreshold', label: 'Maior', kind: 'integer', min: 1, max: 30, default: 6, description: 'Limite de Major threshold de dano: ≥ marca 2 HP.' },
+  { key: 'severeThreshold', label: 'Grave', kind: 'integer', min: 1, max: 30, default: 12, description: 'Limite de Severe threshold de dano: ≥ marca 3 HP.' },
   { key: 'difficulty', label: 'Diff', kind: 'integer', min: 1, max: 30, default: 12, description: 'Difficulty do adversário — alvo pra acertá-lo (adversários usam Difficulty no lugar de Evasion dos PCs).' },
 ]
 
