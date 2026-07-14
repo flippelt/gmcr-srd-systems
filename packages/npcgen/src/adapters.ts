@@ -192,7 +192,8 @@ function d20Markdown(npc: D20GeneratedNpc): string {
 
   if (npc.magic) {
     lines.push(
-      `- **Magia** ${npc.magic.spellAbility.toUpperCase()}` +
+      `- **Magia** (${npc.magic.tradition === 'divine' ? 'divina' : 'arcana'})` +
+        ` ${npc.magic.spellAbility.toUpperCase()}` +
         ` · CD ${npc.magic.spellSaveDC}` +
         ` · ataque ${sign(npc.magic.spellAttackBonus)}` +
         ` · cantrip ${npc.magic.cantripDamage}`,

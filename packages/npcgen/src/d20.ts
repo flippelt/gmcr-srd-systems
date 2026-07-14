@@ -36,8 +36,12 @@ function rolled4d6(): number[] {
   }).sort((a, b) => b - a)
 }
 
-export function generateAbilityScores(method: AbilityMethod, role: NpcRole): AbilityScores {
-  const def = ROLES[role]
+export function generateAbilityScores(
+  method: AbilityMethod,
+  role: NpcRole,
+  defOverride?: RoleDef,
+): AbilityScores {
+  const def = defOverride ?? ROLES[role]
   const pool =
     method === 'rolled'
       ? rolled4d6()

@@ -234,3 +234,37 @@ describe('isD20System / erros', () => {
     expect(() => generateNpcRaw({ systemId: 'daggerheart' })).not.toThrow()
   })
 })
+
+describe('generateNpc — caster arcano vs divino', () => {
+  it('default (arcano): CHA e magia arcana', () => {
+    const n = generateNpc({ systemId: 'dnd5e-2024', level: 9, role: 'caster', seed: 7 })
+    expect(n.magic?.tradition).toBe('arcane')
+    expect(n.magic?.spellAbility).toBe('cha')
+    expect(n.attack.name).toBe('Dardo arcano')
+  })
+
+  it('divine: prioridade WIS, ataque sacro e listas divinas', () => {
+    const n = generateNpc({
+      systemId: 'dnd5e-2024',
+      level: 9,
+      role: 'caster',
+      casterTradition: 'divine',
+      seed: 7,
+    })
+    expect(n.magic?.tradition).toBe('divine')
+    expect(n.magic?.spellAbility).toBe('wis')
+    expect(n.attack.name).toBe('Chama sagrada')
+    // WIS é prioridade máxima → maior valor de atributo
+    const maxScore = Math.max(...Object.values(n.abilities).map((a) => a.score))
+    expect(n.abilities.wis.score).toBe(maxScore)
+    // todos os truques vêm do conjunto divino (não arcano)
+    const DIVINE = /Chama Sagrada|Orientação|Taumaturgia|Resistência|Luz|Poupar os Moribundos/
+    expect(n.magic?.cantrips.every((c) => DIVINE.test(c))).toBe(true)
+    expect(n.magic?.cantrips.some((c) => /Raio de Fogo|Rajada Mística/.test(c))).toBe(false)
+  })
+
+  it('casterTradition é ignorado em papéis não-caster', () => {
+    const soldier = generateNpc({ systemId: 'dnd5e-2024', level: 5, role: 'soldier', casterTradition: 'divine', seed: 3 })
+    expect(soldier.magic).toBeUndefined()
+  })
+})

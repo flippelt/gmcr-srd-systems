@@ -81,6 +81,9 @@ export interface NpcGenHooks {
   defaultLanguages?: (creatureType: string) => string[]
 }
 
+/** Tradição de conjuração de um NPC `caster` (d20). Padrão: 'arcane'. */
+export type CasterTradition = 'arcane' | 'divine'
+
 export interface NpcOptions {
   /** Id do sistema (família d20). Ex.: 'dnd5e-2024'. */
   systemId: string
@@ -88,6 +91,13 @@ export interface NpcOptions {
   level?: number
   /** Arquétipo de combate. Padrão: sorteado. */
   role?: NpcRole
+  /**
+   * Tradição do conjurador quando `role === 'caster'`. `'arcane'` (padrão)
+   * mantém o comportamento clássico; `'divine'` usa prioridade de Sabedoria,
+   * ataque/CD por WIS e listas de truques/magias divinas. Ignorado se o papel
+   * não for caster.
+   */
+  casterTradition?: CasterTradition
   /** Método de atributos. Padrão: 'standard'. */
   abilityMethod?: AbilityMethod
   /** Nome fixo (senão é gerado). */
@@ -140,7 +150,9 @@ export interface NpcAttack {
  * + bônus de proficiência/BAB do modelo.
  */
 export interface NpcMagic {
-  /** Atributo usado pra conjurar (geralmente CHA pro caster genérico). */
+  /** Tradição do conjurador ('arcane' | 'divine'). */
+  tradition: CasterTradition
+  /** Atributo usado pra conjurar (CHA no arcano genérico; WIS no divino). */
   spellAbility: Ability
   /** CD pra resistir a magias deste conjurador (8 + prof + mod no 5e). */
   spellSaveDC: number
