@@ -88,3 +88,17 @@ export {
 export { generateLoot, lootToMarkdown } from './loot'
 export { generateFlavor, flavorMarkdown } from './flavor'
 export { generateName, type NameOptions } from './names'
+export {
+  parseLancerNpcData,
+  generateLancerNpc,
+  lancerNpcToMarkdown,
+  type LancerLcpChunk,
+  type LancerNpcData,
+  type LancerNpcClass,
+  type LancerNpcTemplate,
+  type LancerNpcFeature,
+  type LancerNpcOptions,
+  type LancerGeneratedNpc,
+  type LancerGeneratedFeature,
+  type LancerTier,
+} from './lancer'
