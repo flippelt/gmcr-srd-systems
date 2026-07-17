@@ -63,7 +63,7 @@ describe('parseLancerNpcData', () => {
     clone.classes[0].name = 'DUPLICATA'
     const data = parseLancerNpcData([CHUNK, clone])
     expect(data.classes).toHaveLength(1)
-    expect(data.classes[0].name).toBe('TEST ASSAULT')
+    expect(data.classes[0]?.name).toBe('TEST ASSAULT')
     expect(data.templates).toHaveLength(3)
     expect(data.features).toHaveLength(4)
   })
@@ -92,7 +92,7 @@ describe('generateLancerNpc', () => {
     expect(base.map((f) => f.name)).toEqual(['TEST RIFLE'])
     expect(opt).toHaveLength(2) // tier 2 → 2 opcionais (pool só tem 2)
     // arma resume dano do tier
-    expect(base[0].effect).toContain('7 Kinetic')
+    expect(base[0]?.effect).toContain('7 Kinetic')
   })
 
   it('grunt: 1 PV; ultra: +3 estrutura/stress e +1 ativação', () => {
