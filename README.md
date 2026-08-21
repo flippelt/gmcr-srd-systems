@@ -157,7 +157,7 @@ done
 
 Campos equivalentes na UI: Package → Settings → Trusted Publisher → GitHub Actions (`flippelt` / `gmcr-srd-systems` / `release.yml` / `npm publish`).
 
-O secret `NPM_TOKEN` do repo ficou obsoleto — apagar depois do primeiro publish OIDC bem-sucedido. Não recolocar `NODE_AUTH_TOKEN` no workflow.
+O secret `NPM_TOKEN` do repo foi apagado; o publish é só OIDC. Não recolocar `NODE_AUTH_TOKEN` no workflow.
 
 ## Adicionar um sistema novo
 
