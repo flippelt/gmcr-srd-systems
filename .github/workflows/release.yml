@@ -1,63 +1,97 @@
 name: Release
 
-# Dispara em tags do padrão `<package>@v<version>`:
-#   core@v0.1.1
-#   dnd5e-2014@v0.2.0
-#   lancer@v0.1.5
-#   gumshoe@v0.1.0
+# Dispara em tags `<dir>@v<versão>` (ex.: core@v1.0.0, dnd5e-2014@v1.0.0)
+# ou via workflow_dispatch (republica a versão já no package.json da main).
 #
-# Cada tag publica apenas o pacote alvo. Pré-requisitos no repo:
-#   - Secret NPM_TOKEN (token de automação com permissão de publish no
-#     escopo @gmcr no npm.org)
-#   - O scope @gmcr precisa existir no npm e o token precisa ter acesso
+# Autentica via OIDC trusted publisher — sem NPM_TOKEN, sem OTP.
+# Uma vez por pacote no npmjs.com (Package → Settings → Trusted Publisher)
+# ou em lote com `npm trust github` (ver README).
+#   Organization or user:  flippelt
+#   Repository:            gmcr-srd-systems
+#   Workflow filename:     release.yml
+#   Allowed actions:       npm publish
 
 on:
   push:
     tags:
       - '*@v*'
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Directory name under packages/ (e.g. dnd5e-2014, core, npcgen)
+        required: true
+        type: string
 
 permissions:
   contents: read
-  # id-token: write é necessário pra `npm publish --provenance` (assina
-  # publicações com OIDC do GitHub).
   id-token: write
+
+concurrency:
+  group: release-${{ github.ref }}-${{ github.event.inputs.package || github.ref }}
+  cancel-in-progress: false
 
 jobs:
   publish:
+    if: github.event_name == 'push' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      pkg: ${{ steps.parse.outputs.pkg }}
+      version: ${{ steps.parse.outputs.version }}
+      tag: ${{ steps.parse.outputs.tag }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
 
-      - name: Parse tag
+      # Trusted publishing precisa do npm CLI ≥ 11.5.1.
+      - run: npm install -g npm@latest
+
+      - name: Parse target
         id: parse
         shell: bash
         run: |
-          tag="${GITHUB_REF#refs/tags/}"
-          pkg="${tag%@v*}"
-          version="${tag##*@v}"
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            pkg="${{ github.event.inputs.package }}"
+          else
+            tag="${GITHUB_REF#refs/tags/}"
+            pkg="${tag%@v*}"
+            version="${tag##*@v}"
+          fi
+          if [[ ! "$pkg" =~ ^[a-z0-9][a-z0-9.-]*$ ]]; then
+            echo "::error::Invalid package directory '$pkg'"
+            exit 1
+          fi
+          pkgDir="packages/$pkg"
+          test -d "$pkgDir" || { echo "::error::Package directory '$pkgDir' not found"; exit 1; }
+          declared=$(node -p "require('./$pkgDir/package.json').version")
+          name=$(node -p "require('./$pkgDir/package.json').name")
+          expected="@lippelt/srd-$pkg"
+          if [ "$name" != "$expected" ]; then
+            echo "::error::package.json name ($name) does not match $expected"
+            exit 1
+          fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            version="$declared"
+            tag="$pkg@v$version"
+          elif [ "$declared" != "$version" ]; then
+            echo "::error::Tag version ($version) does not match package.json version ($declared) for $pkgDir"
+            exit 1
+          fi
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "pkg=$pkg" >> "$GITHUB_OUTPUT"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "Tag $tag -> package=$pkg, version=$version"
-
-      - name: Verify package exists and version matches
-        shell: bash
-        run: |
-          pkgDir="packages/${{ steps.parse.outputs.pkg }}"
-          test -d "$pkgDir" || { echo "::error::Package directory '$pkgDir' not found for tag ${{ steps.parse.outputs.tag }}"; exit 1; }
-          declared=$(node -p "require('./$pkgDir/package.json').version")
-          expected="${{ steps.parse.outputs.version }}"
-          if [ "$declared" != "$expected" ]; then
-            echo "::error::Tag version ($expected) does not match package.json version ($declared) for $pkgDir"
-            exit 1
-          fi
 
       - name: Install
         run: npm ci
@@ -74,7 +108,41 @@ jobs:
       - name: Run target package tests
         run: npm test -w packages/${{ steps.parse.outputs.pkg }}
 
+      - name: Pack check (target)
+        run: npm pack --dry-run --json -w packages/${{ steps.parse.outputs.pkg }}
+
+      # Sem NODE_AUTH_TOKEN: o npm CLI troca o OIDC do GitHub por um token
+      # curto. Provenance é gerado automaticamente pelo trusted publisher.
       - name: Publish to npm
-        run: npm publish -w packages/${{ steps.parse.outputs.pkg }} --access public --provenance
+        run: npm publish -w packages/${{ steps.parse.outputs.pkg }} --access public
+
+  github-release:
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Create GitHub Release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.publish.outputs.tag }}
+          PKG: ${{ needs.publish.outputs.pkg }}
+          VERSION: ${{ needs.publish.outputs.version }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists"
+            exit 0
+          fi
+          notes="$(mktemp)"
+          {
+            node scripts/extract-changelog.mjs "packages/$PKG/CHANGELOG.md" "$VERSION"
+            echo
+            echo "npm: https://www.npmjs.com/package/@lippelt/srd-$PKG/v/$VERSION"
+          } > "$notes"
+          gh release create "$TAG" --title "$TAG" --notes-file "$notes"
