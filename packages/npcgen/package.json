@@ -8,19 +8,30 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     }
   },
   "files": [
-    "dist",
-    "README.md"
+    "dist/index.js",
+    "dist/index.cjs",
+    "dist/index.d.ts",
+    "dist/index.d.cts",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
+    "prepack": "node ../../scripts/copy-license.mjs",
     "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
@@ -38,5 +49,10 @@
     "type": "git",
     "url": "git+https://github.com/flippelt/gmcr-srd-systems.git",
     "directory": "packages/npcgen"
+  },
+  "sideEffects": false,
+  "homepage": "https://github.com/flippelt/gmcr-srd-systems/tree/main/packages/npcgen",
+  "bugs": {
+    "url": "https://github.com/flippelt/gmcr-srd-systems/issues"
   }
 }

@@ -17,11 +17,12 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
@@ -53,7 +54,11 @@ jobs:
             test -f "${pkg}dist/index.js"  || (echo "missing ${pkg}dist/index.js"; exit 1)
             test -f "${pkg}dist/index.cjs" || (echo "missing ${pkg}dist/index.cjs"; exit 1)
             test -f "${pkg}dist/index.d.ts" || (echo "missing ${pkg}dist/index.d.ts"; exit 1)
+            test -f "${pkg}dist/index.d.cts" || (echo "missing ${pkg}dist/index.d.cts"; exit 1)
           done
+
+      - name: Pack check (tarball contents)
+        run: npm run pack:check
 
       - name: Audit (high/critical only)
         run: npm audit --audit-level=high

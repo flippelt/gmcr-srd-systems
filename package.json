@@ -9,9 +9,15 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",
+    "clean": "rm -rf packages/*/dist coverage",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
-    "test": "npm run test --workspaces --if-present"
+    "test": "npm run test --workspaces --if-present",
+    "pack:check": "node scripts/pack-check.mjs",
+    "tag": "node scripts/tag-release.mjs"
+  },
+  "engines": {
+    "node": ">=22.14.0"
   },
   "license": "MIT",
   "repository": {

@@ -8,13 +8,21 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     }
   },
   "files": [
-    "dist",
+    "dist/index.js",
+    "dist/index.cjs",
+    "dist/index.d.ts",
+    "dist/index.d.cts",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"
@@ -23,6 +31,7 @@
     "access": "public"
   },
   "scripts": {
+    "prepack": "node ../../scripts/copy-license.mjs",
     "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
@@ -41,5 +50,10 @@
   },
   "devDependencies": {
     "@lippelt/srd-core": "*"
+  },
+  "sideEffects": false,
+  "homepage": "https://github.com/flippelt/gmcr-srd-systems/tree/main/packages/pathfinder-2e",
+  "bugs": {
+    "url": "https://github.com/flippelt/gmcr-srd-systems/issues"
   }
 }
