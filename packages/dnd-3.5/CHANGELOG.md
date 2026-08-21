@@ -6,6 +6,12 @@ O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/)
 e o projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 
+## [1.0.1] — 2026-08-21
+
+### Corrigiu
+- Tarball npm inclui o `LICENSE` MIT (estava listado em `files` mas o arquivo não ia no pacote).
+- `exports` com types separados para ESM e CJS; source maps deixam de ir no tarball.
+
 ## [1.0.0] — 2026-07-13
 
 ### Mudou

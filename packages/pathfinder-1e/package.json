@@ -1,6 +1,6 @@
 {
   "name": "@lippelt/srd-pathfinder-1e",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Pathfinder 1e system module for @lippelt/srd-core — PRD, OGL 1.0a (Paizo)",
   "type": "module",
   "main": "./dist/index.cjs",
