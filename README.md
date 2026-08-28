@@ -167,6 +167,12 @@ O secret `NPM_TOKEN` do repo foi apagado; o publish é só OIDC. Não recolocar 
 4. README seguindo o padrão dos outros (o que inclui, o que NÃO inclui, exemplo de uso, licença).
 5. PR. Após merge, o **primeiro** publish de um pacote novo é local (`npm publish -w packages/<nome> --access public`, com OTP) — o npm só aceita trusted publisher depois da primeira versão. Aí `npm trust github @lippelt/srd-<nome> --file release.yml --repo flippelt/gmcr-srd-systems --allow-publish -y` e as próximas saem por tag.
 
+## Família
+
+Consumido pelo [GM Control Room](https://github.com/flippelt/gm-control-room)
+(wiki: [RPG Systems](https://github.com/flippelt/gm-control-room/wiki/RPG-Systems)).
+Pacotes privados de conteúdo protegido vivem em outro repositório (`@flippelt/srd-*` no GitHub Packages).
+
 ## Licença
 
 Código sob [MIT](LICENSE). Conteúdo derivado de SRDs em cada pacote mantém atribuição própria (vide README + `attribution` do `System`).
